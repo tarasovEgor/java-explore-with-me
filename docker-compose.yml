@@ -1,50 +1,151 @@
+#version: '3.1'
+#services:
+#  stats-server:
+#    build: stats
+#    image: stats-image
+#    container_name: stats-container
+#    ports:
+#      - "9090:9090"
+#    depends_on:
+#      - ewm-service
+#      - stats-server-db
+#    environment:
+##      - STATS_SERVER_URL=http://server:9090
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/statsbase
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=postgres
+#
+#  stats-server-db:
+#    image: postgres:14-alpine
+#    container_name: stats-server-db
+#    ports:
+#      - "6541:5432"
+#    environment:
+#      - POSTGRES_DB=ewmbase
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=postgres
+#
+#  ewm-service:
+#    build: ewm-service
+#    image: ewm-service-image
+#    container_name: ewm-service-container
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - ewm-service-db
+#
+#  ewm-service-db:
+#    image: postgres:14-alpine
+#    container_name: ewm-service-db
+#    ports:
+#      - "6542:5433"
+#    environment:
+#      - POSTGRES_DB=mainbase
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=postgres
+
+
 version: '3.1'
 services:
   stats-server:
-    build: stats
-    image: stats-image
-    container_name: stats-container
+    build:
+      context: stats/stats-server
+      dockerfile: Dockerfile
+    image: stats-server_image
+    container_name: stats-server-container
     ports:
       - "9090:9090"
     depends_on:
-      - ewm-service
-      - stats-server-db
+      - stats-db
     environment:
-      - STATS_SERVER_URL=http://server:9090
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/statsbase
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
 
-  stats-server-db:
+  stats-db:
     image: postgres:14-alpine
-    container_name: stats-server-db
+    container_name: stats-db-container
     ports:
       - "6541:5432"
     environment:
-      - POSTGRES_DB=ewmbase
+      - POSTGRES_DB=statsbase
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
   ewm-service:
-    build: ewm-service
-    image: ewm-service-image
-    container_name: ewm-service-container
+    build: ./ewm-service
+    image: ewm-server_image
+    container_name: ewm-server-container
     ports:
       - "8080:8080"
     depends_on:
-      - ewm-service-db
+      - ewm-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5433/mainbase
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
 
-  ewm-service-db:
+  ewm-db:
     image: postgres:14-alpine
-    container_name: ewm-service-db
+    container_name: main-db-container
     ports:
-      - "6542:5433"
+      - "6543:5433"
     environment:
       - POSTGRES_DB=mainbase
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
 
+
+#  ewm-service:
+#    build: ./ewm-main
+#    image: ewm-main
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.50'
+#          memory: 512M
+#        reservations:
+#          cpus: '0.25'
+#          memory: 128M
+#    container_name: ewm-main
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - ewm-db
+#    environment:
+#      - SPRING_DATASOURCE_URL=${MAIN_DATASOURCE_URL}
+#      - SPRING_DATASOURCE_USERNAME=${MAIN_DATASOURCE_USER}
+#      - SPRING_DATASOURCE_PASSWORD=${MAIN_DATASOURCE_PASSWORD}
+#    networks:
+#      - ewm-net
+#
+#  ewm-db:
+#    image: postgres:14-alpine
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.50'
+#          memory: 512M
+#        reservations:
+#          cpus: '0.25'
+#          memory: 128M
+#    container_name: ewm-main-db
+#    ports:
+#      - "6543:5432"
+#    environment:
+#      - POSTGRES_DB=${MAIN_POSTGRES_DB}
+#      - POSTGRES_USER=${MAIN_POSTGRES_USER}
+#      - POSTGRES_PASSWORD=${MAIN_POSTGRES_PASSWORD}
+#    networks:
+#      - ewm-net
+#
+#networks:
+#  ewm-net:
+#    driver: bridge
+
+
+#--------------------------
 #
 #version: '3.8'
 #services:
