@@ -4,7 +4,6 @@ import ru.practicum.ewm.dto.RequestDataDto;
 import ru.practicum.ewm.model.RequestData;
 
 import java.util.List;
-import java.util.Set;
 
 public interface RequestDataService {
 

@@ -8,7 +8,6 @@ import ru.practicum.ewm.model.RequestData;
 import ru.practicum.ewm.service.RequestDataService;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 public class RequestDataController {
