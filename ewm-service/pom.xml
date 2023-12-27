@@ -11,7 +11,7 @@
     </parent>
 
 <!--    <groupId>org.example</groupId>-->
-    <artifactId>main-service</artifactId>
+    <artifactId>ewm-service</artifactId>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
