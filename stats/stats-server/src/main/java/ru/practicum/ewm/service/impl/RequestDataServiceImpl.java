@@ -36,7 +36,7 @@ public class RequestDataServiceImpl implements RequestDataService {
             return RequestDataMapper.toRequestDataDto(repository.findAllRequestDataByPeriod(start, end), repository);
         } else if (!(unique == null || !unique) && (uris == null || uris.length == 0)) {
             return RequestDataMapper.toRequestDataDto(repository.findAllRequestDataByPeriodIpIsUnique(start, end), repository);
-        } else if ((uris != null || uris.length != 0)) {
+        } else {
             if (!(unique == null || !unique)) {
                 // return finAllRequestDataByPeriodAndUrisAndIpIsUnique
             } else {
