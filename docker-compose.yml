@@ -7,7 +7,7 @@ services:
     ports:
       - "9090:9090"
     depends_on:
-      - ewm-service
+      - main-service
       - stats-db
     environment:
       - STATS_SERVER_URL=http://server:9090
