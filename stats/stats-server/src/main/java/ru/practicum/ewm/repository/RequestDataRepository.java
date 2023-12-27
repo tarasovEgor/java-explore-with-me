@@ -1,0 +1,40 @@
+package ru.practicum.ewm.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import ru.practicum.ewm.model.RequestData;
+
+import java.util.List;
+
+public interface RequestDataRepository extends JpaRepository<RequestData, Long> {
+
+    @Query("select rd from RequestData as rd" +
+            " where rd.timestamp >= ?1 and rd.timestamp <= ?2" +
+            " order by rd.timestamp DESC")
+    List<RequestData> findAllRequestDataByPeriod(String start, String end);
+
+    @Query("select rd from RequestData as rd" +
+            " where rd.timestamp >= ?1 and rd.timestamp <= ?2" +
+            " and rd.ip in (select rd.ip from RequestData as rd" +
+            " group by rd.ip having COUNT(rd.ip) = 1)")
+    List<RequestData> findAllRequestDataByPeriodIpIsUnique(String start, String end);
+
+//    @Query("select rd from RequestData as rd" +
+//            " where rd.timestamp >= ?1 and rd.timestamp <= ?2" +
+//            " and rd.ip in (select DISTINCT(rd.ip) from RequestData as rd)" +
+//            " group by rd.id, rd.ip HAVING COUNT(rd.ip) = 1")
+//    List<RequestData> findAllRequestDataByPeriodIpIsUnique(String start, String end);
+
+    @Query("select COUNT(rd.ip) from RequestData as rd" +
+            " where rd.ip = ?1")
+    Long findRequestDataHitCount(String ip);
+
+    /*@Query("select b from Booking as b" +
+            " join b.item as i" +
+            " where i.owner = ?1 and" +
+            " b.start <= ?2 and b.end >= ?2" +
+            " order by b.start DESC")
+    List<Booking> findAllBookingsByItemOwnerAndStatusCurrent(User owner, LocalDateTime now);*/
+
+}
