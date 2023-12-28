@@ -3,7 +3,7 @@ package ru.practicum.ewm.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import ru.practicum.ewm.model.RequestData;
+import ru.practicum.dto.model.RequestData;
 
 import java.util.List;
 

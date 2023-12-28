@@ -1,4 +1,4 @@
-package ru.practicum.ewm;
+package ru.practicum.dto;
 
 import lombok.extern.slf4j.Slf4j;
 

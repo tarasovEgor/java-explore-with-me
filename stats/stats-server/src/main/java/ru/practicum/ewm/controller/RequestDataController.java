@@ -3,14 +3,15 @@ package ru.practicum.ewm.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import ru.practicum.ewm.dto.RequestDataDto;
-import ru.practicum.ewm.model.RequestData;
+import ru.practicum.dto.dto.RequestDataDto;
+import ru.practicum.dto.model.RequestData;
 import ru.practicum.ewm.service.RequestDataService;
 
 import java.util.List;
 
 @RestController
 public class RequestDataController {
+
 
     private final RequestDataService requestDataService;
 

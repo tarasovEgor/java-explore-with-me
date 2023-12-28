@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.ewm.model.RequestData;
+
+import ru.practicum.dto.model.RequestData;
+
 
 import java.util.Map;
 
@@ -15,7 +17,7 @@ import java.util.Map;
 public class HttpClient extends BaseClient {
 
     @Autowired
-    public HttpClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder builder) {
+    public HttpClient(@Value("http://localhost:9090") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
                         .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
