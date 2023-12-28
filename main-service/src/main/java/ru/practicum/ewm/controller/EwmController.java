@@ -1,10 +1,9 @@
 package ru.practicum.ewm.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.ewm.client.HttpClient;
+import ru.practicum.client.HttpClient;
 
 @RestController
 public class EwmController {
@@ -12,7 +11,7 @@ public class EwmController {
     @Autowired
     HttpClient httpClient;
 
-    String[] args = {"pizda", "zopa", "ya zaebalsa"};
+    String[] args = {"args1", "args2", "args3"};
 
     @GetMapping("/event")
     public void getEvent() {

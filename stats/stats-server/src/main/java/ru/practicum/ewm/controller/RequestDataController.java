@@ -3,8 +3,8 @@ package ru.practicum.ewm.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import ru.practicum.dto.dto.RequestDataDto;
-import ru.practicum.dto.model.RequestData;
+import ru.practicum.dto.RequestDataDto;
+import ru.practicum.model.RequestData;
 import ru.practicum.ewm.service.RequestDataService;
 
 import java.util.List;

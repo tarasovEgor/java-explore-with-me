@@ -1,4 +1,4 @@
-package ru.practicum.ewm.client;
+package ru.practicum.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,7 +8,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
-import ru.practicum.dto.model.RequestData;
+import ru.practicum.model.RequestData;
 
 
 import java.util.Map;

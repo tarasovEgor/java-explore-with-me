@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ru.practicum.dto.dto.RequestDataDto;
-import ru.practicum.dto.model.RequestData;
+import ru.practicum.dto.RequestDataDto;
+import ru.practicum.model.RequestData;
 import ru.practicum.ewm.mapper.RequestDataMapper;
 
 import ru.practicum.ewm.repository.RequestDataRepository;

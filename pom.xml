@@ -12,8 +12,8 @@
 
 	<name>Explore With Me</name>
 	<modules>
+		<module>main-service</module>
 		<module>stats</module>
-		<module>ewm-service</module>
 	</modules>
 
 	<groupId>ru.practicum</groupId>
@@ -198,6 +198,18 @@
 						<systemPropertyVariables>
 							<spring.profiles.active>test</spring.profiles.active>
 						</systemPropertyVariables>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<configuration>
+						<excludes>
+							<exclude>
+								<groupId>org.projectlombok</groupId>
+								<artifactId>lombok</artifactId>
+							</exclude>
+						</excludes>
 					</configuration>
 				</plugin>
 				<plugin>
