@@ -18,6 +18,7 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>ru.practicum</groupId>
             <artifactId>stats-dto</artifactId>
@@ -25,5 +26,4 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
-
 </project>
