@@ -12,5 +12,8 @@ CREATE TABLE IF NOT EXISTS request_data(
     app VARCHAR(255) NOT NULL,
     uri VARCHAR(255) NOT NULL,
     ip VARCHAR(255) NOT NULL,
-    requested_on TIMESTAMP WITHOUT TIME ZONE
+    requested_on VARCHAR(255)
 );
+
+
+--    requested_on TIMESTAMP WITHOUT TIME ZONE
