@@ -17,7 +17,7 @@ import java.util.Map;
 public class HttpClient extends BaseClient {
 
     @Autowired
-    public HttpClient(@Value("http://localhost:9090") String serverUrl, RestTemplateBuilder builder) {
+    public HttpClient(@Value("http://stats-server:9090") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
                         .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))

@@ -4,7 +4,7 @@ services:
     image: postgres:14-alpine
     container_name: stats-db-container
     ports:
-      - "6541:5431"
+      - "6541:5432"
     environment:
       - POSTGRES_DB=statsbase
       - POSTGRES_USER=admin
@@ -29,7 +29,7 @@ services:
     depends_on:
       - stats-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql:stats-db:5431/stats-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://172.19.0.2:5432/statsbase
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=root
 
@@ -42,7 +42,7 @@ services:
     depends_on:
       - ewm-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql:ewm-db:5432/ewm-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://172.19.0.2:5432/ewmbase
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=root
 
