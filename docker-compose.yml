@@ -29,7 +29,7 @@ services:
     depends_on:
       - stats-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://172.19.0.2:5432/statsbase
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/statsbase
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=root
 
@@ -42,7 +42,7 @@ services:
     depends_on:
       - ewm-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://172.19.0.2:5432/ewmbase
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewmbase
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=root
 
