@@ -1,6 +1,7 @@
 package ru.practicum.ewm.mapper;
 
 import ru.practicum.dto.RequestDataDto;
+import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.model.RequestData;
 import ru.practicum.ewm.repository.RequestDataRepository;
 
@@ -37,20 +38,29 @@ public class RequestDataMapper {
 //        )
 //    }
 
-    public static List<RequestDataDto> toRequestDataDto(List<RequestData> requestDataList, RequestDataRepository repo) {
-        List<RequestDataDto> dtos = new ArrayList<>();
+//    public static List<RequestDataDto> toRequestDataDto(List<RequestData> requestDataList, RequestDataRepository repo) {
+//        List<RequestDataDto> dtos = new ArrayList<>();
+//        for (RequestData rd : requestDataList) {
+//            dtos.add(toRequestDataDto(rd, repo));
+//        }
+//        return dtos;
+//    }
+
+    public static ViewStatsDto toViewStatsDto(RequestData requestData, RequestDataRepository repo) {
+        return new ViewStatsDto(
+                requestData.getApp(),
+                requestData.getUri(),
+                repo.findRequestDataHitCount(requestData.getIp())
+        );
+    }
+
+    public static List<ViewStatsDto> toViewStatsDto(List<RequestData> requestDataList, RequestDataRepository repo) {
+        List<ViewStatsDto> dtos = new ArrayList<>();
         for (RequestData rd : requestDataList) {
-            dtos.add(toRequestDataDto(rd, repo));
+            dtos.add(toViewStatsDto(rd, repo));
         }
         return dtos;
     }
 
 
-    /*public static List<ItemDto> toItemDto(List<Item> items) {
-        List<ItemDto> dtos = new ArrayList<>();
-        for (Item item : items) {
-            dtos.add(toItemDto(item));
-        }
-        return dtos;
-    }*/
 }

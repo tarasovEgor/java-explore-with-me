@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ru.practicum.dto.RequestDataDto;
+import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.model.RequestData;
 import ru.practicum.ewm.mapper.RequestDataMapper;
 
@@ -32,19 +33,23 @@ public class RequestDataServiceImpl implements RequestDataService {
     }
 
     @Override
-    public List<RequestDataDto> getAllRequestDataByPeriod(String start, String end, String[] uris, Boolean unique) {
+    public List<ViewStatsDto> getAllRequestDataByPeriod(String start, String end, String[] uris, Boolean unique) {
         if ((uris == null || uris.length == 0) && (unique == null || !unique)) {
-            return RequestDataMapper.toRequestDataDto(repository.findAllRequestDataByPeriod(start, end), repository);
-        } else if (!(unique == null || !unique) && (uris == null || uris.length == 0)) {
-            return RequestDataMapper.toRequestDataDto(repository.findAllRequestDataByPeriodIpIsUnique(start, end), repository);
+            return RequestDataMapper.toViewStatsDto(repository.findAllByPeriod(start, end), repository);
+        } else if (unique && (uris == null || uris.length == 0)) {
+            return repository.findAllByPeriodIpIsUnique(start, end);
         } else {
-            if (!(unique == null || !unique)) {
+            if (unique) {
+                return repository.findAllByPeriodAndUrisAndIpIsUnique(uris, start, end);
                 // return finAllRequestDataByPeriodAndUrisAndIpIsUnique
             } else {
+                return repository.findAllByPeriodAndUris(uris, start, end);
                 // return finAllRequestDataByPeriodAndUris
             }
         }
-        return RequestDataMapper.toRequestDataDto(repository.findAllRequestDataByPeriod(start, end), repository);
+
+      //  return RequestDataMapper.toRequestDataDto(repository.findAllRequestDataByPeriod(start, end), repository);
+      //  return RequestDataMapper.toViewStatsDto(repository.findAllRequestDataByPeriod(start, end), repository);
     }
 
 

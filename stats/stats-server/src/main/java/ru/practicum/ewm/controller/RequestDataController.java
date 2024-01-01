@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import ru.practicum.dto.RequestDataDto;
+import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.model.RequestData;
 import ru.practicum.ewm.service.RequestDataService;
 
@@ -27,7 +28,7 @@ public class RequestDataController {
     }
 
     @GetMapping("/stats")
-    public List<RequestDataDto> getAllRequestDataByPeriod(
+    public List<ViewStatsDto> getAllRequestDataByPeriod(
             @RequestParam String start,
             @RequestParam String end,
             @RequestParam(required = false) String[] uris,
