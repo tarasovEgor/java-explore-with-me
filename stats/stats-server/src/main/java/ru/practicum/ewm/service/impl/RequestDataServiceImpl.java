@@ -47,11 +47,6 @@ public class RequestDataServiceImpl implements RequestDataService {
                 // return finAllRequestDataByPeriodAndUris
             }
         }
-
-      //  return RequestDataMapper.toRequestDataDto(repository.findAllRequestDataByPeriod(start, end), repository);
-      //  return RequestDataMapper.toViewStatsDto(repository.findAllRequestDataByPeriod(start, end), repository);
-        
-        //return RequestDataMapper.toViewStatsDto(repository.findAllByPeriod(start, end), repository);
     }
 
 
@@ -64,3 +59,8 @@ public class RequestDataServiceImpl implements RequestDataService {
 
 
 }
+
+
+// return RequestDataMapper.toRequestDataDto(repository.findAllRequestDataByPeriod(start, end), repository);
+//  return RequestDataMapper.toViewStatsDto(repository.findAllRequestDataByPeriod(start, end), repository);
+//  return RequestDataMapper.toViewStatsDto(repository.findAllByPeriod(start, end), repository);
