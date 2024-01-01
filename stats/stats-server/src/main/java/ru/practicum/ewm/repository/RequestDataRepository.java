@@ -37,7 +37,7 @@ public interface RequestDataRepository extends JpaRepository<RequestData, Long> 
             " order by hits DESC")
     List<ViewStatsDto> findAllByPeriodAndUrisAndIpIsUnique(String[] uris, String start, String end);
 
-    @Query("select new ru.practicum.dto.ViewStatsDto (rd.app, rd.uris, COUNT(rd.ip) as hits)" +
+    @Query("select new ru.practicum.dto.ViewStatsDto (rd.app, rd.uri, COUNT(rd.ip) as hits)" +
             " from RequestData rd" +
             " where rd.uri in (?1)" +
             " and rd.timestamp >= ?2 and rd.timestamp <= ?3" +
