@@ -38,7 +38,10 @@ public class RequestDataServiceImpl implements RequestDataService {
             return RequestDataMapper.toViewStatsDto(repository.findAllByPeriod(start, end), repository);
         } else if (unique && (uris == null || uris.length == 0)) {
             return repository.findAllByPeriodIpIsUnique(start, end);
-        } else {
+        } else if (!unique && (uris == null || uris.length == 0)) {
+
+        }
+        else {
             if (unique) {
                 return repository.findAllByPeriodAndUrisAndIpIsUnique(uris, start, end);
                 // return finAllRequestDataByPeriodAndUrisAndIpIsUnique
@@ -50,6 +53,7 @@ public class RequestDataServiceImpl implements RequestDataService {
 
       //  return RequestDataMapper.toRequestDataDto(repository.findAllRequestDataByPeriod(start, end), repository);
       //  return RequestDataMapper.toViewStatsDto(repository.findAllRequestDataByPeriod(start, end), repository);
+        return RequestDataMapper.toViewStatsDto(repository.findAllByPeriod(start, end), repository);
     }
 
 
