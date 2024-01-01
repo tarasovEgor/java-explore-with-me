@@ -10,7 +10,6 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import ru.practicum.model.RequestData;
 
-
 import java.util.Map;
 
 @Service
@@ -39,36 +38,5 @@ public class HttpClient extends BaseClient {
         );
         return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
     }
-    /*
 
-
-    public ResponseEntity<Object> getAllBookingsByItemOwner(int from, int size, String status, long ownerId) {
-        BookingValidation.isBookingStateValid(status);
-        Map<String, Object> parameters = Map.of(
-                "state", status,
-                "from", from,
-                "size", size
-        );
-        return get("/owner?state={state}&from={from}&size={size}", ownerId, parameters);
-    }
-
-    public ResponseEntity<Object> getAllBookingsByBooker(int from, int size, String status, long bookerId) {
-        BookingValidation.isBookingStateValid(status);
-        Map<String, Object> parameters = Map.of(
-                "state", status,
-                "from", from,
-                "size", size
-        );
-        return get("/?state={state}&from={from}&size={size}", bookerId, parameters);
-    }
-
-    public ResponseEntity<Object> saveBooking(long bookerId, BookingDto bookingDto) {
-        if (bookingDto.getStart() == null || bookingDto.getEnd() == null) {
-            throw new InvalidBookingDateException("Invalid booking date.");
-        }
-        BookingValidation.isBookingDateValid(bookingDto.getStart(), bookingDto.getEnd());
-        return post("", bookerId, bookingDto);
-    }
-
-*/
 }

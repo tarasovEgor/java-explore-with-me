@@ -41,26 +41,10 @@ public class RequestDataServiceImpl implements RequestDataService {
         } else {
             if (unique) {
                 return repository.findAllByPeriodAndUrisAndIpIsUnique(uris, start, end);
-                // return finAllRequestDataByPeriodAndUrisAndIpIsUnique
             } else {
                 return repository.findAllByPeriodAndUris(uris, start, end);
-                // return finAllRequestDataByPeriodAndUris
             }
         }
     }
 
-
-//    @Override
-//    public RequestDataDto saveRequestData(RequestDataDto requestDataDto) {
-//        RequestData requestData = RequestDataMapper.toRequestData(requestDataDto);
-//        log.info("{}", requestData);
-//        return RequestDataMapper.toRequestDataDto(repository.save(requestData));
-//    }
-
-
 }
-
-
-// return RequestDataMapper.toRequestDataDto(repository.findAllRequestDataByPeriod(start, end), repository);
-//  return RequestDataMapper.toViewStatsDto(repository.findAllRequestDataByPeriod(start, end), repository);
-//  return RequestDataMapper.toViewStatsDto(repository.findAllByPeriod(start, end), repository);

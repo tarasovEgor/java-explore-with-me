@@ -14,6 +14,3 @@ CREATE TABLE IF NOT EXISTS request_data(
     ip VARCHAR(255) NOT NULL,
     requested_on VARCHAR(255)
 );
-
-
---    requested_on TIMESTAMP WITHOUT TIME ZONE

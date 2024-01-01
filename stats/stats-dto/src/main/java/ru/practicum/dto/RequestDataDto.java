@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-//@AllArgsConstructor
 public class RequestDataDto {
 
     private Long id;
@@ -28,13 +27,5 @@ public class RequestDataDto {
         this.timestamp = timestamp;
         this.hits = hits;
     }
-
-//    public RequestDataDto(String app,
-//                          String uri,
-//                          Long hits) {
-//        this.app = app;
-//        this.uri = uri;
-//        this.hits = hits;
-//    }
 
 }

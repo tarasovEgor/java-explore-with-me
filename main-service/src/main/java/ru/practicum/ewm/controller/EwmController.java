@@ -3,6 +3,7 @@ package ru.practicum.ewm.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import ru.practicum.client.HttpClient;
 
 @RestController
@@ -11,7 +12,7 @@ public class EwmController {
     @Autowired
     HttpClient httpClient;
 
-    String[] args = {"args1", "args2", "args3"};
+    String[] args = {"arg1", "arg2", "arg3"};
 
     @GetMapping("/event")
     public void getEvent() {

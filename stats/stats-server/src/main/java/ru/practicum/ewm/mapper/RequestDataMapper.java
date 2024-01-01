@@ -30,22 +30,6 @@ public class RequestDataMapper {
         );
     }
 
-//    public static RequestDataDto toRequestDataDtoShortened(RequestData requestData) {
-//        return new RequestDataDto(
-//                requestData.getApp(),
-//                requestData.getUri(),
-//                requestData.get
-//        )
-//    }
-
-//    public static List<RequestDataDto> toRequestDataDto(List<RequestData> requestDataList, RequestDataRepository repo) {
-//        List<RequestDataDto> dtos = new ArrayList<>();
-//        for (RequestData rd : requestDataList) {
-//            dtos.add(toRequestDataDto(rd, repo));
-//        }
-//        return dtos;
-//    }
-
     public static ViewStatsDto toViewStatsDto(RequestData requestData, RequestDataRepository repo) {
         return new ViewStatsDto(
                 requestData.getApp(),
@@ -61,6 +45,5 @@ public class RequestDataMapper {
         }
         return dtos;
     }
-
 
 }
