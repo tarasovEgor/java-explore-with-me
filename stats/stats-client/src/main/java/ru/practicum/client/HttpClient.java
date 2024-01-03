@@ -8,7 +8,8 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
-import ru.practicum.server.model.RequestData;
+
+//import ru.practicum.server.model.RequestData;
 
 import java.util.Map;
 
@@ -27,7 +28,7 @@ public class HttpClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> saveRequestData(RequestData requestData) {
+    public ResponseEntity<Object> saveRequestData(Object requestData) {
         return post("/hit", requestData);
     }
 
