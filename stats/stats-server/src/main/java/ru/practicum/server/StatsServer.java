@@ -1,4 +1,4 @@
-package ru.practicum.ewm;
+package ru.practicum.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,12 +1,13 @@
-package ru.practicum.ewm.controller;
+package ru.practicum.server.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import ru.practicum.dto.RequestDataDto;
 import ru.practicum.dto.ViewStatsDto;
-import ru.practicum.model.RequestData;
-import ru.practicum.ewm.service.RequestDataService;
+
+import ru.practicum.server.model.RequestData;
+import ru.practicum.server.service.RequestDataService;
 
 import java.util.List;
 

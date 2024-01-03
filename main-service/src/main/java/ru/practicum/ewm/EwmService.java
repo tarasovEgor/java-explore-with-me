@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableJpaRepositories("ru.practicum.*")
+@EnableJpaRepositories("ru.practicum.ewm")
 @ComponentScan(basePackages = { "ru.practicum.*" })
 @EntityScan("ru.practicum.*")
 public class EwmService {

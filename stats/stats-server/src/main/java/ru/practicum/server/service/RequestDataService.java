@@ -1,8 +1,8 @@
-package ru.practicum.ewm.service;
+package ru.practicum.server.service;
 
 import ru.practicum.dto.RequestDataDto;
 import ru.practicum.dto.ViewStatsDto;
-import ru.practicum.model.RequestData;
+import ru.practicum.server.model.RequestData;
 
 import java.util.List;
 

@@ -1,19 +1,30 @@
-package ru.practicum.ewm.repository;
+package ru.practicum.server.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import ru.practicum.dto.ViewStatsDto;
-import ru.practicum.model.RequestData;
+import ru.practicum.server.model.RequestData;
 
 import java.util.List;
 
 public interface RequestDataRepository extends JpaRepository<RequestData, Long> {
 
-    @Query("select rd from RequestData as rd" +
+//    @Query("select rd from RequestData as rd" +
+//            " where rd.timestamp >= ?1 and rd.timestamp <= ?2" +
+//            " order by rd.timestamp DESC")
+//    List<RequestData> findAllByPeriod(String start, String end);
+
+//    @Query("select new ru.practicum.dto.RequestDataDto (rd.id, rd.app, rd.uri," +
+//            " rd.ip, rd.timestamp, COUNT(rd.ip) as hits)" +
+//            " where ")
+
+    @Query("select new ru.practicum.dto.ViewStatsDto (rd.app, rd.uri, COUNT(rd.ip) as hits)" +
+            " from RequestData rd" +
             " where rd.timestamp >= ?1 and rd.timestamp <= ?2" +
+            " group by rd.id, rd.app, rd.uri, rd.ip, rd.timestamp" +
             " order by rd.timestamp DESC")
-    List<RequestData> findAllByPeriod(String start, String end);
+    List<ViewStatsDto> findAllByPeriod(String start, String end);
 
     @Query("select new ru.practicum.dto.ViewStatsDto (rd.app, rd.uri, COUNT(rd.ip) as hits)" +
             " from RequestData rd" +
@@ -38,8 +49,8 @@ public interface RequestDataRepository extends JpaRepository<RequestData, Long> 
             " order by hits DESC")
     List<ViewStatsDto> findAllByPeriodAndUris(String[] uris, String start, String end);
 
-    @Query("select COUNT(rd.ip) from RequestData as rd" +
-            " where rd.ip = ?1")
-    Long findRequestDataHitCount(String ip);
+//    @Query("select COUNT(rd.ip) from RequestData as rd" +
+//            " where rd.ip = ?1")
+//    Long findRequestDataHitCount(String ip);
 
 }

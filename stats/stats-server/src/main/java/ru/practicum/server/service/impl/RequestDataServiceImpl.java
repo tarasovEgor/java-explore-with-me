@@ -1,4 +1,4 @@
-package ru.practicum.ewm.service.impl;
+package ru.practicum.server.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 
 import ru.practicum.dto.RequestDataDto;
 import ru.practicum.dto.ViewStatsDto;
-import ru.practicum.model.RequestData;
-import ru.practicum.ewm.mapper.RequestDataMapper;
+import ru.practicum.server.model.RequestData;
+import ru.practicum.server.mapper.RequestDataMapper;
 
-import ru.practicum.ewm.repository.RequestDataRepository;
-import ru.practicum.ewm.service.RequestDataService;
+import ru.practicum.server.repository.RequestDataRepository;
+import ru.practicum.server.service.RequestDataService;
 
 import java.util.List;
 
@@ -35,7 +35,8 @@ public class RequestDataServiceImpl implements RequestDataService {
     @Override
     public List<ViewStatsDto> getAllRequestDataByPeriod(String start, String end, String[] uris, Boolean unique) {
         if ((uris == null || uris.length == 0) && (unique == null || !unique)) {
-            return RequestDataMapper.toViewStatsDto(repository.findAllByPeriod(start, end), repository);
+            //return RequestDataMapper.toViewStatsDto(repository.findAllByPeriod(start, end), repository);
+            return repository.findAllByPeriod(start, end);
         } else if (unique && (uris == null || uris.length == 0)) {
             return repository.findAllByPeriodIpIsUnique(start, end);
         } else {

@@ -12,20 +12,19 @@ public class RequestDataDto {
     private String uri;
     private String ip;
     private String timestamp;
-    private Long hits = 0L;
+   // private Long hits = 0L;
 
     public RequestDataDto(Long id,
                           String app,
                           String uri,
                           String ip,
-                          String timestamp,
-                          Long hits) {
+                          String timestamp) {
         this.id = id;
         this.app = app;
         this.uri = uri;
         this.ip = ip;
         this.timestamp = timestamp;
-        this.hits = hits;
+  //      this.hits = hits;
     }
 
 }
