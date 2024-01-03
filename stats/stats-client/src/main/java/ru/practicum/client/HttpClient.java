@@ -8,14 +8,9 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
-
-//import ru.practicum.server.model.RequestData;
-
 import java.util.Map;
 
 @Service
-//@EntityScan("ru.practicum.server.*")
-//@ComponentScan(basePackages = { "ru.practicum.server.*" })
 public class HttpClient extends BaseClient {
 
     @Autowired

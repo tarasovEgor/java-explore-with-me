@@ -10,6 +10,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import java.util.Map;
 
 public class BaseClient {
+
     protected final RestTemplate restTemplate;
 
     public BaseClient(RestTemplate restTemplate) {
@@ -55,4 +56,5 @@ public class BaseClient {
 
         return responseBuilder.build();
     }
+
 }

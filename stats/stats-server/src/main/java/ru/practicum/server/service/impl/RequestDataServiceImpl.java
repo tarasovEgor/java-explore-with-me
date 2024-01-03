@@ -35,7 +35,6 @@ public class RequestDataServiceImpl implements RequestDataService {
     @Override
     public List<ViewStatsDto> getAllRequestDataByPeriod(String start, String end, String[] uris, Boolean unique) {
         if ((uris == null || uris.length == 0) && (unique == null || !unique)) {
-            //return RequestDataMapper.toViewStatsDto(repository.findAllByPeriod(start, end), repository);
             return repository.findAllByPeriod(start, end);
         } else if (unique && (uris == null || uris.length == 0)) {
             return repository.findAllByPeriodIpIsUnique(start, end);

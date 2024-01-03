@@ -23,7 +23,6 @@ public class RequestDataController {
 
     @PostMapping("/hit")
     public RequestDataDto saveRequestData(@RequestBody RequestData requestData) {
-
         return requestDataService.saveRequestData(requestData);
     }
 
