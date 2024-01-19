@@ -521,6 +521,16 @@ public class EventServiceImpl implements EventService {
         List<Event> eventsByCat;
         List<EventWithLDT> eventsByCatLTD;
 
+        if (predicate == null) {
+
+            List<Event> events = eventRepository.findAll();
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(events);
+            
+        }
+
         if (categories.length != 0) {
 
             categoryIds = Arrays
