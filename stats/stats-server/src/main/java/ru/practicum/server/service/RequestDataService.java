@@ -8,8 +8,12 @@ import java.util.List;
 
 public interface RequestDataService {
 
-    RequestDataDto saveRequestData(RequestData requestDataDto);
+   // RequestDataDto saveRequestData(RequestData requestDataDto);
 
     List<ViewStatsDto> getAllRequestDataByPeriod(String start, String end, String[] uris, Boolean unique);
+
+    // ------------------   MODEL CHANGED TO DTO IN METHOD PARAMS
+
+    RequestData saveRequestData(RequestDataDto requestDataDto);
 
 }

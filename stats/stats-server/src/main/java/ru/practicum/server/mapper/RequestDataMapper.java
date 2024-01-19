@@ -8,11 +8,20 @@ public class RequestDataMapper {
 
     public static RequestDataDto toRequestDataDto(RequestData requestData, RequestDataRepository repo) {
         return new RequestDataDto(
-                requestData.getId(),
+                //requestData.getId(),
                 requestData.getApp(),
                 requestData.getUri(),
                 requestData.getIp(),
                 requestData.getTimestamp()
+        );
+    }
+
+    public static RequestData toRequestData(RequestDataDto requestDataDto) {
+        return new RequestData(
+                requestDataDto.getApp(),
+                requestDataDto.getUri(),
+                requestDataDto.getIp(),
+                requestDataDto.getTimestamp()
         );
     }
 

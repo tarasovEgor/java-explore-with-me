@@ -21,9 +21,14 @@ public class RequestDataController {
         this.requestDataService = requestDataService;
     }
 
+//    @PostMapping("/hit")
+//    public RequestDataDto saveRequestData(@RequestBody RequestData requestData) {
+//        return requestDataService.saveRequestData(requestData);
+//    }
+
     @PostMapping("/hit")
-    public RequestDataDto saveRequestData(@RequestBody RequestData requestData) {
-        return requestDataService.saveRequestData(requestData);
+    public RequestData saveRequestData(@RequestBody RequestDataDto requestDataDto) {
+        return requestDataService.saveRequestData(requestDataDto);
     }
 
     @GetMapping("/stats")

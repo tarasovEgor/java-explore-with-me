@@ -26,11 +26,11 @@ public class RequestDataServiceImpl implements RequestDataService {
         this.repository = repository;
     }
 
-    @Override
-    public RequestDataDto saveRequestData(RequestData requestData) {
-        log.info("Saving the following data: {}", requestData);
-        return RequestDataMapper.toRequestDataDto(repository.save(requestData), repository);
-    }
+//    @Override
+//    public RequestDataDto saveRequestData(RequestData requestData) {
+//        log.info("Saving the following data: {}", requestData);
+//        return RequestDataMapper.toRequestDataDto(repository.save(requestData), repository);
+//    }
 
     @Override
     public List<ViewStatsDto> getAllRequestDataByPeriod(String start, String end, String[] uris, Boolean unique) {
@@ -45,6 +45,13 @@ public class RequestDataServiceImpl implements RequestDataService {
                 return repository.findAllByPeriodAndUris(uris, start, end);
             }
         }
+    }
+
+    @Override
+    public RequestData saveRequestData(RequestDataDto requestDataDto) {
+        log.info("Saving the following data: {}", requestDataDto);
+        RequestData requestData = RequestDataMapper.toRequestData(requestDataDto);
+        return repository.save(requestData);
     }
 
 }
