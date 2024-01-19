@@ -1,13 +1,13 @@
 package ru.practicum.ewm.event.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ru.practicum.ewm.event.dto.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 import ru.practicum.ewm.request.mapper.ParticipationRequestMapper;
 import ru.practicum.ewm.request.model.ParticipationRequest;
 import ru.practicum.ewm.request.model.Status;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class EventRequestMapper {
 

@@ -1,17 +1,16 @@
 package ru.practicum.ewm.event.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.format.annotation.DateTimeFormat;
+
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.compilation.model.Compilation;
 import ru.practicum.ewm.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Data
 @Entity

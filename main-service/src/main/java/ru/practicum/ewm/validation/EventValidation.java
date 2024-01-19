@@ -4,15 +4,10 @@ import ru.practicum.ewm.event.dto.UpdateEventAdminDto;
 import ru.practicum.ewm.event.dto.UpdateEventUserDto;
 import ru.practicum.ewm.event.model.Event;
 
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 
 import static java.time.LocalDateTime.*;
-import static java.util.Calendar.HOUR;
 
 public class EventValidation {
 

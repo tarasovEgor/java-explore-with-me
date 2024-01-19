@@ -1,6 +1,7 @@
 package ru.practicum.ewm.event.service;
 
 import org.springframework.http.ResponseEntity;
+
 import ru.practicum.ewm.event.dto.EventDto;
 import ru.practicum.ewm.event.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.event.dto.UpdateEventAdminDto;
@@ -37,7 +38,7 @@ public interface EventService {
 
     // ---------------------   ADMIN   --------------------- //
 
-    ResponseEntity<Object> getAllEventsAdmin(long[] users, String[] states, long[] categories,  // GET: /admin/events
+    ResponseEntity<Object> getAllEventsAdmin(HttpServletRequest request, long[] users, String[] states, long[] categories,  // GET: /admin/events
                                              String rangeStart, String rangeEnd,
                                              int from, int size);
 

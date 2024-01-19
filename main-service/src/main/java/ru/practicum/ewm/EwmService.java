@@ -4,13 +4,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
-import ru.practicum.ewm.event.model.Event;
-import ru.practicum.ewm.event.model.Location;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import static java.lang.String.format;
 
 @SpringBootApplication
 //@EnableJpaRepositories("ru.practicum.ewm")

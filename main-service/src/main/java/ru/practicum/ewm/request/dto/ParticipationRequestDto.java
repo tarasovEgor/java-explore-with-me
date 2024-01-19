@@ -3,6 +3,7 @@ package ru.practicum.ewm.request.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import ru.practicum.ewm.request.model.Status;
 
 import java.time.LocalDateTime;

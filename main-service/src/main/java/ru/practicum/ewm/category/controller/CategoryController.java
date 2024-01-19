@@ -10,7 +10,6 @@ import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.service.CategoryService;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 public class CategoryController {

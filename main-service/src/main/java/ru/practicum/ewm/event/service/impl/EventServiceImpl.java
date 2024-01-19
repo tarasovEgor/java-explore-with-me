@@ -1,6 +1,7 @@
 package ru.practicum.ewm.event.service.impl;
 
 import com.querydsl.core.types.Predicate;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +37,13 @@ import ru.practicum.ewm.validation.EventValidation;
 //import ru.practicum.server.model.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.querydsl.core.types.ExpressionUtils.in;
-import static java.lang.String.format;
 import static java.time.LocalDateTime.*;
 
 @Slf4j
@@ -1185,7 +1186,8 @@ queryFactory.selectFrom(customer)
     // ---------------------   ADMIN   --------------------- //
 
     @Override
-    public ResponseEntity<Object> getAllEventsAdmin(long[] users, String[] states, long[] categories,
+    public ResponseEntity<Object> getAllEventsAdmin(HttpServletRequest request, long[] users,
+                                                    String[] statesStr, long[] categories,
                                                     String rangeStart, String rangeEnd,
                                                     int from, int size) {
 
@@ -1194,8 +1196,211 @@ queryFactory.selectFrom(customer)
         - В случае, если по заданным фильтрам не найдено ни одного события, возвращает пустой список
         */
 
+        Page<Event> result;
 
-        return null;
+        List<Event> events;
+
+        Predicate predicate = QPredicates.builder()
+                .add(rangeStart, QEvent.event.eventDate::gt)
+                .add(rangeEnd, QEvent.event.eventDate::lt)
+                .buildAnd();
+
+        // requestDataDto....
+
+        RequestDataDto requestDataDto = new RequestDataDto(
+                "main-service",
+                request.getRemoteAddr(),
+                request.getRequestURI(),
+                String.valueOf(LocalDateTime.now())
+        );
+
+        Optional<List<Long>> userIds = Optional.of(Arrays.stream(users)
+                .boxed().collect(Collectors.toList()));
+
+        Optional<List<Long>> categoryIds = Optional.of(Arrays.stream(categories)
+                .boxed().collect(Collectors.toList()));
+
+        Optional<List<String>> states = Optional.of(Arrays.stream(statesStr)
+                .collect(Collectors.toList()));
+
+        if (!userIds.get().isEmpty() && !categoryIds.get().isEmpty() && !states.get().isEmpty()) {
+
+            result = eventRepository.findAll(
+                    predicate,
+                    PageRequest.of(from, size)
+            );
+
+            events = result.getContent().stream()
+                    .distinct()
+                    .filter(x -> userIds.get().contains(
+                                    x.getInitiator().getId()
+                            )
+                    )
+                    .filter(x -> categoryIds.get().contains(
+                                    x.getCategory().getId()
+                            )
+                    )
+                    .filter(x -> states.get().contains(
+                                     String.valueOf(x.getState())
+                            )
+                    )
+                    .collect(Collectors.toList());
+
+            //  httpClient.saveRequestData(requestDataDto);
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(events);
+
+        } else if (!userIds.get().isEmpty() && !states.get().isEmpty()) {
+
+            result = eventRepository.findAll(
+                    predicate,
+                    PageRequest.of(from, size)
+            );
+
+            events = result.getContent().stream()
+                    .distinct()
+                    .filter(x -> userIds.get().contains(
+                                    x.getInitiator().getId()
+                            )
+                    )
+                    .filter(x -> states.get().contains(
+                                     String.valueOf(x.getState())
+                            )
+                    )
+                    .collect(Collectors.toList());
+
+            //  httpClient.saveRequestData(requestDataDto);
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(events);
+
+        } else if (!userIds.get().isEmpty() && !categoryIds.get().isEmpty()) {
+
+            result = eventRepository.findAll(
+                    predicate,
+                    PageRequest.of(from, size)
+            );
+
+            events = result.getContent().stream()
+                    .distinct()
+                    .filter(x -> userIds.get().contains(
+                                    x.getInitiator().getId()
+                            )
+                    )
+                    .filter(x -> categoryIds.get().contains(
+                                    x.getCategory().getId()
+                            )
+                    )
+                    .collect(Collectors.toList());
+
+            //  httpClient.saveRequestData(requestDataDto);
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(events);
+
+        } else if (!states.get().isEmpty() && !categoryIds.get().isEmpty()) {
+
+            result = eventRepository.findAll(
+                    predicate,
+                    PageRequest.of(from, size)
+            );
+
+            events = result.getContent().stream()
+                    .distinct()
+                    .filter(x -> states.get().contains(
+                                    String.valueOf(x.getState())
+                            )
+                    )
+                    .filter(x -> categoryIds.get().contains(
+                                    x.getCategory().getId()
+                            )
+                    )
+                    .collect(Collectors.toList());
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(events);
+
+        } else if (!userIds.get().isEmpty()) {
+
+            result = eventRepository.findAll(
+                    predicate,
+                    PageRequest.of(from, size)
+            );
+
+            events = result.getContent().stream()
+                    .distinct()
+                    .filter(x -> userIds.get().contains(
+                                    x.getInitiator().getId()
+                            )
+                    )
+                    .collect(Collectors.toList());
+
+            //  httpClient.saveRequestData(requestDataDto);
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(events);
+
+        } else if (!categoryIds.get().isEmpty()) {
+
+            result = eventRepository.findAll(
+                    predicate,
+                    PageRequest.of(from, size)
+            );
+
+            events = result.getContent().stream()
+                    .distinct()
+                    .filter(x -> categoryIds.get().contains(
+                                    x.getCategory().getId()
+                            )
+                    )
+                    .collect(Collectors.toList());
+
+            //  httpClient.saveRequestData(requestDataDto);
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(events);
+
+        } else if (!states.get().isEmpty()) {
+
+            result = eventRepository.findAll(
+                    predicate,
+                    PageRequest.of(from, size)
+            );
+
+            events = result.getContent().stream()
+                    .distinct()
+                    .filter(x -> states.get().contains(
+                                    String.valueOf(x.getState())
+                            )
+                    )
+                    .collect(Collectors.toList());
+
+            //  httpClient.saveRequestData(requestDataDto);
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(events);
+
+        } else {
+
+            result = eventRepository.findAll(
+                    predicate,
+                    PageRequest.of(from, size)
+            );
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(result.getContent());
+
+        }
+
     }
 
     @Override

@@ -88,11 +88,30 @@ public class EventController {
 
 
     // ------------------  ADMIN  ------------------
+
+    @GetMapping("/admin/events")
+    public ResponseEntity<Object> getAllEventsAdmin(HttpServletRequest request,
+                                                    @RequestParam(required = false) long[] users,
+                                                    @RequestParam(required = false) String[] states,
+                                                    @RequestParam(required = false) long[] categories,
+                                                    @RequestParam(required = false) String rangeStart,
+                                                    @RequestParam(required = false) String rangeEnd,
+                                                    @RequestParam(required = false, defaultValue = "0") int from,
+                                                    @RequestParam(required = false, defaultValue = "10") int size) {
+        return eventService.getAllEventsAdmin(request, users, states, categories, rangeStart, rangeEnd, from, size);
+    }
+
+    /*HttpServletRequest request, long[] users,
+                                                    String[] statesStr, long[] categories,
+                                                    String rangeStart, String rangeEnd,
+                                                    int from, int size*/
     @PatchMapping("/admin/events/{eventId}")
     public ResponseEntity<Object> updateEventByIdAdmin(@PathVariable long eventId,
                                                        @RequestBody UpdateEventAdminDto updatedEventDto) {
         return eventService.updateEventDataPublic(updatedEventDto, eventId);
     }
+
+
 
     /*String text, long[] categories, Boolean paid,
                                                      String rangeStart, String rangeEnd, Boolean onlyAvailable,

@@ -3,9 +3,10 @@ package ru.practicum.ewm.request.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import org.hibernate.annotations.DynamicUpdate;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.user.model.User;
+
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 

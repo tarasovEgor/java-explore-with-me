@@ -17,8 +17,6 @@ import ru.practicum.ewm.category.mapper.CategoryMapper;
 import ru.practicum.ewm.error.ApiError;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
