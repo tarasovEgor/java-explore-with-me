@@ -528,7 +528,6 @@ public class EventServiceImpl implements EventService {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(events);
-            
         }
 
         if (categories.length != 0) {
