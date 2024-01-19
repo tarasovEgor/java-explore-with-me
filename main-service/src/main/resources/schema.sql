@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS events(
     category_id BIGINT NOT NULL,
     confirmed_req_num BIGINT,
     created_on VARCHAR(255),
-    description VARCHAR(255),
+    description VARCHAR(1024),
     event_date VARCHAR(255) NOT NULL,
     initiator_id BIGINT NOT NULL,
     location_id BIGINT NOT NULL,
