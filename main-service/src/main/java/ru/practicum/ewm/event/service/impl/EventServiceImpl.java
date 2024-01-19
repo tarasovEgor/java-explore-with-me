@@ -506,12 +506,12 @@ public class EventServiceImpl implements EventService {
                 //.add(onlyAvailable, QEvent.event.participantLimit.lt(QEvent.event.))
                 .buildAnd();
 
-        RequestDataDto requestDataDto = new RequestDataDto(
-                "main-service",
-                request.getRemoteAddr(),
-                request.getRequestURI(),
-                String.valueOf(LocalDateTime.now())
-        );
+//        RequestDataDto requestDataDto = new RequestDataDto(
+//                "main-service",
+//                request.getRemoteAddr(),
+//                request.getRequestURI(),
+//                String.valueOf(LocalDateTime.now())
+//        );
 
         //  httpClient.saveRequestData(requestDataDto);
 
@@ -1241,12 +1241,12 @@ queryFactory.selectFrom(customer)
 
         // requestDataDto....
 
-        RequestDataDto requestDataDto = new RequestDataDto(
-                "main-service",
-                request.getRemoteAddr(),
-                request.getRequestURI(),
-                String.valueOf(LocalDateTime.now())
-        );
+//        RequestDataDto requestDataDto = new RequestDataDto(
+//                "main-service",
+//                request.getRemoteAddr(),
+//                request.getRequestURI(),
+//                String.valueOf(LocalDateTime.now())
+//        );
 
         Optional<List<Long>> userIds = Optional.of(Arrays.stream(users)
                 .boxed().collect(Collectors.toList()));
