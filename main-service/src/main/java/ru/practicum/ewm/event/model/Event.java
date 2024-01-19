@@ -78,7 +78,7 @@ public class Event {
     )
     private User initiator;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(
             name = "location_id",
             nullable = false

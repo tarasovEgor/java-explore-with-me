@@ -13,7 +13,6 @@ import java.util.List;
 
 public class EventMapper {
 
-    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static Event toEvent(EventDto eventDto) {
         return new Event(
@@ -51,6 +50,10 @@ public class EventMapper {
     }
 
     public static EventWithLDT toEventWithLDT(Event event) {
+
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         return new EventWithLDT(
                 event.getId(),
                 event.getAnnotation(),

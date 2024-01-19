@@ -428,15 +428,49 @@ public class EventServiceImpl implements EventService {
 
                     } else {
 
+                        return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(new ApiError(
+                                        "400",
+                                        "Bad Request.",
+                                        "Method not allowed."
+                                ));
 
                     }
 
+                } else {
+
+                    return ResponseEntity
+                            .status(HttpStatus.NOT_FOUND)
+                            .body(new ApiError(
+                                    "404",
+                                    "Not Found.",
+                                    "Requests do not exist."
+                            ));
+
                 }
 
+            } else {
+
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(new ApiError(
+                                "404",
+                                "Not Found.",
+                                "Event doesn't exist."
+                        ));
 
             }
+
+        } else {
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError(
+                            "404",
+                            "Not Found.",
+                            "User doesn't exist."
+                    ));
         }
-        return null;
     }
 
     // ---------------------   PUBLIC   --------------------- //
