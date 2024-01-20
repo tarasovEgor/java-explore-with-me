@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.client.HttpClient;
 import ru.practicum.dto.RequestDataDto;
 import ru.practicum.ewm.category.model.Category;
@@ -842,31 +843,6 @@ public class EventServiceImpl implements EventService {
         }
 
 
-        // else
-
-//            categoryIds = Arrays
-//                    .stream(categories)
-//                    .boxed()
-//                    .collect(Collectors.toList());
-
-//        result = eventRepository.findAll(
-//                predicate,
-//                PageRequest.of(from, size)
-//        );
-//
-//        eventsByCat = result.getContent().stream()
-//                .distinct()
-//                //.filter(x -> x.getState().equals(State.PENDING))
-//                .filter(x -> categoryIds.contains(
-//                                x.getCategory().getId()
-//                        )
-//                )
-//                .collect(Collectors.toList());
-//
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(eventsByCat);
-
 
 
 
@@ -926,250 +902,6 @@ queryFactory.selectFrom(customer)
 
 
 
-
-        /*if (text != null) {
-            if (categories.length != 0) {
-                if (paid != null && rangeStart != null && rangeEnd != null
-                        && onlyAvailable != null && sort != null) {
-                    if (onlyAvailable && SortTypes.valueOf(sort) == SortTypes.EVENT_DATE) {
-                        return ResponseEntity
-                                .status(HttpStatus.OK)
-                                .body(eventRepository
-                                        .findAllByTextAndCategoriesAllParamsAreNotNullAndOnlyAvailableIsTrueAndSortIsEqualToEventDate(
-                                                text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size)
-                                );
-                    } else {
-                        return ResponseEntity
-                                .status(HttpStatus.OK)
-                                .body(eventRepository
-                                        .findAllByTextAndCategoriesAllParamsAreNotNullAndOnlyAvailableIsFalseAndSortIsEqualToViews(
-                                                text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size)
-                                );
-                    }
-                } else if (paid != null && rangeStart != null && rangeEnd != null
-                        && onlyAvailable != null) {
-
-                } else if (rangeStart != null && rangeEnd != null && onlyAvailable != null
-                        && sort != null) {
-
-                } else if (paid != null && rangeStart != null && rangeEnd != null) {
-
-                } else if (paid != null && rangeStart != null && sort != null) {
-                    //// CONTINUE .....
-                } else if (paid != null && rangeEnd != null && sort != null) {
-
-                } else if (paid != null && rangeStart != null && onlyAvailable != null) {
-
-                } else if (paid != null && rangeEnd != null && onlyAvailable != null) {
-
-                } else if (paid != null && sort != null && onlyAvailable != null) {
-
-                } else if (rangeStart != null && rangeEnd != null && onlyAvailable != null) {
-
-                } else if (rangeEnd != null && onlyAvailable != null && sort != null) {
-
-                } else if (paid != null && rangeStart != null) {
-
-                } else if (paid != null && rangeEnd != null) {
-
-                } else if (paid != null && sort != null) {
-
-                } else if (paid != null && onlyAvailable != null) {
-
-                } else if (rangeStart != null && rangeEnd != null) {
-
-                } else if (rangeStart != null && sort != null) {
-
-                } else if (rangeStart != null && onlyAvailable != null) {
-
-                } else if (rangeEnd != null && onlyAvailable != null) {
-
-                } else if (rangeEnd != null && sort != null) {
-
-                } else if (onlyAvailable != null && sort != null) {
-
-                } else if (rangeStart != null) {
-
-                } else if (rangeEnd != null) {
-
-                } else if (onlyAvailable != null) {
-
-                } else if (sort != null) {
-
-                }
-            } else {
-                if (paid != null && rangeStart != null && rangeEnd != null
-                        && onlyAvailable != null && sort != null) {
-
-                } else if (paid != null && rangeStart != null && rangeEnd != null
-                        && onlyAvailable != null) {
-
-                } else if (rangeStart != null && rangeEnd != null && onlyAvailable != null
-                        && sort != null) {
-
-                } else if (paid != null && rangeStart != null && rangeEnd != null) {
-
-                } else if (paid != null && rangeStart != null && sort != null) {
-                    //// CONTINUE .....
-                } else if (paid != null && rangeEnd != null && sort != null) {
-
-                } else if (paid != null && rangeStart != null && onlyAvailable != null) {
-
-                } else if (paid != null && rangeEnd != null && onlyAvailable != null) {
-
-                } else if (paid != null && sort != null && onlyAvailable != null) {
-
-                } else if (rangeStart != null && rangeEnd != null && onlyAvailable != null) {
-
-                } else if (rangeEnd != null && onlyAvailable != null && sort != null) {
-
-                } else if (paid != null && rangeStart != null) {
-
-                } else if (paid != null && rangeEnd != null) {
-
-                } else if (paid != null && sort != null) {
-
-                } else if (paid != null && onlyAvailable != null) {
-
-                } else if (rangeStart != null && rangeEnd != null) {
-
-                } else if (rangeStart != null && sort != null) {
-
-                } else if (rangeStart != null && onlyAvailable != null) {
-
-                } else if (rangeEnd != null && onlyAvailable != null) {
-
-                } else if (rangeEnd != null && sort != null) {
-
-                } else if (onlyAvailable != null && sort != null) {
-
-                } else if (rangeStart != null) {
-
-                } else if (rangeEnd != null) {
-
-                } else if (onlyAvailable != null) {
-
-                } else if (sort != null) {
-
-                }
-            }
-        } else {
-            if (categories.length != 0) {
-                if (paid != null && rangeStart != null && rangeEnd != null
-                        && onlyAvailable != null && sort != null) {
-
-
-                } else if (paid != null && rangeStart != null && rangeEnd != null
-                        && onlyAvailable != null) {
-
-                } else if (rangeStart != null && rangeEnd != null && onlyAvailable != null
-                        && sort != null) {
-
-                } else if (paid != null && rangeStart != null && rangeEnd != null) {
-
-                } else if (paid != null && rangeStart != null && sort != null) {
-                    //// CONTINUE .....
-                } else if (paid != null && rangeEnd != null && sort != null) {
-
-                } else if (paid != null && rangeStart != null && onlyAvailable != null) {
-
-                } else if (paid != null && rangeEnd != null && onlyAvailable != null) {
-
-                } else if (paid != null && sort != null && onlyAvailable != null) {
-
-                } else if (rangeStart != null && rangeEnd != null && onlyAvailable != null) {
-
-                } else if (rangeEnd != null && onlyAvailable != null && sort != null) {
-
-                } else if (paid != null && rangeStart != null) {
-
-                } else if (paid != null && rangeEnd != null) {
-
-                } else if (paid != null && sort != null) {
-
-                } else if (paid != null && onlyAvailable != null) {
-
-                } else if (rangeStart != null && rangeEnd != null) {
-
-                } else if (rangeStart != null && sort != null) {
-
-                } else if (rangeStart != null && onlyAvailable != null) {
-
-                } else if (rangeEnd != null && onlyAvailable != null) {
-
-                } else if (rangeEnd != null && sort != null) {
-
-                } else if (onlyAvailable != null && sort != null) {
-
-                } else if (rangeStart != null) {
-
-                } else if (rangeEnd != null) {
-
-                } else if (onlyAvailable != null) {
-
-                } else if (sort != null) {
-
-                }
-            } else {
-                if (paid != null && rangeStart != null && rangeEnd != null
-                        && onlyAvailable != null && sort != null) {
-
-                } else if (paid != null && rangeStart != null && rangeEnd != null
-                        && onlyAvailable != null) {
-
-                } else if (rangeStart != null && rangeEnd != null && onlyAvailable != null
-                        && sort != null) {
-
-                } else if (paid != null && rangeStart != null && rangeEnd != null) {
-
-                } else if (paid != null && rangeStart != null && sort != null) {
-                    //// CONTINUE .....
-                } else if (paid != null && rangeEnd != null && sort != null) {
-
-                } else if (paid != null && rangeStart != null && onlyAvailable != null) {
-
-                } else if (paid != null && rangeEnd != null && onlyAvailable != null) {
-
-                } else if (paid != null && sort != null && onlyAvailable != null) {
-
-                } else if (rangeStart != null && rangeEnd != null && onlyAvailable != null) {
-
-                } else if (rangeEnd != null && onlyAvailable != null && sort != null) {
-
-                } else if (paid != null && rangeStart != null) {
-
-                } else if (paid != null && rangeEnd != null) {
-
-                } else if (paid != null && sort != null) {
-
-                } else if (paid != null && onlyAvailable != null) {
-
-                } else if (rangeStart != null && rangeEnd != null) {
-
-                } else if (rangeStart != null && sort != null) {
-
-                } else if (rangeStart != null && onlyAvailable != null) {
-
-                } else if (rangeEnd != null && onlyAvailable != null) {
-
-                } else if (rangeEnd != null && sort != null) {
-
-                } else if (onlyAvailable != null && sort != null) {
-
-                } else if (rangeStart != null) {
-
-                } else if (rangeEnd != null) {
-
-                } else if (onlyAvailable != null) {
-
-                } else if (sort != null) {
-
-                }
-            }
-        }
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(List.of());*/
     }
 
     @Override
@@ -1185,44 +917,47 @@ queryFactory.selectFrom(customer)
 
         Optional<Event> event = eventRepository.findById(eventId);
 
-        if (event.isEmpty()) {
-
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError());
-        } else {
-
-            if (event.get().getState() == State.PUBLISHED) {
-
-                RequestDataDto requestDataDto = new RequestDataDto(
-                        "main-service",
-                        request.getRemoteAddr(),
-                        request.getRequestURI(),
-                        String.valueOf(LocalDateTime.now())
-                );
-
-                eventRepository.incrementEventViewsByOne(eventId);
-                httpClient.saveRequestData(requestDataDto);
-
-            } else {
-
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body(new ApiError(
-                                "400",
-                                "Event has not been published yet.",
-                                "Event unavailable.")
-                        );
-            }
-
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiError(
-                            "400",
-                            "Bad Request.",
-                            "Method unavailable.")
-                    );
-        }
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(event);
+//        if (event.isEmpty()) {
+//
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError());
+//        } else {
+//
+//            if (event.get().getState() == State.PUBLISHED) {
+//
+//                RequestDataDto requestDataDto = new RequestDataDto(
+//                        "main-service",
+//                        request.getRemoteAddr(),
+//                        request.getRequestURI(),
+//                        String.valueOf(LocalDateTime.now())
+//                );
+//
+////                eventRepository.incrementEventViewsByOne(eventId);
+////                httpClient.saveRequestData(requestDataDto);
+//
+//            } else {
+//
+//                return ResponseEntity
+//                        .status(HttpStatus.BAD_REQUEST)
+//                        .body(new ApiError(
+//                                "400",
+//                                "Event has not been published yet.",
+//                                "Event unavailable.")
+//                        );
+//            }
+//
+//            return ResponseEntity
+//                    .status(HttpStatus.BAD_REQUEST)
+//                    .body(new ApiError(
+//                            "400",
+//                            "Bad Request.",
+//                            "Method unavailable.")
+//                    );
+//        }
     }
 
 
@@ -1447,7 +1182,7 @@ queryFactory.selectFrom(customer)
     }
 
     @Override
-    public ResponseEntity<Object> updateEventDataPublic(UpdateEventAdminDto updateEventAdminDto, long eventId) {
+    public ResponseEntity<Object> patchEventDataAdmin(UpdateEventAdminDto updateEventAdminDto, long eventId) {
 
         /*
         - Дата начала изменяемого события должна быть не ранее чем за час от даты публикации. (Ожидается код ошибки 409)
@@ -1457,74 +1192,129 @@ queryFactory.selectFrom(customer)
 
         Optional<Event> event = eventRepository.findById(eventId);
 
-        if (event.isPresent()) {
-            if (updateEventAdminDto.getStateAction() != null
-                    && updateEventAdminDto.getStateAction().equals(String.valueOf(AdminStateActions.PUBLISH_EVENT))) {
-                if (EventValidation.isEventDateValidForUpdate(updateEventAdminDto, event.get())
-                        && event.get().getEventDate() != null && updateEventAdminDto.getEventDate() != null) {
+        if (event.isPresent() && event.get().getClass().equals(Event.class)) {
 
-                    Category category = categoryRepository
-                            .findById(updateEventAdminDto.getCategory()).get();
+            if (updateEventAdminDto.getAnnotation() != null) {
+                event.get().setAnnotation(updateEventAdminDto.getAnnotation());
+            }
 
-                    event.get().setState(State.PUBLISHED);
-                    event.get().setAnnotation(updateEventAdminDto.getAnnotation());
-                    event.get().setCategory(category);
-                    event.get().setDescription(updateEventAdminDto.getDescription());
-                    event.get().setEventDate(updateEventAdminDto.getEventDate());
-                    event.get().setLocation(updateEventAdminDto.getLocation());
-                    event.get().setPaid(updateEventAdminDto.getPaid());
-                    event.get().setParticipantLimit(updateEventAdminDto.getParticipantLimit());
-                    event.get().setRequestModeration(updateEventAdminDto.getRequestModeration());
-                    event.get().setTitle(updateEventAdminDto.getTitle());
+            if (updateEventAdminDto.getCategory() != null) {
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(eventRepository.save(event.get()));
+                Optional<Category> category = categoryRepository.findById(updateEventAdminDto.getCategory());
+
+                if (category.isPresent() && category.get().getClass().equals(Category.class)) {
+
+                    event.get().setCategory(category.get());
+
                 } else {
 
-//                    Category category = categoryRepository
-//                            .findById(updateEventAdminDto.getCategory()).get();
-//
-//                    event.get().setState(State.PUBLISHED);
-//                    event.get().setAnnotation(updateEventAdminDto.getAnnotation());
-//                    event.get().setCategory(category);
-//                    event.get().setDescription(updateEventAdminDto.getDescription());
-//                    event.get().setLocation(updateEventAdminDto.getLocation());
-//                    event.get().setPaid(updateEventAdminDto.getPaid());
-//                    event.get().setParticipantLimit(updateEventAdminDto.getParticipantLimit());
-//                    event.get().setRequestModeration(updateEventAdminDto.getRequestModeration());
-//                    event.get().setTitle(updateEventAdminDto.getTitle());
-
-//                    return ResponseEntity
-//                            .status(HttpStatus.OK)
-//                            .body(eventRepository.save(event.get()));
                     return ResponseEntity
-                            .status(HttpStatus.BAD_REQUEST)
+                            .status(HttpStatus.NOT_FOUND)
                             .body(new ApiError(
-                                    "400",
-                                    "Bad Request.",
-                                    "Invalid Event Date, method unavailable."
+                                    "404",
+                                    "Not Found.",
+                                    "Category doesn't exist."
+                            ));
+
+                }
+            }
+
+            if (updateEventAdminDto.getDescription() != null) {
+                event.get().setDescription(updateEventAdminDto.getDescription());
+            }
+
+            if (updateEventAdminDto.getEventDate() != null) {
+
+                if (EventValidation.isEventDateValidForUpdate(event.get().getEventDate())) {
+
+                    event.get().setEventDate(updateEventAdminDto.getEventDate());
+
+                } else {
+
+                    return ResponseEntity
+                            .status(HttpStatus.CONFLICT)
+                            .body(new ApiError(
+                                    "409",
+                                    "Conflict.",
+                                    "Invalid event date."
                             ));
                 }
 
-            } else if (updateEventAdminDto.getStateAction() != null
-                    && updateEventAdminDto.getStateAction().equals(String.valueOf(AdminStateActions.REJECT_EVENT))) {
-
-                event.get().setState(State.CANCELLED);
-
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(eventRepository.save(event.get()));
-            } else {
-                return ResponseEntity
-                        .status(HttpStatus.CONFLICT)
-                        .body(eventRepository.save(event.get()));
             }
 
+            if (updateEventAdminDto.getLocation() != null) {
+                event.get().setLocation(updateEventAdminDto.getLocation());
+            }
+
+            if (updateEventAdminDto.getPaid() != null) {
+                event.get().setPaid(updateEventAdminDto.getPaid());
+            }
+
+            if (updateEventAdminDto.getParticipantLimit() != null) {
+                event.get().setParticipantLimit(updateEventAdminDto.getParticipantLimit());
+            }
+
+            if (updateEventAdminDto.getRequestModeration() != null) {
+                event.get().setRequestModeration(updateEventAdminDto.getRequestModeration());
+            }
+
+            if (updateEventAdminDto.getStateAction() != null) {
+
+                if (event.get().getState().equals(State.PENDING)) {
+
+                    if (updateEventAdminDto.getStateAction()
+                            .equals(String.valueOf(AdminStateActions.PUBLISH_EVENT))) {
+
+                        event.get().setState(State.PUBLISHED);
+
+                    } else if (updateEventAdminDto.getStateAction()
+                            .equals(String.valueOf(AdminStateActions.REJECT_EVENT))) {
+
+                        event.get().setState(State.CANCELLED);
+
+                    } else {
+
+                        return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(new ApiError(
+                                        "400",
+                                        "Bad Request.",
+                                        "Invalid state action."
+                                ));
+                    }
+
+                } else {
+
+                    return ResponseEntity
+                            .status(HttpStatus.CONFLICT)
+                            .body(new ApiError(
+                               "409",
+                               "Conflict.",
+                               "Event is not in the right state."
+                            ));
+
+                }
+
+            }
+
+            if (updateEventAdminDto.getTitle() != null) {
+                event.get().setTitle(updateEventAdminDto.getTitle());
+            }
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(eventRepository.save(event.get()));
+
         } else {
+
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError());
+                    .body(new ApiError(
+                       "404",
+                       "Not Found.",
+                            "Event doesn't exist."
+                    ));
+
         }
     }
 

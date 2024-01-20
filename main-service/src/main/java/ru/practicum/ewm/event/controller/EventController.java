@@ -45,7 +45,7 @@ public class EventController {
     }
 
     @PatchMapping("/users/{userId}/events/{eventId}")
-    public ResponseEntity<Object> updateEventByEventIdAndUserIdPrivate(@PathVariable long userId,
+    public ResponseEntity<Object> patchEventByEventIdAndUserIdPrivate(@PathVariable long userId,
                                                                        @PathVariable long eventId,
                                                                        @RequestBody UpdateEventUserDto updatedEventDto) {
         return eventService.patchEventByEventIdAndUserIdPrivate(updatedEventDto, userId, eventId);
@@ -106,9 +106,9 @@ public class EventController {
                                                     String rangeStart, String rangeEnd,
                                                     int from, int size*/
     @PatchMapping("/admin/events/{eventId}")
-    public ResponseEntity<Object> updateEventByIdAdmin(@PathVariable long eventId,
+    public ResponseEntity<Object> patchEventByIdAdmin(@PathVariable long eventId,
                                                        @RequestBody UpdateEventAdminDto updatedEventDto) {
-        return eventService.updateEventDataPublic(updatedEventDto, eventId);
+        return eventService.patchEventDataAdmin(updatedEventDto, eventId);
     }
 
 

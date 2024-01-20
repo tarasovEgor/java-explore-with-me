@@ -42,6 +42,6 @@ public interface EventService {
                                              String rangeStart, String rangeEnd,
                                              int from, int size);
 
-    ResponseEntity<Object> updateEventDataPublic(UpdateEventAdminDto updateEventAdminDto, long eventId);
+    ResponseEntity<Object> patchEventDataAdmin(UpdateEventAdminDto updateEventAdminDto, long eventId);
 
 }

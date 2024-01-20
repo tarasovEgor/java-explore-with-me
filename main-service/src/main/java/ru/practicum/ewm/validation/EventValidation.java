@@ -19,6 +19,10 @@ public class EventValidation {
 
     public static Boolean isEventDateValidForUpdate(UpdateEventAdminDto updateEventAdminDto, Event event) {
 
+//        if (updateEventAdminDto.getEventDate() == null) {
+//            return true;
+//        }
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         LocalDateTime oldEventDate = parse(event.getEventDate(), formatter);
@@ -58,5 +62,15 @@ public class EventValidation {
         newEventTime = parse(updateEventUserDto.getEventDate(), formatter);
         return oldEventDate.isBefore(LocalDateTime.now().minusMinutes(60))
                 && newEventTime.isBefore(LocalDateTime.now().minusMinutes(60));
+    }
+
+    public static boolean isEventDateValidForUpdate(String eventDate) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        LocalDateTime eventDateLDT = parse(eventDate, formatter);
+
+        return eventDateLDT.isBefore(LocalDateTime.now().minusHours(1));
+
     }
 }

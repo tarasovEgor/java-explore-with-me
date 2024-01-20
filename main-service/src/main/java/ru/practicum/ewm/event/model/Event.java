@@ -3,6 +3,7 @@ package ru.practicum.ewm.event.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import ru.practicum.ewm.category.model.Category;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
         schema = "public"
 )
 @DynamicUpdate
+@DynamicInsert
 @NoArgsConstructor
 public class Event {
 
@@ -39,8 +41,8 @@ public class Event {
     private Long id;
 
     @Column(
-            name = "annotation",
-            nullable = false
+            name = "annotation"
+           // nullable = false
     )
     private String annotation;
 
@@ -66,34 +68,34 @@ public class Event {
     private String description;
 
     @Column(
-            name = "event_date",
-            nullable = false
+            name = "event_date"
+            //nullable = false
     )
     private String eventDate;
 
     @ManyToOne
     @JoinColumn(
-            name = "initiator_id",
-            nullable = false
+            name = "initiator_id"
+           // nullable = false
     )
     private User initiator;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(
-            name = "location_id",
-            nullable = false
+            name = "location_id"
+           // nullable = false
     )
     private Location location;
 
     @Column(
-            name = "paid",
-            nullable = false
+            name = "paid"
+           // nullable = false
     )
     private Boolean paid;
 
     @Column(
-            name = "participant_lim",
-            nullable = false
+            name = "participant_lim"
+         //   nullable = false
     )
     private Integer participantLimit;
 
@@ -114,8 +116,8 @@ public class Event {
     private State state;
 
     @Column(
-            name = "title",
-            nullable = false
+            name = "title"
+           // nullable = false
     )
     private String title;
 
