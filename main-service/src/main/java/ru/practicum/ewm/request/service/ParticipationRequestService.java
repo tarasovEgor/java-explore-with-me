@@ -2,7 +2,6 @@ package ru.practicum.ewm.request.service;
 
 import org.springframework.http.ResponseEntity;
 
-import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 
 public interface ParticipationRequestService {
 
