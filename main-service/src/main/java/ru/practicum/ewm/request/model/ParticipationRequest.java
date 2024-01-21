@@ -62,11 +62,11 @@ public class ParticipationRequest {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public ParticipationRequest(//String created,
-                                Event event,
+    public ParticipationRequest(Event event,
                                 User requester,
-                                Status status) {
-        //this.created = created;
+                                Status status,
+                                String created) {
+        this.created = created;
         this.event = event;
         this.requester = requester;
         this.status = status;

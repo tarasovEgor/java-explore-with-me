@@ -46,8 +46,8 @@ public class EventController {
 
     @PatchMapping("/users/{userId}/events/{eventId}")
     public ResponseEntity<Object> patchEventByEventIdAndUserIdPrivate(@PathVariable long userId,
-                                                                       @PathVariable long eventId,
-                                                                       @RequestBody UpdateEventUserDto updatedEventDto) {
+                                                                      @PathVariable long eventId,
+                                                                      @RequestBody UpdateEventUserDto updatedEventDto) {
         return eventService.patchEventByEventIdAndUserIdPrivate(updatedEventDto, userId, eventId);
     }
 

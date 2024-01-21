@@ -11,9 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.client.HttpClient;
-import ru.practicum.dto.RequestDataDto;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.repository.CategoryRepository;
 import ru.practicum.ewm.error.ApiError;
@@ -186,107 +184,124 @@ public class EventServiceImpl implements EventService {
         */
 
         Optional<User> user = userRepository.findById(userId);
-        Optional<Event> event;
-
         if (user.isPresent() && user.get().getClass().equals(User.class)) {
 
-            event = eventRepository.findByIdAndInitiator(eventId, user.get());
+            Optional<Event> event = eventRepository.findById(eventId);
             if (event.isPresent() && event.get().getClass().equals(Event.class)) {
 
                 if (event.get().getState().equals(State.PENDING)
-                        || event.get().getState().equals(State.CANCELLED)) {
+                        || event.get().getState().equals(State.CANCELED)) {
 
-                    if (updateEventUserDto.getStateAction() != null
-                            && updateEventUserDto.getStateAction()
-                            .equals(String.valueOf(UserStateActions.SEND_TO_REVIEW))) {
-
-                        if (EventValidation.isEventDateValidForUpdate(updateEventUserDto, event.get())
-                                && event.get().getEventDate() != null && updateEventUserDto.getEventDate() != null) {
-
-                            Category category = categoryRepository
-                                    .findById(updateEventUserDto.getCategory()).get();
-
-                            event.get().setAnnotation(updateEventUserDto.getAnnotation());
-                            event.get().setCategory(category);
-                            event.get().setDescription(updateEventUserDto.getDescription());
-                            event.get().setEventDate(updateEventUserDto.getEventDate());
-                            event.get().setLocation(updateEventUserDto.getLocation());
-                            event.get().setPaid(updateEventUserDto.getPaid());
-                            event.get().setParticipantLimit(updateEventUserDto.getParticipantLimit());
-                            event.get().setRequestModeration(updateEventUserDto.getRequestModeration());
-                            event.get().setTitle(updateEventUserDto.getTitle());
-                            event.get().setState(State.PENDING);
-
-                            return ResponseEntity
-                                    .status(HttpStatus.OK)
-                                    .body(eventRepository.save(event.get()));
-
-                        } else {
-
-                            return ResponseEntity
-                                    .status(HttpStatus.BAD_REQUEST)
-                                    .body(new ApiError(
-                                            "400",
-                                            "Bad Request.",
-                                            "Invalid event date, method not allowed."
-                                    ));
-                        }
-
-                    } else if (updateEventUserDto.getStateAction() != null
-                            && updateEventUserDto.getStateAction()
-                            .equals(String.valueOf(UserStateActions.CANCEL_REVIEW))) {
-
-                        if (EventValidation.isEventDateValidForUpdate(updateEventUserDto, event.get())
-                                && event.get().getEventDate() != null && updateEventUserDto.getEventDate() != null) {
-
-                            Category category = categoryRepository
-                                    .findById(updateEventUserDto.getCategory()).get();
-
-                            event.get().setAnnotation(updateEventUserDto.getAnnotation());
-                            event.get().setCategory(category);
-                            event.get().setDescription(updateEventUserDto.getDescription());
-                            event.get().setEventDate(updateEventUserDto.getEventDate());
-                            event.get().setLocation(updateEventUserDto.getLocation());
-                            event.get().setPaid(updateEventUserDto.getPaid());
-                            event.get().setParticipantLimit(updateEventUserDto.getParticipantLimit());
-                            event.get().setRequestModeration(updateEventUserDto.getRequestModeration());
-                            event.get().setTitle(updateEventUserDto.getTitle());
-                            event.get().setState(State.CANCELLED);
-
-                            return ResponseEntity
-                                    .status(HttpStatus.OK)
-                                    .body(eventRepository.save(event.get()));
-
-                        } else {
-
-                            return ResponseEntity
-                                    .status(HttpStatus.BAD_REQUEST)
-                                    .body(new ApiError(
-                                            "400",
-                                            "Bad Request.",
-                                            "Invalid event date, method not allowed."
-                                    ));
-                        }
-
-                    } else {
-
-                        return ResponseEntity
-                                .status(HttpStatus.BAD_REQUEST)
-                                .body(new ApiError(
-                                        "400",
-                                        "Bad Request.",
-                                        "Invalid state action, method not allowed."
-                                ));
+                    if (updateEventUserDto.getAnnotation() != null) {
+                        event.get().setAnnotation(updateEventUserDto.getAnnotation());
                     }
+
+                    if (updateEventUserDto.getCategory() != null) {
+
+                        Optional<Category> category = categoryRepository.findById(updateEventUserDto.getCategory());
+
+                        if (category.isPresent() && category.get().getClass().equals(Category.class)) {
+
+                            event.get().setCategory(category.get());
+
+                        } else {
+
+                            return ResponseEntity
+                                    .status(HttpStatus.NOT_FOUND)
+                                    .body(new ApiError(
+                                            "404",
+                                            "Not Found.",
+                                            "Category doesn't exist."
+                                    ));
+
+                        }
+
+                    }
+
+                    if (updateEventUserDto.getDescription() != null) {
+                        event.get().setDescription(updateEventUserDto.getDescription());
+                    }
+
+                    if (updateEventUserDto.getEventDate() != null) {
+
+                        if (EventValidation.isEventDateValidForUpdate(
+                                event.get().getEventDate(),
+                                updateEventUserDto.getEventDate())) {
+
+                            event.get().setEventDate(updateEventUserDto.getEventDate());
+
+                        } else {
+
+                            return ResponseEntity
+                                    .status(HttpStatus.CONFLICT)
+                                    .body(new ApiError(
+                                            "409",
+                                            "Conflict.",
+                                            "Invalid event date."
+                                    ));
+                        }
+
+                    }
+
+                    if (updateEventUserDto.getLocation() != null) {
+                        event.get().setLocation(updateEventUserDto.getLocation());
+                    }
+
+                    if (updateEventUserDto.getPaid() != null) {
+                        event.get().setPaid(updateEventUserDto.getPaid());
+                    }
+
+                    if (updateEventUserDto.getParticipantLimit() != null) {
+                        event.get().setParticipantLimit(updateEventUserDto.getParticipantLimit());
+                    }
+
+                    if (updateEventUserDto.getRequestModeration() != null) {
+                        event.get().setRequestModeration(updateEventUserDto.getRequestModeration());
+                    }
+
+                    if (updateEventUserDto.getStateAction() != null) {
+
+                        if (event.get().getState().equals(State.PENDING)) {
+
+                            if (updateEventUserDto.getStateAction()
+                                    .equals(String.valueOf(UserStateActions.SEND_TO_REVIEW))) {
+
+                                event.get().setState(State.PENDING);
+
+                            } else if (updateEventUserDto.getStateAction()
+                                    .equals(String.valueOf(UserStateActions.CANCEL_REVIEW))) {
+
+                                event.get().setState(State.CANCELED);
+
+                            } else {
+
+                                return ResponseEntity
+                                        .status(HttpStatus.BAD_REQUEST)
+                                        .body(new ApiError(
+                                                "400",
+                                                "Bad Request.",
+                                                "Invalid state action."
+                                        ));
+                            }
+                        }
+                    }
+
+                    if (updateEventUserDto.getTitle() != null) {
+                        event.get().setTitle(updateEventUserDto.getTitle());
+                    }
+
+                    return ResponseEntity
+                            .status(HttpStatus.OK)
+                            .body(eventRepository.save(event.get()));
 
                 } else {
 
                     return ResponseEntity
-                            .status(HttpStatus.FORBIDDEN)
+                            .status(HttpStatus.CONFLICT)
                             .body(new ApiError(
-                                    "403",
-                                    "Forbidden.",
-                                    "Only pending or canceled events can be changed."
+                                    "409",
+                                    "Conflict.",
+                                    "Event is not in the rigth state."
                             ));
                 }
 
@@ -296,9 +311,10 @@ public class EventServiceImpl implements EventService {
                         .status(HttpStatus.NOT_FOUND)
                         .body(new ApiError(
                                 "404",
-                                "Not found.",
+                                "Not Found.",
                                 "Event doesn't exist."
                         ));
+
             }
 
         } else {
@@ -307,10 +323,137 @@ public class EventServiceImpl implements EventService {
                     .status(HttpStatus.NOT_FOUND)
                     .body(new ApiError(
                             "404",
-                            "Not found.",
+                            "Not Found.",
                             "User doesn't exist."
                     ));
         }
+
+//        Optional<User> user = userRepository.findById(userId);
+//        Optional<Event> event;
+//
+//        if (user.isPresent() && user.get().getClass().equals(User.class)) {
+//
+//            event = eventRepository.findByIdAndInitiator(eventId, user.get());
+//            if (event.isPresent() && event.get().getClass().equals(Event.class)) {
+//
+//                if (event.get().getState().equals(State.PENDING)
+//                        || event.get().getState().equals(State.CANCELLED)) {
+//
+//                    if (updateEventUserDto.getStateAction() != null
+//                            && updateEventUserDto.getStateAction()
+//                            .equals(String.valueOf(UserStateActions.SEND_TO_REVIEW))) {
+//
+//                        if (EventValidation.isEventDateValidForUpdate(updateEventUserDto, event.get())
+//                                && event.get().getEventDate() != null && updateEventUserDto.getEventDate() != null) {
+//
+//                            Category category = categoryRepository
+//                                    .findById(updateEventUserDto.getCategory()).get();
+//
+//                            event.get().setAnnotation(updateEventUserDto.getAnnotation());
+//                            event.get().setCategory(category);
+//                            event.get().setDescription(updateEventUserDto.getDescription());
+//                            event.get().setEventDate(updateEventUserDto.getEventDate());
+//                            event.get().setLocation(updateEventUserDto.getLocation());
+//                            event.get().setPaid(updateEventUserDto.getPaid());
+//                            event.get().setParticipantLimit(updateEventUserDto.getParticipantLimit());
+//                            event.get().setRequestModeration(updateEventUserDto.getRequestModeration());
+//                            event.get().setTitle(updateEventUserDto.getTitle());
+//                            event.get().setState(State.PENDING);
+//
+//                            return ResponseEntity
+//                                    .status(HttpStatus.OK)
+//                                    .body(eventRepository.save(event.get()));
+//
+//                        } else {
+//
+//                            return ResponseEntity
+//                                    .status(HttpStatus.BAD_REQUEST)
+//                                    .body(new ApiError(
+//                                            "400",
+//                                            "Bad Request.",
+//                                            "Invalid event date, method not allowed."
+//                                    ));
+//                        }
+//
+//                    } else if (updateEventUserDto.getStateAction() != null
+//                            && updateEventUserDto.getStateAction()
+//                            .equals(String.valueOf(UserStateActions.CANCEL_REVIEW))) {
+//
+//                        if (EventValidation.isEventDateValidForUpdate(updateEventUserDto, event.get())
+//                                && event.get().getEventDate() != null && updateEventUserDto.getEventDate() != null) {
+//
+//                            Category category = categoryRepository
+//                                    .findById(updateEventUserDto.getCategory()).get();
+//
+//                            event.get().setAnnotation(updateEventUserDto.getAnnotation());
+//                            event.get().setCategory(category);
+//                            event.get().setDescription(updateEventUserDto.getDescription());
+//                            event.get().setEventDate(updateEventUserDto.getEventDate());
+//                            event.get().setLocation(updateEventUserDto.getLocation());
+//                            event.get().setPaid(updateEventUserDto.getPaid());
+//                            event.get().setParticipantLimit(updateEventUserDto.getParticipantLimit());
+//                            event.get().setRequestModeration(updateEventUserDto.getRequestModeration());
+//                            event.get().setTitle(updateEventUserDto.getTitle());
+//                            event.get().setState(State.CANCELLED);
+//
+//                            return ResponseEntity
+//                                    .status(HttpStatus.OK)
+//                                    .body(eventRepository.save(event.get()));
+//
+//                        } else {
+//
+//                            return ResponseEntity
+//                                    .status(HttpStatus.BAD_REQUEST)
+//                                    .body(new ApiError(
+//                                            "400",
+//                                            "Bad Request.",
+//                                            "Invalid event date, method not allowed."
+//                                    ));
+//                        }
+//
+//                    } else {
+//
+//                        return ResponseEntity
+//                                .status(HttpStatus.BAD_REQUEST)
+//                                .body(new ApiError(
+//                                        "400",
+//                                        "Bad Request.",
+//                                        "Invalid state action, method not allowed."
+//                                ));
+//                    }
+//
+//                } else {
+//
+//                    return ResponseEntity
+//                            .status(HttpStatus.FORBIDDEN)
+//                            .body(new ApiError(
+//                                    "403",
+//                                    "Forbidden.",
+//                                    "Only pending or canceled events can be changed."
+//                            ));
+//                }
+//
+//            } else {
+//
+//                return ResponseEntity
+//                        .status(HttpStatus.NOT_FOUND)
+//                        .body(new ApiError(
+//                                "404",
+//                                "Not found.",
+//                                "Event doesn't exist."
+//                        ));
+//            }
+//
+//        } else {
+//
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "404",
+//                            "Not found.",
+//                            "User doesn't exist."
+//                    ));
+//        }
     }
 
     @Override
@@ -323,9 +466,9 @@ public class EventServiceImpl implements EventService {
             if (event.isPresent() && event.get().getClass().equals(Event.class)) {
 
                 Optional<ParticipationRequest> participationRequest =
-                        requestRepository.findByRequesterAndEvent(
-                                requester.get(),
-                                event.get()
+                        requestRepository.findByRequesterIdAndEventId(
+                                requester.get().getId(),
+                                event.get().getId()
                         );
 
                 if (participationRequest.isPresent() && participationRequest.get().getClass()
@@ -1225,7 +1368,9 @@ queryFactory.selectFrom(customer)
 
             if (updateEventAdminDto.getEventDate() != null) {
 
-                if (EventValidation.isEventDateValidForUpdate(event.get().getEventDate())) {
+                if (EventValidation.isEventDateValidForUpdate(
+                        event.get().getEventDate(),
+                        updateEventAdminDto.getEventDate())) {
 
                     event.get().setEventDate(updateEventAdminDto.getEventDate());
 
@@ -1270,7 +1415,7 @@ queryFactory.selectFrom(customer)
                     } else if (updateEventAdminDto.getStateAction()
                             .equals(String.valueOf(AdminStateActions.REJECT_EVENT))) {
 
-                        event.get().setState(State.CANCELLED);
+                        event.get().setState(State.REJECTED);
 
                     } else {
 

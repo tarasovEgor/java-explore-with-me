@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 import ru.practicum.ewm.request.service.ParticipationRequestService;
 
 @RestController
@@ -18,9 +17,10 @@ public class ParticipationRequestController {
     }
 
     @PostMapping("/users/{userId}/requests")
-    public ResponseEntity<Object> saveParticipantionRequestPrivate(@PathVariable long userId,
-                                                                   @RequestBody ParticipationRequestDto requestDto) {
-        return requestService.saveParticipationRequestPrivate(requestDto, userId);
+    public ResponseEntity<Object> saveParticipationRequestPrivate(@PathVariable long userId,
+                                                                  @RequestParam long eventId) {
+                                                                   //@RequestBody ParticipationRequestDto requestDto) {
+        return requestService.saveParticipationRequestPrivate(userId, eventId);
     }
 
     @GetMapping("/users/{userId}/requests")

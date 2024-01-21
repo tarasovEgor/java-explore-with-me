@@ -43,10 +43,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     }
 
     @Override
-    public ResponseEntity<Object> saveParticipationRequestPrivate(ParticipationRequestDto participationRequestDto, long userId) {
-
-        //  ДОДЕЛАТЬ
-
+    public ResponseEntity<Object> saveParticipationRequestPrivate(long userId, long eventId) {
 
         /*
         - нельзя добавить повторный запрос (Ожидается код ошибки 409)
@@ -59,39 +56,94 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         Optional<User> requester = userRepository.findById(userId);
         if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
 
-            Optional<Event> event = eventRepository.findById(participationRequestDto.getEvent());
+            Optional<Event> event = eventRepository.findById(eventId);
             if (event.isPresent() && event.get().getClass().equals(Event.class)) {
 
-                DateTimeFormatter formatter
-                        = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                DateTimeFormatter formatter =
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+                String createdOn = now().format(formatter);
 
                 ParticipationRequest participationRequest =
                         ParticipationRequestMapper.toParticipantRequest(
-                                requester.get(),
                                 event.get(),
-                                Status.PENDING
+                                requester.get(),
+                                Status.PENDING,
+                                createdOn
                         );
 
-                String createdOn = now().format(formatter);
-                participationRequest.setCreated(createdOn);
-
-                ParticipationRequest savedRequest =
-                        requestRepository.save(participationRequest);
-
-                participationRequestDto.setId(savedRequest.getId());
-                participationRequestDto.setRequester(requester.get().getId());
-                participationRequestDto.setEvent(event.get().getId());
-                participationRequestDto.setCreated(LocalDateTime.parse(createdOn, formatter));
-                participationRequestDto.setStatus(Status.PENDING);
-
+                ParticipationRequestDto participationRequestDto =
+                        ParticipationRequestMapper.toParticipationRequestDto(
+                                requestRepository.save(participationRequest)
+                        );
 
                 return ResponseEntity
                         .status(HttpStatus.CREATED)
                         .body(participationRequestDto);
+
+            } else {
+
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(new ApiError(
+                                "404",
+                                "Not Found.",
+                                "Event doesn't exist."
+                        ));
+
             }
+
+        } else {
+
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError(
+                            "404",
+                            "Not Found.",
+                            "Requester doesn't exist."
+                    ));
+
         }
 
-        return null;
+
+//        Optional<User> requester = userRepository.findById(userId);
+//        if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
+//
+//            Optional<Event> event = eventRepository.findById(participationRequestDto.getEvent());
+//            if (event.isPresent() && event.get().getClass().equals(Event.class)) {
+//
+//                DateTimeFormatter formatter
+//                        = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//
+//                ParticipationRequest participationRequest =
+//                        ParticipationRequestMapper.toParticipantRequest(
+//                                requester.get(),
+//                                event.get(),
+//                                Status.PENDING
+//                        );
+//
+//                String createdOn = now().format(formatter);
+//                participationRequest.setCreated(createdOn);
+//
+//                ParticipationRequest savedRequest =
+//                        requestRepository.save(participationRequest);
+//
+//                participationRequestDto.setId(savedRequest.getId());
+//                participationRequestDto.setRequester(requester.get().getId());
+//                participationRequestDto.setEvent(event.get().getId());
+//                participationRequestDto.setCreated(LocalDateTime.parse(createdOn, formatter));
+//                participationRequestDto.setStatus(Status.PENDING);
+//
+//
+//                return ResponseEntity
+//                        .status(HttpStatus.CREATED)
+//                        .body(participationRequestDto);
+//            }
+//        }
+//
+//        return null;
+
+
     }
 
     @Override
@@ -136,7 +188,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                 if (participationRequest.get().getRequester().equals(requester.get())
                         && participationRequest.get().getStatus().equals(Status.PENDING)) {
 
-                    participationRequest.get().setStatus(Status.CANCELLED);
+                    participationRequest.get().setStatus(Status.CANCELED);
 
                     return ResponseEntity
                             .status(HttpStatus.OK)

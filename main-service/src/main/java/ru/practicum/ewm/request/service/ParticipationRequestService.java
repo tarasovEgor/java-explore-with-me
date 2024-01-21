@@ -6,7 +6,7 @@ import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 
 public interface ParticipationRequestService {
 
-    ResponseEntity<Object> saveParticipationRequestPrivate(ParticipationRequestDto participationRequestDto, long userId);
+    ResponseEntity<Object> saveParticipationRequestPrivate(long userId, long eventId);
 
     ResponseEntity<Object> getParticipationRequestByUserIdPrivate(long userId);
 

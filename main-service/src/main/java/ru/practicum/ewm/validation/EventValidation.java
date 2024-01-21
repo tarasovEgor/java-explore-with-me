@@ -64,13 +64,15 @@ public class EventValidation {
                 && newEventTime.isBefore(LocalDateTime.now().minusMinutes(60));
     }
 
-    public static boolean isEventDateValidForUpdate(String eventDate) {
+    public static boolean isEventDateValidForUpdate(String eventDate, String newEventDate) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         LocalDateTime eventDateLDT = parse(eventDate, formatter);
+        LocalDateTime newEventDateLDT = parse(newEventDate, formatter);
 
-        return eventDateLDT.isBefore(LocalDateTime.now().minusHours(1));
+        return eventDateLDT.isBefore(LocalDateTime.now().minusHours(1))
+                || eventDateLDT.equals(newEventDateLDT);
 
     }
 }
