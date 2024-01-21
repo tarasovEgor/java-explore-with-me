@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import java.util.Set;
+import java.util.List;
 
 import org.hibernate.annotations.DynamicUpdate;
 import ru.practicum.ewm.event.model.Event;
@@ -42,8 +42,10 @@ public class Compilation {
 //            joinColumns = @JoinColumn(name = "compilation_id"),
 //            inverseJoinColumns = @JoinColumn(name = "event_id")
 //    )
+
+
     @OneToMany(mappedBy = "compilation")
-    private Set<Event> events;
+    private List<Event> events;
 
     @Column(
             name = "pinned"
@@ -55,7 +57,7 @@ public class Compilation {
     )
     private String title;
 
-    public Compilation(Set<Event> events,
+    public Compilation(List<Event> events,
                        Boolean pinned,
                        String title) {
         this.events = events;

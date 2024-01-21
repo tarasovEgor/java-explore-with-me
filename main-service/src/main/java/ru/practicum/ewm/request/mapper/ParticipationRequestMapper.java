@@ -8,6 +8,8 @@ import ru.practicum.ewm.user.model.User;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ParticipationRequestMapper {
 
@@ -37,5 +39,16 @@ public class ParticipationRequestMapper {
                 createdOn
         );
 
+    }
+
+    public static List<ParticipationRequestDto> toParticipationRequestDto(List<ParticipationRequest> participationRequests) {
+
+        List<ParticipationRequestDto> dtos = new ArrayList<>();
+
+        for (ParticipationRequest req : participationRequests) {
+            dtos.add(toParticipationRequestDto(req));
+        }
+
+        return dtos;
     }
 }

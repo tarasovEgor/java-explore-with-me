@@ -7,15 +7,13 @@ import ru.practicum.ewm.event.mapper.EventMapper;
 import ru.practicum.ewm.event.model.Event;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class CompilationMapper {
 
-    public static Set<EventShortDto> toEventShortDtoSet(Set<Event> events) {
+    public static List<EventShortDto> toEventShortDtoList(List<Event> events) {
 
-        Set<EventShortDto> shortEventDtos = new HashSet<>();
+        List<EventShortDto> shortEventDtos = new ArrayList<>();
 
         for (Event e : events) {
             shortEventDtos.add(EventMapper.toEventShortDto(e));
@@ -26,7 +24,8 @@ public class CompilationMapper {
 
     public static CompilationWithShortEventDto toCompilationWithShortEventDto(Compilation compilation) {
 
-        Set<EventShortDto> eventShortDtos = toEventShortDtoSet(compilation.getEvents());
+        List<EventShortDto> eventShortDtos = toEventShortDtoList(compilation.getEvents());
+
 
         return new CompilationWithShortEventDto(
                 compilation.getId(),

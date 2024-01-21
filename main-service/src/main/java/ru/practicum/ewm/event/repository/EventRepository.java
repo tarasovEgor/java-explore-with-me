@@ -2,13 +2,14 @@ package ru.practicum.ewm.event.repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import com.querydsl.core.types.Predicate;
-import org.springframework.data.domain.Page;
+
+
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.user.model.User;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -65,8 +66,8 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
 
     Optional<Event> findByIdAndInitiator(long eventId, User user);
 
-    @Transactional
-    Optional<Set<Event>> findAllByIdIn(List<Long> eventIds);
+    //@Transactional
+    Optional<List<Event>> findAllByIdIn(List<Long> eventIds);
 
 
     // ------------------  UTILS METHODS  ------------------

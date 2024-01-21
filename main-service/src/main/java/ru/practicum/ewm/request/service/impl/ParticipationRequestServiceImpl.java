@@ -21,6 +21,7 @@ import ru.practicum.ewm.user.repository.UserRepository;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import java.util.List;
 
 import static java.time.LocalDateTime.now;
 
@@ -154,24 +155,60 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
         Optional<User> requester = userRepository.findById(userId);
         if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
-            Optional<ParticipationRequest> participationRequest =
-                    requestRepository.findByRequester(requester.get());
 
-            if (participationRequest.isPresent() && participationRequest.get().getClass()
-                    .equals(ParticipationRequest.class)) {
+            Optional<List<ParticipationRequest>> participationRequests =
+                    requestRepository.findAllByRequesterId(requester.get().getId());
 
-                ParticipationRequestDto foundRequest =
-                        ParticipationRequestMapper.toParticipationRequestDto(participationRequest.get());
+            if (!participationRequests.get().isEmpty()) {
+
+                List<ParticipationRequestDto> foundRequest =
+                        ParticipationRequestMapper.toParticipationRequestDto(participationRequests.get());
 
                 return ResponseEntity
                         .status(HttpStatus.OK)
                         .body(foundRequest);
+
+            } else {
+
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(new ApiError(
+                                "404",
+                                "Not Found.",
+                                "Participation requests do not exist."
+                        ));
+
             }
+
+        } else {
+
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError(
+                            "404",
+                            "Not Found.",
+                            "User does not exist."
+                    ));
+
         }
 
-
-
-        return null;
+//        Optional<User> requester = userRepository.findById(userId);
+//        if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
+//            Optional<ParticipationRequest> participationRequest =
+//                    requestRepository.findByRequester(requester.get());
+//
+//            if (participationRequest.isPresent() && participationRequest.get().getClass()
+//                    .equals(ParticipationRequest.class)) {
+//
+//                ParticipationRequestDto foundRequest =
+//                        ParticipationRequestMapper.toParticipationRequestDto(participationRequest.get());
+//
+//                return ResponseEntity
+//                        .status(HttpStatus.OK)
+//                        .body(foundRequest);
+//            }
+//        }
+//
     }
 
     @Override

@@ -130,11 +130,15 @@ public class Event {
 //    @ManyToMany(mappedBy = "events")
 //    private Set<Compilation> compilations;
 
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(
             name = "compilation_id"
     )
+    //@OneToMany(mappedBy = "event")
     private Compilation compilation;
+    //private List<CompilationEvent> compilation;
+
+   // private Long compilation_id;
 
     public Event(String annotation,
           //       Category category,

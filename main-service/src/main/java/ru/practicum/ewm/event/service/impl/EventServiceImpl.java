@@ -4,6 +4,7 @@ import com.querydsl.core.types.Predicate;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -461,24 +462,25 @@ public class EventServiceImpl implements EventService {
 
         Optional<User> requester = userRepository.findById(userId);
         if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
-            Optional<Event> event = eventRepository.findById(eventId);
 
+            Optional<Event> event = eventRepository.findById(eventId);
             if (event.isPresent() && event.get().getClass().equals(Event.class)) {
 
-                Optional<ParticipationRequest> participationRequest =
-                        requestRepository.findByRequesterIdAndEventId(
-                                requester.get().getId(),
-                                event.get().getId()
-                        );
+                Optional<List<ParticipationRequest>> participationRequests =
+//                        requestRepository.findAllByRequesterIdAndEventId(
+//                                requester.get().getId(),
+//                                event.get().getId()
+//                        );
+                requestRepository.findAllByEventId(event.get().getId());
 
-                if (participationRequest.isPresent() && participationRequest.get().getClass()
-                        .equals(ParticipationRequest.class)) {
+                if (!participationRequests.get().isEmpty()) {
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
                             .body(ParticipationRequestMapper
-                                    .toParticipationRequestDto(participationRequest.get())
+                                    .toParticipationRequestDto(participationRequests.get())
                             );
+
                 } else {
 
                     return ResponseEntity
@@ -486,8 +488,9 @@ public class EventServiceImpl implements EventService {
                             .body(new ApiError(
                                     "404",
                                     "Not Found.",
-                                    "Participation request doesn't exist."
+                                    "Participant requests don't exist."
                             ));
+
                 }
 
             } else {
@@ -508,9 +511,62 @@ public class EventServiceImpl implements EventService {
                     .body(new ApiError(
                             "404",
                             "Not Found.",
-                            "Requester doesn't exist."
+                            "User doesn't exist."
                     ));
         }
+
+//        Optional<User> requester = userRepository.findById(userId);
+//        if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
+//            Optional<Event> event = eventRepository.findById(eventId);
+//
+//            if (event.isPresent() && event.get().getClass().equals(Event.class)) {
+//
+//                Optional<ParticipationRequest> participationRequest =
+//                        requestRepository.findByRequesterIdAndEventId(
+//                                requester.get().getId(),
+//                                event.get().getId()
+//                        );
+//
+//                if (participationRequest.isPresent() && participationRequest.get().getClass()
+//                        .equals(ParticipationRequest.class)) {
+//
+//                    return ResponseEntity
+//                            .status(HttpStatus.OK)
+//                            .body(ParticipationRequestMapper
+//                                    .toParticipationRequestDto(participationRequest.get())
+//                            );
+//                } else {
+//
+//                    return ResponseEntity
+//                            .status(HttpStatus.NOT_FOUND)
+//                            .body(new ApiError(
+//                                    "404",
+//                                    "Not Found.",
+//                                    "Participation request doesn't exist."
+//                            ));
+//                }
+//
+//            } else {
+//
+//                return ResponseEntity
+//                        .status(HttpStatus.NOT_FOUND)
+//                        .body(new ApiError(
+//                                "404",
+//                                "Not Found.",
+//                                "Event doesn't exist."
+//                        ));
+//            }
+//
+//        } else {
+//
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "404",
+//                            "Not Found.",
+//                            "Requester doesn't exist."
+//                    ));
+//        }
     }
 
     @Override

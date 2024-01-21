@@ -20,7 +20,6 @@ import ru.practicum.ewm.event.repository.EventRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -87,6 +86,16 @@ public class CompilationServiceImpl implements CompilationService {
         Optional<Compilation> compilation = compilationRepository.findById(compId);
         if (compilation.isPresent() && compilation.get().getClass().equals(Compilation.class)) {
 
+            Optional<List<Event>> events =
+                    compilationRepository.getAllEventEdsByCompilation(compilation.get());
+
+//            if (events.isPresent() && !events.get().isEmpty()) {
+//                compilation.get().setEvents(events.get());
+//            }
+
+//            List<EventShortDto> eventShortDtos =
+//                    CompilationMapper.toEventShortDtoList(compilationRepository.getAllEventEdsByCategory(compilation.get()));
+
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(CompilationMapper
@@ -109,7 +118,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public ResponseEntity<Object> saveCompilationAdmin(NewCompilationDto newCompilationDto) {
 
-        Optional<Set<Event>> events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
+        Optional<List<Event>> events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
         if (events.isPresent() && events.get().size() == newCompilationDto.getEvents().size()) {
 
             Compilation compilation = new Compilation(
@@ -118,6 +127,11 @@ public class CompilationServiceImpl implements CompilationService {
                     newCompilationDto.getTitle()
             );
 
+//            for (Event e : events.get()) {
+//                e.setCompilation(compilation);
+//            }
+
+            eventRepository.saveAll(events.get());
             compilationRepository.save(compilation);
 
             return ResponseEntity
@@ -144,27 +158,64 @@ public class CompilationServiceImpl implements CompilationService {
         Optional<Compilation> compilation = compilationRepository.findById(compId);
         if (compilation.isPresent() && compilation.get().getClass().equals(Compilation.class)) {
 
-            Optional<Set<Event>> events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
+            if (newCompilationDto.getEvents() != null) {
 
-            compilation.get().setEvents(events.get());
-            compilation.get().setPinned(newCompilationDto.getPinned());
-            compilation.get().setTitle(newCompilationDto.getTitle());
+                Optional<List<Event>> events =
+                        eventRepository.findAllByIdIn(newCompilationDto.getEvents());
+
+                compilation.get().setEvents(events.get());
+            }
+
+            if (newCompilationDto.getPinned() != null) {
+                compilation.get().setPinned(newCompilationDto.getPinned());
+            }
+
+            if (newCompilationDto.getTitle() != null) {
+                compilation.get().setTitle(newCompilationDto.getTitle());
+            }
 
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(CompilationMapper
-                            .toCompilationWithShortEventDto(
-                                    compilationRepository.save(compilation.get())
-                            ));
+                    .body(CompilationMapper.toCompilationWithShortEventDto(
+                            compilationRepository.save(
+                                    compilation.get()
+                            )
+                    ));
+
         } else {
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
                     .body(new ApiError(
                             "404",
                             "Not Found.",
                             "Compilation doesn't exist."
                     ));
         }
+//        Optional<Compilation> compilation = compilationRepository.findById(compId);
+//        if (compilation.isPresent() && compilation.get().getClass().equals(Compilation.class)) {
+//
+//            Optional<Set<Event>> events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
+//
+//            compilation.get().setEvents(events.get());
+//            compilation.get().setPinned(newCompilationDto.getPinned());
+//            compilation.get().setTitle(newCompilationDto.getTitle());
+//
+//            return ResponseEntity
+//                    .status(HttpStatus.OK)
+//                    .body(CompilationMapper
+//                            .toCompilationWithShortEventDto(
+//                                    compilationRepository.save(compilation.get())
+//                            ));
+//        } else {
+//
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "404",
+//                            "Not Found.",
+//                            "Compilation doesn't exist."
+//                    ));
+//        }
 
     }
 
