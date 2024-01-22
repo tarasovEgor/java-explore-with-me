@@ -6,11 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import ru.practicum.ewm.user.dto.UserDto;
-import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.service.UserService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 public class UserController {

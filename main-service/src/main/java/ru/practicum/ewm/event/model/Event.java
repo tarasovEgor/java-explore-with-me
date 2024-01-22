@@ -130,7 +130,7 @@ public class Event {
 //    @ManyToMany(mappedBy = "events")
 //    private Set<Compilation> compilations;
 
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(
             name = "compilation_id"
     )
