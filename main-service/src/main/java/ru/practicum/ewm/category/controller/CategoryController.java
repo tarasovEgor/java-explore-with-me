@@ -9,6 +9,7 @@ import ru.practicum.ewm.category.dto.NewCategoryDto;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.service.CategoryService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class CategoryController {
     }
 
     @PostMapping("/admin/categories")
-    public ResponseEntity<Category> saveCategory(@RequestBody NewCategoryDto newCategoryDto) {
+    public ResponseEntity<Category> saveCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(categoryService.saveCategory(newCategoryDto));
     }
@@ -40,7 +41,7 @@ public class CategoryController {
 
     @PatchMapping("/admin/categories/{categoryId}")
     public Category updateCategory(@PathVariable long categoryId,
-                                   @RequestBody NewCategoryDto newCategoryDto) {
+                                   @Valid @RequestBody NewCategoryDto newCategoryDto) {
         return categoryService.updateCategory(categoryId, newCategoryDto);
     }
 

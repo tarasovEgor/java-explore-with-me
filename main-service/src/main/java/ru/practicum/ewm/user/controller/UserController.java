@@ -9,6 +9,7 @@ import ru.practicum.ewm.user.dto.UserDto;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.service.UserService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/admin/users")
-    public ResponseEntity<Object> saveUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<Object> saveUser(@Valid @RequestBody UserDto userDto) {
         /*
         *   REFACTOR!!!
         * */
@@ -32,9 +33,9 @@ public class UserController {
     }
 
     @GetMapping("/admin/users")
-    public List<User> getUsersById(@RequestParam(required = false) long[] ids,
-                                   @RequestParam(required = false, defaultValue = "0") int from,
-                                   @RequestParam(required = false, defaultValue = "10") int size) {
+    public ResponseEntity<Object> getUsersById(@RequestParam(required = false) long[] ids,
+                                               @RequestParam(required = false, defaultValue = "0") int from,
+                                               @RequestParam(required = false, defaultValue = "10") int size) {
         return userService.getUsersById(ids, from, size);
     }
 

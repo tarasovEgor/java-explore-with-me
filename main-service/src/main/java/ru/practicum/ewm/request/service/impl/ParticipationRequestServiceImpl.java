@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.error.ApiError;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.repository.EventRepository;
@@ -59,22 +60,68 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
             Optional<Event> event = eventRepository.findById(eventId);
             if (event.isPresent() && event.get().getClass().equals(Event.class)) {
 
+                Optional<ParticipationRequest> participationRequest =
+                     requestRepository.findByRequester(requester.get());
+
+                if (participationRequest.isPresent() && participationRequest.get().getClass()
+                        .equals(ParticipationRequest.class)) {
+
+                    return ResponseEntity
+                            .status(HttpStatus.CONFLICT)
+                            .body(new ApiError(
+                                    "409",
+                                    "Conflict.",
+                                    "Unable to send a repeated request."
+                            ));
+                }
+
+                if (event.get().getInitiator().getId().equals(requester.get().getId())) {
+
+                    return ResponseEntity
+                            .status(HttpStatus.CONFLICT)
+                            .body(new ApiError(
+                                    "409",
+                                    "Conflict.",
+                                    "Initiator can't send a request to his own event."
+                            ));
+
+                }
+
                 DateTimeFormatter formatter =
                         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
                 String createdOn = now().format(formatter);
 
-                ParticipationRequest participationRequest =
-                        ParticipationRequestMapper.toParticipantRequest(
-                                event.get(),
-                                requester.get(),
-                                Status.PENDING,
-                                createdOn
-                        );
+                ParticipationRequest newParticipationRequest;
+
+
+                if (!event.get().getRequestModeration() || event.get().getParticipantLimit() == 0) {
+                    newParticipationRequest =
+                            ParticipationRequestMapper.toParticipantRequest(
+                                    event.get(),
+                                    requester.get(),
+                                    Status.CONFIRMED,
+                                    createdOn
+                            );
+                } else {
+
+                    newParticipationRequest =
+                            ParticipationRequestMapper.toParticipantRequest(
+                                    event.get(),
+                                    requester.get(),
+                                    Status.PENDING,
+                                    createdOn
+                            );
+                }
+
+
+//                if (!event.get().getRequestModeration()) {
+//                    participationRequest.setStatus(Status.CONFIRMED);
+//                }
 
                 ParticipationRequestDto participationRequestDto =
                         ParticipationRequestMapper.toParticipationRequestDto(
-                                requestRepository.save(participationRequest)
+                                requestRepository.save(newParticipationRequest)
                         );
 
                 return ResponseEntity
@@ -212,6 +259,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     }
 
     @Override
+    //@Transactional(readOnly = false)
     public ResponseEntity<Object> cancelParticipationRequestByUserIdPrivate(long userId, long requestId) {
 
         Optional<User> requester = userRepository.findById(userId);
@@ -222,7 +270,8 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                     .equals(ParticipationRequest.class)) {
 
                 if (participationRequest.get().getRequester().equals(requester.get())
-                        && participationRequest.get().getStatus().equals(Status.PENDING)) {
+                        && (participationRequest.get().getStatus().equals(Status.PENDING)
+                        || participationRequest.get().getStatus().equals(Status.CONFIRMED))) {
 
                     participationRequest.get().setStatus(Status.CANCELED);
 

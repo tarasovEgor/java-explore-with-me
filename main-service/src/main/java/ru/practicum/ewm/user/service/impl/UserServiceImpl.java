@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import ru.practicum.ewm.user.dto.UserDto;
@@ -12,8 +14,6 @@ import ru.practicum.ewm.user.mapper.UserMapper;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.repository.UserRepository;
 import ru.practicum.ewm.user.service.UserService;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -33,20 +33,36 @@ public class UserServiceImpl implements UserService {
         * */
         User user = UserMapper.toUser(userDto);
         return repository.save(user);
+//        User user = UserMapper.toUser(userDto);
+//
+//
+//
+//        return ResponseEntity
+//                .status(HttpStatus.CREATED)
+//                .body(repository.save(user));
+
     }
 
     @Override
-    public List<User> getUsersById(long[] ids, int from, int size) {
+    public ResponseEntity<Object> getUsersById(long[] ids, int from, int size) {
         /*
         *   CHECKS !!!
         * */
         Page<User> page = repository.findAll(PageRequest.of(from, size));
-        if (ids.length != 0) {
-            page = repository.findAllByIdIn(ids, PageRequest.of(from, size));
-            return page.getContent();
+        if (ids == null) {
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(page.getContent());
+
         } else {
-            return page.getContent();
+
+            page = repository.findAllByIdIn(ids, PageRequest.of(from, size));
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(page.getContent());
         }
+
     }
 
     @Override

@@ -118,11 +118,12 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public ResponseEntity<Object> saveCompilationAdmin(NewCompilationDto newCompilationDto) {
 
-        Optional<List<Event>> events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
-        if (events.isPresent() && events.get().size() == newCompilationDto.getEvents().size()) {
+        Compilation compilation;
 
-            Compilation compilation = new Compilation(
-                    events.get(),
+        if (newCompilationDto.getEvents() == null) {
+
+            compilation = new Compilation(
+                    List.of(),
                     newCompilationDto.getPinned(),
                     newCompilationDto.getTitle()
             );
@@ -131,7 +132,11 @@ public class CompilationServiceImpl implements CompilationService {
 //                e.setCompilation(compilation);
 //            }
 
-            eventRepository.saveAll(events.get());
+            if (compilation.getPinned() == null) {
+                compilation.setPinned(false);
+            }
+
+            //eventRepository.saveAll(events.get());
             compilationRepository.save(compilation);
 
             return ResponseEntity
@@ -139,17 +144,47 @@ public class CompilationServiceImpl implements CompilationService {
                     .body(CompilationMapper
                             .toCompilationWithShortEventDto(compilation)
                     );
+
         } else {
 
-            return ResponseEntity
+            Optional<List<Event>> events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
+            if (events.isPresent() && events.get().size() == newCompilationDto.getEvents().size()) {
+
+                compilation = new Compilation(
+                        events.get(),
+                        newCompilationDto.getPinned(),
+                        newCompilationDto.getTitle()
+                );
+
+//            for (Event e : events.get()) {
+//                e.setCompilation(compilation);
+//            }
+                if (compilation.getPinned() == null) {
+                    compilation.setPinned(false);
+                }
+
+                //eventRepository.saveAll(events.get());
+                compilationRepository.save(compilation);
+
+                return ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body(CompilationMapper
+                                .toCompilationWithShortEventDto(compilation)
+                        );
+
+            } else {
+
+                return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(new ApiError(
                             "404",
                             "Not Found.",
                             "Event doesn't exist."
                     ));
-        }
 
+            }
+
+        }
     }
 
     @Override

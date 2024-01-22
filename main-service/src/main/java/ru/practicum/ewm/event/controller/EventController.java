@@ -11,6 +11,7 @@ import ru.practicum.ewm.event.dto.UpdateEventUserDto;
 import ru.practicum.ewm.event.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 public class EventController {
@@ -26,7 +27,7 @@ public class EventController {
     // ------------------  PRIVATE  ------------------
 
     @PostMapping("/users/{userId}/events")
-    public ResponseEntity<Object> saveEventPrivate(@RequestBody EventDto eventDto,
+    public ResponseEntity<Object> saveEventPrivate(@Valid @RequestBody EventDto eventDto,
                                                    @PathVariable long userId) {
         return eventService.saveEventPrivate(eventDto, userId);
     }
@@ -47,7 +48,7 @@ public class EventController {
     @PatchMapping("/users/{userId}/events/{eventId}")
     public ResponseEntity<Object> patchEventByEventIdAndUserIdPrivate(@PathVariable long userId,
                                                                       @PathVariable long eventId,
-                                                                      @RequestBody UpdateEventUserDto updatedEventDto) {
+                                                                      @Valid @RequestBody UpdateEventUserDto updatedEventDto) {
         return eventService.patchEventByEventIdAndUserIdPrivate(updatedEventDto, userId, eventId);
     }
 
@@ -107,7 +108,7 @@ public class EventController {
                                                     int from, int size*/
     @PatchMapping("/admin/events/{eventId}")
     public ResponseEntity<Object> patchEventByIdAdmin(@PathVariable long eventId,
-                                                       @RequestBody UpdateEventAdminDto updatedEventDto) {
+                                                      @Valid @RequestBody UpdateEventAdminDto updatedEventDto) {
         return eventService.patchEventDataAdmin(updatedEventDto, eventId);
     }
 

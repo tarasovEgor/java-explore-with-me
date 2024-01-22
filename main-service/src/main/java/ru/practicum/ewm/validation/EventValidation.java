@@ -75,4 +75,14 @@ public class EventValidation {
                 || eventDateLDT.equals(newEventDateLDT);
 
     }
+
+    public static boolean isEventDateValidForSave(String eventDate) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        LocalDateTime eventDateLDT = parse(eventDate, formatter);
+
+        return eventDateLDT.isAfter(LocalDateTime.now().minusHours(2));
+
+    }
 }

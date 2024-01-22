@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import ru.practicum.client.HttpClient;
+import ru.practicum.dto.RequestDataDto;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.repository.CategoryRepository;
 import ru.practicum.ewm.error.ApiError;
@@ -80,9 +81,85 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public ResponseEntity<Object> saveEventPrivate(EventDto eventDto, long userId) {
+
+        Event event = EventMapper.toEvent(eventDto);
+
+        Optional<User> initiator = userRepository.findById(userId);
+        if (initiator.isPresent() && initiator.get().getClass().equals(User.class)) {
+
+            Optional<Category> category = categoryRepository.findById(eventDto.getCategory());
+            if (category.isPresent() && category.get().getClass().equals(Category.class)) {
+
+//        LocalDateTime time = LocalDateTime.parse(event.getEventDate(), formatter);
+
+                //LocalDateTime eventDate = LocalDateTime.parse(event.getEventDate(), formatter);
+                if (event.getPaid() == null) {
+                    event.setPaid(false);
+                }
+                if (event.getRequestModeration() == null) {
+                    event.setRequestModeration(true);
+                }
+                if (event.getParticipantLimit() == null) {
+                    event.setParticipantLimit(0);
+                }
+
+                if (EventValidation.isEventDateValidForSave(event.getEventDate())) {
+
+                    String createdOn = now().format(formatter);
+
+                    event.setInitiator(initiator.get());
+                    event.setCategory(category.get());
+                    event.setCreatedOn(createdOn);
+                    event.setState(State.PENDING);
+
+                    locationRepository.save(eventDto.getLocation());
+
+                    return ResponseEntity
+                            .status(HttpStatus.CREATED)
+                            .body(eventRepository.save(event));
+
+                } else {
+
+                    return ResponseEntity
+                            .status(HttpStatus.BAD_REQUEST)
+                            .body(new ApiError(
+                                    "400",
+                                    "Bad Request.",
+                                    "Invalid event date."
+                            ));
+                }
+
+            } else {
+
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(new ApiError(
+                                "404",
+                                "Not Found.",
+                                "Category doesn't exist."
+                        ));
+
+            }
+
+        } else {
+
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError(
+                            "404",
+                            "Not Found.",
+                            "User doesn't exist."
+                    ));
+
+        }
+
+
         /*
          *   CHECKS!!!
-         * */
+         * *//*
+
+        //if (eventDto.getAnnotation() == null)
+
         Event event = EventMapper.toEvent(eventDto);
 
         // переделать
@@ -106,7 +183,7 @@ public class EventServiceImpl implements EventService {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(eventRepository.save(event));
+                .body(eventRepository.save(event));*/
     }
 
     @Override
@@ -193,6 +270,8 @@ public class EventServiceImpl implements EventService {
                 if (event.get().getState().equals(State.PENDING)
                         || event.get().getState().equals(State.CANCELED)) {
 
+                    event.get().setState(State.PENDING);
+
                     if (updateEventUserDto.getAnnotation() != null) {
                         event.get().setAnnotation(updateEventUserDto.getAnnotation());
                     }
@@ -234,10 +313,10 @@ public class EventServiceImpl implements EventService {
                         } else {
 
                             return ResponseEntity
-                                    .status(HttpStatus.CONFLICT)
+                                    .status(HttpStatus.BAD_REQUEST)
                                     .body(new ApiError(
-                                            "409",
-                                            "Conflict.",
+                                            "400",
+                                            "Bad Request.",
                                             "Invalid event date."
                                     ));
                         }
@@ -262,34 +341,56 @@ public class EventServiceImpl implements EventService {
 
                     if (updateEventUserDto.getStateAction() != null) {
 
-                        if (event.get().getState().equals(State.PENDING)) {
+//                        if (event.get().getState().equals(State.PENDING)) {
+//
+//                            if (updateEventUserDto.getStateAction()
+//                                    .equals(String.valueOf(UserStateActions.SEND_TO_REVIEW))) {
+//
+//                                event.get().setState(State.PENDING);
+//
+//                            } else if (updateEventUserDto.getStateAction()
+//                                    .equals(String.valueOf(UserStateActions.CANCEL_REVIEW))) {
+//
+//                                event.get().setState(State.CANCELED);
+//
+//                            } else {
+//
+//                                return ResponseEntity
+//                                        .status(HttpStatus.BAD_REQUEST)
+//                                        .body(new ApiError(
+//                                                "400",
+//                                                "Bad Request.",
+//                                                "Invalid state action."
+//                                        ));
+//                            }
+//                        }
 
-                            if (updateEventUserDto.getStateAction()
-                                    .equals(String.valueOf(UserStateActions.SEND_TO_REVIEW))) {
+                        if (updateEventUserDto.getStateAction()
+                                .equals(String.valueOf(UserStateActions.CANCEL_REVIEW))) {
 
-                                event.get().setState(State.PENDING);
+                            event.get().setState(State.CANCELED);
 
-                            } else if (updateEventUserDto.getStateAction()
-                                    .equals(String.valueOf(UserStateActions.CANCEL_REVIEW))) {
+                        } else if (!updateEventUserDto.getStateAction()
+                                .equals(String.valueOf(UserStateActions.SEND_TO_REVIEW))) {
 
-                                event.get().setState(State.CANCELED);
-
-                            } else {
-
-                                return ResponseEntity
+                            return ResponseEntity
                                         .status(HttpStatus.BAD_REQUEST)
                                         .body(new ApiError(
                                                 "400",
                                                 "Bad Request.",
                                                 "Invalid state action."
                                         ));
-                            }
+
                         }
                     }
 
                     if (updateEventUserDto.getTitle() != null) {
                         event.get().setTitle(updateEventUserDto.getTitle());
                     }
+
+//                    if (!event.get().getState().equals(State.CANCELED)) {
+//                        event.get().setState(State.PENDING);
+//                    }
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
@@ -302,7 +403,7 @@ public class EventServiceImpl implements EventService {
                             .body(new ApiError(
                                     "409",
                                     "Conflict.",
-                                    "Event is not in the rigth state."
+                                    "Event is not in the right state."
                             ));
                 }
 
@@ -723,11 +824,11 @@ public class EventServiceImpl implements EventService {
 
         if (predicate == null) {
 
-            List<Event> events = eventRepository.findAll();
+            Page<Event> events = eventRepository.findAll(PageRequest.of(from, size));
 
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(events);
+                    .body(events.getContent());
         }
 
         if (categories.length != 0) {
@@ -1116,9 +1217,45 @@ queryFactory.selectFrom(customer)
 
         Optional<Event> event = eventRepository.findById(eventId);
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(event);
+        if (event.isPresent() && event.get().getClass().equals(Event.class)) {
+
+            if (event.get().getState().equals(State.PUBLISHED)) {
+
+                //eventRepository.incrementEventViewsByOne(eventId);
+
+                event.get().setViews(event.get().getViews() + 1);
+
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(event.get());
+
+            } else {
+
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(new ApiError(
+                                "404",
+                                "Not Found.",
+                                "Event hasn't been published."
+                        ));
+
+            }
+
+        } else {
+
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError(
+                            "404",
+                            "Not Found.",
+                            "Event doesn't exist."
+                    ));
+        }
+//
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(event);
+
 //        if (event.isEmpty()) {
 //
 //            return ResponseEntity
@@ -1141,9 +1278,9 @@ queryFactory.selectFrom(customer)
 //            } else {
 //
 //                return ResponseEntity
-//                        .status(HttpStatus.BAD_REQUEST)
+//                        .status(HttpStatus.NOT_FOUND)
 //                        .body(new ApiError(
-//                                "400",
+//                                "404",
 //                                "Event has not been published yet.",
 //                                "Event unavailable.")
 //                        );
@@ -1190,6 +1327,25 @@ queryFactory.selectFrom(customer)
 //                request.getRequestURI(),
 //                String.valueOf(LocalDateTime.now())
 //        );
+
+        if (users == null) {
+            users = new long[]{};
+        }
+        if (categories == null) {
+            categories = new long[]{};
+        }
+        if (statesStr == null) {
+            statesStr = new String[]{};
+        }
+
+        if (predicate == null) {
+
+            Page<Event> foundEvents = eventRepository.findAll(PageRequest.of(from, size));
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(foundEvents.getContent());
+        }
 
         Optional<List<Long>> userIds = Optional.of(Arrays.stream(users)
                 .boxed().collect(Collectors.toList()));
@@ -1433,10 +1589,10 @@ queryFactory.selectFrom(customer)
                 } else {
 
                     return ResponseEntity
-                            .status(HttpStatus.CONFLICT)
+                            .status(HttpStatus.BAD_REQUEST)
                             .body(new ApiError(
-                                    "409",
-                                    "Conflict.",
+                                    "400",
+                                    "Bad Request.",
                                     "Invalid event date."
                             ));
                 }
@@ -1471,7 +1627,7 @@ queryFactory.selectFrom(customer)
                     } else if (updateEventAdminDto.getStateAction()
                             .equals(String.valueOf(AdminStateActions.REJECT_EVENT))) {
 
-                        event.get().setState(State.REJECTED);
+                        event.get().setState(State.CANCELED);
 
                     } else {
 

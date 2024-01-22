@@ -24,4 +24,5 @@ public interface ParticipationRequestRepository extends JpaRepository<Participat
     Optional<List<ParticipationRequest>> findAllByIdIn(Long[] ids);
 
 
+
 }

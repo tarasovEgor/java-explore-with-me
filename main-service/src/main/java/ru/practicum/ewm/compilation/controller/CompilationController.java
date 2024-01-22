@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.practicum.ewm.compilation.dto.NewCompilationDto;
 import ru.practicum.ewm.compilation.service.CompilationService;
 
+import javax.validation.Valid;
+
 @RestController
 public class CompilationController {
 
@@ -30,12 +32,12 @@ public class CompilationController {
     }
 
     @PostMapping("/admin/compilations")
-    public ResponseEntity<Object> saveCompilationAdmin(@RequestBody NewCompilationDto newCompilationDto) {
+    public ResponseEntity<Object> saveCompilationAdmin(@Valid @RequestBody NewCompilationDto newCompilationDto) {
         return compilationService.saveCompilationAdmin(newCompilationDto);
     }
 
     @PatchMapping("/admin/compilations/{compId}")
-    public ResponseEntity<Object> patchCompilationAdmin(@RequestBody NewCompilationDto newCompilationDto,
+    public ResponseEntity<Object> patchCompilationAdmin(@Valid @RequestBody NewCompilationDto newCompilationDto,
                                                         @PathVariable long compId) {
         return compilationService.patchCompilationAdmin(newCompilationDto, compId);
     }

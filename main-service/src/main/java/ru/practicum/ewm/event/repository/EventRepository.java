@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import com.querydsl.core.types.Predicate;
 
-
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.user.model.User;
 
@@ -35,6 +34,19 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
 
     // ------------------  PUBLIC  ------------------
 
+//    @Modifying
+//    @Query("update Item i" +
+//            " set i.name = ?1," +
+//            " i.description = ?2," +
+//            " i.available = ?3" +
+//            " where i.id = ?4 and i.owner = ?5")
+//    void updateItem(String name, String description, Boolean available, long itemId, User owner);
+
+//    @Modifying
+//    @Query("update Event e" +
+//            " set e.views = e.views + 1" +
+//            " where e.id = ?1")
+//    void incrementEventViewsCount(long eventId);
 
     Page<Event> findAllByCategoryIdIn(long[] ids, Predicate predicate, Pageable pageable);
 
@@ -73,7 +85,7 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
     // ------------------  UTILS METHODS  ------------------
 
     @Modifying
-    @Transactional
+    //@Transactional
     @Query("update Event e" +
             " set e.views = e.views + 1" +
             " where e.id = ?1")
