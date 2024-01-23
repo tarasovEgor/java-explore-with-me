@@ -822,14 +822,14 @@ public class EventServiceImpl implements EventService {
                 //.add(onlyAvailable, QEvent.event.participantLimit.lt(QEvent.event.))
                 .buildAnd();
 
-        RequestDataDto requestDataDto = new RequestDataDto(
-                "main-service",
-                request.getRemoteAddr(),
-                request.getRequestURI(),
-                String.valueOf(LocalDateTime.now())
-        );
-
-        httpClient.saveRequestData(requestDataDto);
+//        RequestDataDto requestDataDto = new RequestDataDto(
+//                "main-service",
+//                request.getRemoteAddr(),
+//                request.getRequestURI(),
+//                String.valueOf(LocalDateTime.now())
+//        );
+//
+//        httpClient.saveRequestData(requestDataDto);
 
         Page<Event> result;
 
@@ -1232,12 +1232,12 @@ queryFactory.selectFrom(customer)
 
         Optional<Event> event = eventRepository.findById(eventId);
 
-        RequestDataDto requestDataDto = new RequestDataDto(
-                "main-service",
-                request.getRemoteAddr(),
-                request.getRequestURI(),
-                String.valueOf(LocalDateTime.now())
-        );
+//        RequestDataDto requestDataDto = new RequestDataDto(
+//                "main-service",
+//                request.getRemoteAddr(),
+//                request.getRequestURI(),
+//                String.valueOf(LocalDateTime.now())
+//        );
 
         if (event.isPresent() && event.get().getClass().equals(Event.class)) {
 
@@ -1247,7 +1247,7 @@ queryFactory.selectFrom(customer)
 
                 event.get().setViews(event.get().getViews() + 1);
 
-                httpClient.saveRequestData(requestDataDto);
+                //httpClient.saveRequestData(requestDataDto);
 
                 return ResponseEntity
                         .status(HttpStatus.OK)

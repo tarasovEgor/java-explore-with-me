@@ -90,18 +90,8 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
                     }
 
-//                    if (event.get().getParticipantLimit() <= (event.get().getConfirmedRequests() + 1)
-//                        && event.get().getParticipantLimit() != 0) {
-//                        return ResponseEntity
-//                                .status(HttpStatus.CONFLICT)
-//                                .body(new ApiError(
-//                                        "409",
-//                                        "Conflict.",
-//                                        "Participant limit is full."
-//                                ));
-//                    }
 
-                    if (event.get().getParticipantLimit().equals(event.get().getConfirmedRequests())
+                    if (event.get().getParticipantLimit() < event.get().getConfirmedRequests() + 1
                             && event.get().getParticipantLimit() != 0) {
 
                         return ResponseEntity
@@ -114,6 +104,19 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
                     }
 
+//                    if (event.get().getParticipantLimit().equals(event.get().getConfirmedRequests())
+//                            && event.get().getParticipantLimit() != 0) {
+//
+//                        return ResponseEntity
+//                                .status(HttpStatus.CONFLICT)
+//                                .body(new ApiError(
+//                                        "409",
+//                                        "Conflict.",
+//                                        "Participant limit is full."
+//                                ));
+//
+//                    }
+
                     DateTimeFormatter formatter =
                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -123,6 +126,10 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
 
                     if (!event.get().getRequestModeration() || event.get().getParticipantLimit() == 0) {
+
+                        event.get().setConfirmedRequests(event.get().getConfirmedRequests() + 1);
+
+                        eventRepository.save(event.get());
 
                         newParticipationRequest =
                                 ParticipationRequestMapper.toParticipantRequest(
