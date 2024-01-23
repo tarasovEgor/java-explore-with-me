@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface CategoryService {
 
-    Category saveCategory(NewCategoryDto newCategoryDto);
+    ResponseEntity<Object> saveCategory(NewCategoryDto newCategoryDto);
 
     ResponseEntity<Object> getCategoryById(long categoryId);
 
     List<Category> getAllCategories(int from, int size);
 
-    Category updateCategory(long categoryId, NewCategoryDto newCategoryDto);
+    ResponseEntity<Object> patchCategory(long categoryId, NewCategoryDto newCategoryDto);
 
     ResponseEntity<Object> deleteCategory(long categoryId);
 

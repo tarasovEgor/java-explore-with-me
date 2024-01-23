@@ -199,6 +199,7 @@ public class CompilationServiceImpl implements CompilationService {
                         eventRepository.findAllByIdIn(newCompilationDto.getEvents());
 
                 compilation.get().setEvents(events.get());
+
             }
 
             if (newCompilationDto.getPinned() != null) {

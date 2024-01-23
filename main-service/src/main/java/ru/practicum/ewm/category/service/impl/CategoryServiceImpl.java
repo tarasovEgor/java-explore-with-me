@@ -31,12 +31,30 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category saveCategory(NewCategoryDto newCategoryDto) {
+    public ResponseEntity<Object> saveCategory(NewCategoryDto newCategoryDto) {
         /*
         *   CHECKS !!!
         * */
         Category category = CategoryMapper.toCategory(newCategoryDto);
-        return repository.save(category);
+
+        try {
+
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(repository.save(category));
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(new ApiError(
+                            "409",
+                            "Conflict.",
+                            "Invalid method."
+                    ));
+
+        }
+
     }
 
     @Override
@@ -61,28 +79,77 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category updateCategory(long categoryId, NewCategoryDto newCategoryDto) {
+    public ResponseEntity<Object> patchCategory(long categoryId, NewCategoryDto newCategoryDto) {
         /*
         *   CHECKS !!!
         * */
         Category category = CategoryMapper.toCategory(newCategoryDto);
         category.setId(categoryId);
-        repository.update(category.getName(), categoryId);
-        return category;
+
+        try {
+
+            repository.update(category.getName(), categoryId);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(category);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(new ApiError(
+                            "409",
+                            "Conflict.",
+                            "Invalid method."
+                    ));
+        }
+       // return category;
     }
 
     @Override
     public ResponseEntity<Object> deleteCategory(long categoryId) {
-        /*
-        *   CHECKS !!!
-        * */
+
         Optional<Category> category = repository.findById(categoryId);
-        if (category.isEmpty()) return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                new ApiError()
-        );
-        repository.delete(category.get());
-        log.info("Successfully deleted category with the id of - '{}'", categoryId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(category);
+
+        if (category.isPresent() && category.get().getClass().equals(Category.class)) {
+
+            try {
+
+                repository.delete(category.get());
+                log.info("Successfully deleted category with the id of - '{}'", categoryId);
+
+                return ResponseEntity
+                        .noContent()
+                        .build();
+
+            } catch (RuntimeException e) {
+
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(new ApiError(
+                                "409",
+                                "Conflict.",
+                                "Method not allowed."
+                        ));
+            }
+
+        } else {
+
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError(
+
+                    ));
+        }
+
+//        if (category.isEmpty()) {
+//
+//
+//
+//        }
+//
+//
+//        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(category);
     }
 
 

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import ru.practicum.ewm.error.ApiError;
 import ru.practicum.ewm.user.dto.UserDto;
 import ru.practicum.ewm.user.mapper.UserMapper;
 import ru.practicum.ewm.user.model.User;
@@ -27,12 +28,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(UserDto userDto) {
+    public ResponseEntity<Object> saveUser(UserDto userDto) {
         /*
         *   CHECKS !!!
         * */
         User user = UserMapper.toUser(userDto);
-        return repository.save(user);
+
+        try {
+
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(repository.save(user));
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new ApiError(
+                            "409",
+                            "Conflict.",
+                            "MEthod not allowed."
+                    ));
+        }
 //        User user = UserMapper.toUser(userDto);
 //
 //

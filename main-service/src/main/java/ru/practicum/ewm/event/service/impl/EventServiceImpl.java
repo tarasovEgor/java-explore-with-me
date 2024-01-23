@@ -686,6 +686,19 @@ public class EventServiceImpl implements EventService {
 
             if (event.isPresent() && event.get().getClass().equals(Event.class)) {
 
+                if (event.get().getParticipantLimit().equals(event.get().getConfirmedRequests())
+                        && event.get().getParticipantLimit() != 0) {
+
+                    return ResponseEntity
+                            .status(HttpStatus.CONFLICT)
+                            .body(new ApiError(
+                                    "409",
+                                    "Conflict.",
+                                    "Participant limit is full."
+                            ));
+
+                }
+
                 Optional<List<ParticipationRequest>> requests =
                         requestRepository.findAllByIdIn(updateRequest.getRequestIds());
 
@@ -704,6 +717,9 @@ public class EventServiceImpl implements EventService {
 
                             }
                         }
+
+                        event.get().setConfirmedRequests(event.get().getConfirmedRequests() + requests.get().size());
+                        eventRepository.save(event.get());
 
                         return ResponseEntity
                                 .status(HttpStatus.OK)

@@ -25,9 +25,9 @@ public class UserController {
         /*
         *   REFACTOR!!!
         * */
-        //return userService.saveUser(userDto);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userService.saveUser(userDto));
+        return userService.saveUser(userDto);
+//        return ResponseEntity.status(HttpStatus.CREATED)
+//                .body(userService.saveUser(userDto));
     }
 
     @GetMapping("/admin/users")

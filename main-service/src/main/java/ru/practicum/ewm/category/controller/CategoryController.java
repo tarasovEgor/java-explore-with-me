@@ -23,9 +23,11 @@ public class CategoryController {
     }
 
     @PostMapping("/admin/categories")
-    public ResponseEntity<Category> saveCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(categoryService.saveCategory(newCategoryDto));
+    public ResponseEntity<Object> saveCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
+//        return ResponseEntity
+//                .status(HttpStatus.CREATED)
+//                .body(categoryService.saveCategory(newCategoryDto));
+        return categoryService.saveCategory(newCategoryDto);
     }
 
     @GetMapping("/categories/{categoryId}")
@@ -40,9 +42,9 @@ public class CategoryController {
     }
 
     @PatchMapping("/admin/categories/{categoryId}")
-    public Category updateCategory(@PathVariable long categoryId,
+    public ResponseEntity<Object> updateCategory(@PathVariable long categoryId,
                                    @Valid @RequestBody NewCategoryDto newCategoryDto) {
-        return categoryService.updateCategory(categoryId, newCategoryDto);
+        return categoryService.patchCategory(categoryId, newCategoryDto);
     }
 
     @DeleteMapping("/admin/categories/{categoryId}")

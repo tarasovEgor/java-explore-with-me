@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import ru.practicum.ewm.error.ApiError;
 import ru.practicum.ewm.event.model.Event;
+import ru.practicum.ewm.event.model.State;
 import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 import ru.practicum.ewm.request.mapper.ParticipationRequestMapper;
@@ -59,73 +60,115 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
             Optional<Event> event = eventRepository.findById(eventId);
             if (event.isPresent() && event.get().getClass().equals(Event.class)) {
 
-                Optional<ParticipationRequest> participationRequest =
-                     requestRepository.findByRequester(requester.get());
+                if (!event.get().getState().equals(State.PENDING)) {
 
-                if (participationRequest.isPresent() && participationRequest.get().getClass()
-                        .equals(ParticipationRequest.class)) {
+                    Optional<ParticipationRequest> participationRequest =
+                            requestRepository.findByRequester(requester.get());
 
-                    return ResponseEntity
-                            .status(HttpStatus.CONFLICT)
-                            .body(new ApiError(
-                                    "409",
-                                    "Conflict.",
-                                    "Unable to send a repeated request."
-                            ));
-                }
+                    if (participationRequest.isPresent() && participationRequest.get().getClass()
+                            .equals(ParticipationRequest.class)) {
 
-                if (event.get().getInitiator().getId().equals(requester.get().getId())) {
+                        return ResponseEntity
+                                .status(HttpStatus.CONFLICT)
+                                .body(new ApiError(
+                                        "409",
+                                        "Conflict.",
+                                        "Unable to send a repeated request."
+                                ));
 
-                    return ResponseEntity
-                            .status(HttpStatus.CONFLICT)
-                            .body(new ApiError(
-                                    "409",
-                                    "Conflict.",
-                                    "Initiator can't send a request to his own event."
-                            ));
+                    }
 
-                }
+                    if (event.get().getInitiator().getId().equals(requester.get().getId())) {
 
-                DateTimeFormatter formatter =
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                        return ResponseEntity
+                                .status(HttpStatus.CONFLICT)
+                                .body(new ApiError(
+                                        "409",
+                                        "Conflict.",
+                                        "Initiator can't send a request to his own event."
+                                ));
 
-                String createdOn = now().format(formatter);
+                    }
 
-                ParticipationRequest newParticipationRequest;
+//                    if (event.get().getParticipantLimit() <= (event.get().getConfirmedRequests() + 1)
+//                        && event.get().getParticipantLimit() != 0) {
+//                        return ResponseEntity
+//                                .status(HttpStatus.CONFLICT)
+//                                .body(new ApiError(
+//                                        "409",
+//                                        "Conflict.",
+//                                        "Participant limit is full."
+//                                ));
+//                    }
+
+                    if (event.get().getParticipantLimit().equals(event.get().getConfirmedRequests())
+                            && event.get().getParticipantLimit() != 0) {
+
+                        return ResponseEntity
+                                .status(HttpStatus.CONFLICT)
+                                .body(new ApiError(
+                                        "409",
+                                        "Conflict.",
+                                        "Participant limit is full."
+                                ));
+
+                    }
+
+                    DateTimeFormatter formatter =
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+                    String createdOn = now().format(formatter);
+
+                    ParticipationRequest newParticipationRequest;
 
 
-                if (!event.get().getRequestModeration() || event.get().getParticipantLimit() == 0) {
-                    newParticipationRequest =
-                            ParticipationRequestMapper.toParticipantRequest(
-                                    event.get(),
-                                    requester.get(),
-                                    Status.CONFIRMED,
-                                    createdOn
-                            );
-                } else {
+                    if (!event.get().getRequestModeration() || event.get().getParticipantLimit() == 0) {
 
-                    newParticipationRequest =
-                            ParticipationRequestMapper.toParticipantRequest(
-                                    event.get(),
-                                    requester.get(),
-                                    Status.PENDING,
-                                    createdOn
-                            );
-                }
+                        newParticipationRequest =
+                                ParticipationRequestMapper.toParticipantRequest(
+                                        event.get(),
+                                        requester.get(),
+                                        Status.CONFIRMED,
+                                        createdOn
+                                );
+
+                    } else {
+
+                        newParticipationRequest =
+                                ParticipationRequestMapper.toParticipantRequest(
+                                        event.get(),
+                                        requester.get(),
+                                        Status.PENDING,
+                                        createdOn
+                                );
+                    }
 
 
 //                if (!event.get().getRequestModeration()) {
 //                    participationRequest.setStatus(Status.CONFIRMED);
 //                }
 
-                ParticipationRequestDto participationRequestDto =
-                        ParticipationRequestMapper.toParticipationRequestDto(
-                                requestRepository.save(newParticipationRequest)
-                        );
+                    ParticipationRequestDto participationRequestDto =
+                            ParticipationRequestMapper.toParticipationRequestDto(
+                                    requestRepository.save(newParticipationRequest)
+                            );
 
-                return ResponseEntity
-                        .status(HttpStatus.CREATED)
-                        .body(participationRequestDto);
+                    return ResponseEntity
+                            .status(HttpStatus.CREATED)
+                            .body(participationRequestDto);
+
+                } else {
+
+                    return ResponseEntity
+                            .status(HttpStatus.CONFLICT)
+                            .body(new ApiError(
+                                    "409",
+                                    "Conflict.",
+                                    "Event hasn't been published yet."
+                            ));
+
+                }
+
 
             } else {
 

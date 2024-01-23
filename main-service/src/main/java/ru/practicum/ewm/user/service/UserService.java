@@ -7,7 +7,7 @@ import ru.practicum.ewm.user.model.User;
 
 public interface UserService {
 
-    User saveUser(UserDto userDto);
+    ResponseEntity<Object> saveUser(UserDto userDto);
 
     ResponseEntity<Object> getUsersById(long[] ids, int from, int size);
 
