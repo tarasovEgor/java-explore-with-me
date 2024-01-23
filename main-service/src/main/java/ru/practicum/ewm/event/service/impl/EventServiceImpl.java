@@ -946,29 +946,43 @@ public class EventServiceImpl implements EventService {
                                 ));
                     }
 
-                    result = eventRepository.findAll(
-                            predicate,
-                            PageRequest.of(from, size)
-                    );
+//                    result = eventRepository.findAll(
+//                            predicate,
+//                            PageRequest.of(from, size)
+//                    );
 
-                    List<EventWithLDT> foundEvents = EventMapper.toEventWithLDT(result.getContent());
+                    result = eventRepository.findByEventDateAfter(rangeStart, PageRequest.of(from, size));
 
-                    eventsByCatLTD = foundEvents.stream()
+                    //List<EventWithLDT> foundEventsLDT = EventMapper.toEventWithLDT(result.getContent());
+
+                    List<Event> foundEvents = result.getContent();
+
+                    eventsByCat = foundEvents.stream()
                             .distinct()
-                            // .filter(x -> x.getConfirmedRequests() < x.getParticipantLimit())
-                            //.filter(x -> x.getState().equals(State.PENDING))
                             .filter(x -> categoryIds.contains(
                                             x.getCategory().getId()
                                     )
                             )
-                            .sorted(Comparator.comparing(EventWithLDT::getEventDate).reversed())
+                            //.sorted(Comparator.comparing(Event::getEventDate).reversed())
                             .collect(Collectors.toList());
+
+//                    eventsByCatLTD = foundEvents.stream()
+//                            .distinct()
+//                            // .filter(x -> x.getConfirmedRequests() < x.getParticipantLimit())
+//                            //.filter(x -> x.getState().equals(State.PENDING))
+//                            .filter(x -> categoryIds.contains(
+//                                            x.getCategory().getId()
+//                                    )
+//                            )
+//                            .sorted(Comparator.comparing(EventWithLDT::getEventDate).reversed())
+//                            .collect(Collectors.toList());
+
 
                     //  httpClient.saveRequestData(requestDataDto);
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
-                            .body(eventsByCatLTD);
+                            .body(eventsByCat);
 
                 } else if (sort != null && sort.equals(String.valueOf(SortTypes.VIEWS))) {
 

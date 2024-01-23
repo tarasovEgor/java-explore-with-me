@@ -33,6 +33,8 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
 
     // ------------------  PUBLIC  ------------------
 
+    Page<Event> findByEventDateAfter(String date, Pageable pageable);
+
 //    @Modifying
 //    @Query("update Item i" +
 //            " set i.name = ?1," +
