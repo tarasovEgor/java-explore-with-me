@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import ru.practicum.client.HttpClient;
+import ru.practicum.dto.RequestDataDto;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.repository.CategoryRepository;
 import ru.practicum.ewm.error.ApiError;
@@ -823,14 +824,14 @@ public class EventServiceImpl implements EventService {
 
         //.add(onlyAvailable, QEvent.event.participantLimit.lt(QEvent.event.)) - out of use
 
-//        RequestDataDto requestDataDto = new RequestDataDto(
-//                "main-service",
-//                request.getRemoteAddr(),
-//                request.getRequestURI(),
-//                String.valueOf(LocalDateTime.now())
-//        );
-//
-//        httpClient.saveRequestData(requestDataDto);
+        RequestDataDto requestDataDto = new RequestDataDto(
+                "main-service",
+                request.getRemoteAddr(),
+                request.getRequestURI(),
+                String.valueOf(LocalDateTime.now())
+        );
+
+        //httpClient.saveRequestData(requestDataDto);
 
         Page<Event> result;
 
@@ -876,7 +877,7 @@ public class EventServiceImpl implements EventService {
                             .sorted(Comparator.comparing(EventWithLDT::getEventDate).reversed())
                             .collect(Collectors.toList());
 
-                    //  httpClient.saveRequestData(requestDataDto);
+                      httpClient.saveRequestData(requestDataDto);
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
@@ -899,7 +900,7 @@ public class EventServiceImpl implements EventService {
                             .sorted(Comparator.comparing(Event::getViews).reversed())
                             .collect(Collectors.toList());
 
-                    //  httpClient.saveRequestData(requestDataDto);
+                    httpClient.saveRequestData(requestDataDto);
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
@@ -921,7 +922,7 @@ public class EventServiceImpl implements EventService {
                             )
                             .collect(Collectors.toList());
 
-                    //  httpClient.saveRequestData(requestDataDto);
+                    httpClient.saveRequestData(requestDataDto);
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
@@ -978,7 +979,7 @@ public class EventServiceImpl implements EventService {
 //                            .collect(Collectors.toList());
 
 
-                    //  httpClient.saveRequestData(requestDataDto);
+                    httpClient.saveRequestData(requestDataDto);
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
@@ -1001,7 +1002,7 @@ public class EventServiceImpl implements EventService {
                             .sorted(Comparator.comparing(Event::getViews).reversed())
                             .collect(Collectors.toList());
 
-                    //  httpClient.saveRequestData(requestDataDto);
+                    httpClient.saveRequestData(requestDataDto);
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
@@ -1022,7 +1023,7 @@ public class EventServiceImpl implements EventService {
                             )
                             .collect(Collectors.toList());
 
-                    //  httpClient.saveRequestData(requestDataDto);
+                    httpClient.saveRequestData(requestDataDto);
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
@@ -1056,7 +1057,7 @@ public class EventServiceImpl implements EventService {
                             .sorted(Comparator.comparing(EventWithLDT::getEventDate).reversed())
                             .collect(Collectors.toList());
 
-                    //  httpClient.saveRequestData(requestDataDto);
+                    httpClient.saveRequestData(requestDataDto);
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
@@ -1078,7 +1079,7 @@ public class EventServiceImpl implements EventService {
                             .sorted(Comparator.comparing(EventWithLDT::getViews).reversed())
                             .collect(Collectors.toList());
 
-                    //  httpClient.saveRequestData(requestDataDto);
+                    httpClient.saveRequestData(requestDataDto);
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
@@ -1100,7 +1101,7 @@ public class EventServiceImpl implements EventService {
                             .filter(x -> x.getEventDate().isAfter(LocalDateTime.now()))
                             .collect(Collectors.toList());
 
-                    //  httpClient.saveRequestData(requestDataDto);
+                    httpClient.saveRequestData(requestDataDto);
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
@@ -1140,7 +1141,7 @@ public class EventServiceImpl implements EventService {
                             .sorted(Comparator.comparing(EventWithLDT::getEventDate).reversed())
                             .collect(Collectors.toList());
 
-                    //  httpClient.saveRequestData(requestDataDto);
+                    httpClient.saveRequestData(requestDataDto);
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
@@ -1162,7 +1163,7 @@ public class EventServiceImpl implements EventService {
                             .sorted(Comparator.comparing(EventWithLDT::getViews).reversed())
                             .collect(Collectors.toList());
 
-                    //  httpClient.saveRequestData(requestDataDto);
+                    httpClient.saveRequestData(requestDataDto);
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
@@ -1183,7 +1184,7 @@ public class EventServiceImpl implements EventService {
                             //.filter(x -> x.getEventDate().isAfter(LocalDateTime.now()))
                             .collect(Collectors.toList());
 
-                    //  httpClient.saveRequestData(requestDataDto);
+                    httpClient.saveRequestData(requestDataDto);
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
@@ -1275,12 +1276,12 @@ queryFactory.selectFrom(customer)
 
         Optional<Event> event = eventRepository.findById(eventId);
 
-//        RequestDataDto requestDataDto = new RequestDataDto(
-//                "main-service",
-//                request.getRemoteAddr(),
-//                request.getRequestURI(),
-//                String.valueOf(LocalDateTime.now())
-//        );
+        RequestDataDto requestDataDto = new RequestDataDto(
+                "main-service",
+                request.getRemoteAddr(),
+                request.getRequestURI(),
+                String.valueOf(LocalDateTime.now())
+        );
 
         if (event.isPresent() && event.get().getClass().equals(Event.class)) {
 
@@ -1290,7 +1291,7 @@ queryFactory.selectFrom(customer)
 
                 event.get().setViews(event.get().getViews() + 1);
 
-                //httpClient.saveRequestData(requestDataDto);
+                httpClient.saveRequestData(requestDataDto);
 
                 return ResponseEntity
                         .status(HttpStatus.OK)
