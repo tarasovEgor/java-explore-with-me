@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import ru.practicum.client.HttpClient;
+import ru.practicum.dto.RequestDataDto;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.repository.CategoryRepository;
 import ru.practicum.ewm.error.ApiError;
@@ -821,14 +822,14 @@ public class EventServiceImpl implements EventService {
                 //.add(onlyAvailable, QEvent.event.participantLimit.lt(QEvent.event.))
                 .buildAnd();
 
-//        RequestDataDto requestDataDto = new RequestDataDto(
-//                "main-service",
-//                request.getRemoteAddr(),
-//                request.getRequestURI(),
-//                String.valueOf(LocalDateTime.now())
-//        );
+        RequestDataDto requestDataDto = new RequestDataDto(
+                "main-service",
+                request.getRemoteAddr(),
+                request.getRequestURI(),
+                String.valueOf(LocalDateTime.now())
+        );
 
-        //  httpClient.saveRequestData(requestDataDto);
+        httpClient.saveRequestData(requestDataDto);
 
         Page<Event> result;
 
