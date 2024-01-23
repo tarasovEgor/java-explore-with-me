@@ -8,6 +8,7 @@ import com.querydsl.core.types.Predicate;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.user.model.User;
 
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
