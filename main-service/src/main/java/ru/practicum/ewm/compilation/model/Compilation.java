@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.DynamicUpdate;
@@ -44,8 +45,15 @@ public class Compilation {
 //    )
 
 
-    @OneToMany(mappedBy = "compilation")
-    private List<Event> events;
+//    @OneToMany(mappedBy = "compilation")
+//    private List<Event> events;
+
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "compilation_event",
+            joinColumns = @JoinColumn(name = "compilation_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id"))
+    private List<Event> events = new ArrayList<>();
 
     @Column(
             name = "pinned"

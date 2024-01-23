@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.practicum.ewm.compilation.dto.NewCompilationDto;
+import ru.practicum.ewm.compilation.dto.UpdateCompilationDto;
 import ru.practicum.ewm.compilation.service.CompilationService;
 
 import javax.validation.Valid;
@@ -37,7 +38,7 @@ public class CompilationController {
     }
 
     @PatchMapping("/admin/compilations/{compId}")
-    public ResponseEntity<Object> patchCompilationAdmin(@Valid @RequestBody NewCompilationDto newCompilationDto,
+    public ResponseEntity<Object> patchCompilationAdmin(@Valid @RequestBody UpdateCompilationDto newCompilationDto,
                                                         @PathVariable long compId) {
         return compilationService.patchCompilationAdmin(newCompilationDto, compId);
     }

@@ -22,7 +22,7 @@ public interface CompilationRepository extends JpaRepository<Compilation, Long> 
 
     // List<Long> getAll
 
-    @Query("select e from Event e" +
-            " where e.compilation = ?1")
-    Optional<List<Event>> getAllEventEdsByCompilation(Compilation compilation);
+//    @Query("select e from Event e" +
+//            " where e.compilation = ?1")
+//    Optional<List<Event>> getAllEventEdsByCompilation(Compilation compilation);
 }

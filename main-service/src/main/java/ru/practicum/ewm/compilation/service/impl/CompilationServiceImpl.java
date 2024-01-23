@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import ru.practicum.ewm.compilation.dto.NewCompilationDto;
+import ru.practicum.ewm.compilation.dto.UpdateCompilationDto;
 import ru.practicum.ewm.compilation.mapper.CompilationMapper;
 import ru.practicum.ewm.compilation.model.Compilation;
 import ru.practicum.ewm.compilation.repository.CompilationRepository;
@@ -20,6 +21,7 @@ import ru.practicum.ewm.event.repository.EventRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -86,8 +88,8 @@ public class CompilationServiceImpl implements CompilationService {
         Optional<Compilation> compilation = compilationRepository.findById(compId);
         if (compilation.isPresent() && compilation.get().getClass().equals(Compilation.class)) {
 
-            Optional<List<Event>> events =
-                    compilationRepository.getAllEventEdsByCompilation(compilation.get());
+//            Optional<List<Event>> events =
+//                    compilationRepository.getAllEventEdsByCompilation(compilation.get());
 
 //            if (events.isPresent() && !events.get().isEmpty()) {
 //                compilation.get().setEvents(events.get());
@@ -156,9 +158,14 @@ public class CompilationServiceImpl implements CompilationService {
                         newCompilationDto.getTitle()
                 );
 
-//            for (Event e : events.get()) {
-//                e.setCompilation(compilation);
-//            }
+              //  events.get().get(0).setCompilation(compilation);
+//                for (Event e : events.get()) {
+//                    e.setCompilation(compilation);
+//                    //eventRepository.save(e);
+//                }
+
+                //System.out.println(events);
+
                 if (compilation.getPinned() == null) {
                     compilation.setPinned(false);
                 }
@@ -188,7 +195,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    public ResponseEntity<Object> patchCompilationAdmin(NewCompilationDto newCompilationDto, long compId) {
+    public ResponseEntity<Object> patchCompilationAdmin(UpdateCompilationDto newCompilationDto, long compId) {
 
         Optional<Compilation> compilation = compilationRepository.findById(compId);
         if (compilation.isPresent() && compilation.get().getClass().equals(Compilation.class)) {

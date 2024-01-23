@@ -12,6 +12,9 @@ import ru.practicum.ewm.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -126,16 +129,28 @@ public class Event {
     )
     private Long views = 0L;
 
-//    @JsonIgnore
-//    @ManyToMany(mappedBy = "events")
-//    private Set<Compilation> compilations;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(
-            name = "compilation_id"
-    )
-    //@OneToMany(mappedBy = "event")
-    private Compilation compilation;
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(
+//            name = "compilation_id"
+//    )
+//    private Compilation compilation;
+
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "compilation_event",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "compilation_id"))
+    private List<Compilation> compilations = new ArrayList<>();
+
+    /*@ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="employee_task",
+            joinColumns=  @JoinColumn(name="employee_id", referencedColumnName="id"),
+            inverseJoinColumns= @JoinColumn(name="task_id", referencedColumnName="id") )
+    private Set<EmployeeTask> tasks = new HashSet<EmployeeTask>();*/
+
+
+
     //private List<CompilationEvent> compilation;
 
    // private Long compilation_id;
