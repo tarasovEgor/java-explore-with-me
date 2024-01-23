@@ -1232,6 +1232,13 @@ queryFactory.selectFrom(customer)
 
         Optional<Event> event = eventRepository.findById(eventId);
 
+        RequestDataDto requestDataDto = new RequestDataDto(
+                "main-service",
+                request.getRemoteAddr(),
+                request.getRequestURI(),
+                String.valueOf(LocalDateTime.now())
+        );
+
         if (event.isPresent() && event.get().getClass().equals(Event.class)) {
 
             if (event.get().getState().equals(State.PUBLISHED)) {
@@ -1239,6 +1246,8 @@ queryFactory.selectFrom(customer)
                 //eventRepository.incrementEventViewsByOne(eventId);
 
                 event.get().setViews(event.get().getViews() + 1);
+
+                httpClient.saveRequestData(requestDataDto);
 
                 return ResponseEntity
                         .status(HttpStatus.OK)
