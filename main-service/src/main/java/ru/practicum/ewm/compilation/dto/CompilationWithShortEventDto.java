@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import ru.practicum.ewm.event.dto.EventShortDto;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor

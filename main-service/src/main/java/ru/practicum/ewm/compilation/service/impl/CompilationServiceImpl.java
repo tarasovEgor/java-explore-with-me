@@ -21,7 +21,6 @@ import ru.practicum.ewm.event.repository.EventRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Slf4j
 @Service
