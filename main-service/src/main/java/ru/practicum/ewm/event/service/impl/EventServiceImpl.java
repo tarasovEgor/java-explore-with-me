@@ -812,14 +812,16 @@ public class EventServiceImpl implements EventService {
 
 
         Predicate predicate = QPredicates.builder()
+
                 .add(text, QEvent.event.annotation::containsIgnoreCase)
                 .add(text, QEvent.event.description::containsIgnoreCase)
-                //.add()
                 .add(paid, QEvent.event.paid::eq)
-                .add(rangeStart, QEvent.event.eventDate::gt)
-                .add(rangeEnd, QEvent.event.eventDate::lt)
-                //.add(onlyAvailable, QEvent.event.participantLimit.lt(QEvent.event.))
+                .add(rangeStart, QEvent.event.eventDate::goe)
+                .add(rangeEnd, QEvent.event.eventDate::loe)
+
                 .buildAnd();
+
+        //.add(onlyAvailable, QEvent.event.participantLimit.lt(QEvent.event.)) - out of use
 
 //        RequestDataDto requestDataDto = new RequestDataDto(
 //                "main-service",
@@ -929,6 +931,20 @@ public class EventServiceImpl implements EventService {
             } else {
 
                 if (sort != null && sort.equals(String.valueOf(SortTypes.EVENT_DATE))) {
+
+                    LocalDateTime start = parse(rangeStart, formatter);
+                    LocalDateTime end = parse(rangeEnd, formatter);
+
+                    if (start.isAfter(end)) {
+
+                        return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(new ApiError(
+                                        "400",
+                                        "Bad Request.",
+                                        "Start date can't come before the end date."
+                                ));
+                    }
 
                     result = eventRepository.findAll(
                             predicate,
@@ -1078,6 +1094,20 @@ public class EventServiceImpl implements EventService {
                 }
 
             } else if (onlyAvailable != null) {
+
+                LocalDateTime start = parse(rangeStart, formatter);
+                LocalDateTime end = parse(rangeEnd, formatter);
+
+                if (start.isAfter(end)) {
+
+                    return ResponseEntity
+                            .status(HttpStatus.BAD_REQUEST)
+                            .body(new ApiError(
+                                    "400",
+                                    "Bad Request.",
+                                    "Start date can't come before the end date."
+                            ));
+                }
 
                 if (sort != null && sort.equals(String.valueOf(SortTypes.EVENT_DATE))) {
 
