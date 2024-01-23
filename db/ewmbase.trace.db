@@ -1,3 +1,0 @@
-2024-01-23 21:30:17 jdbc[13]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]EVENTS"; expected "EXPLAIN, EXECUTE"; SQL statement:
-EVENTS [42001-214]
