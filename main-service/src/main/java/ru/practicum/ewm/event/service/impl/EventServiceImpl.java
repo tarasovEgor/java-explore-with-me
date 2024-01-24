@@ -825,9 +825,9 @@ public class EventServiceImpl implements EventService {
         //.add(onlyAvailable, QEvent.event.participantLimit.lt(QEvent.event.)) - out of use
 
         RequestDataDto requestDataDto = new RequestDataDto(
-                "main-service",
-                request.getRemoteAddr(),
+                "ewm-main-service",
                 request.getRequestURI(),
+                request.getRemoteAddr(),
                 String.valueOf(LocalDateTime.now())
         );
 
@@ -842,6 +842,8 @@ public class EventServiceImpl implements EventService {
         if (predicate == null) {
 
             Page<Event> events = eventRepository.findAll(PageRequest.of(from, size));
+
+            httpClient.saveRequestData(requestDataDto);
 
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -1194,6 +1196,8 @@ public class EventServiceImpl implements EventService {
 
             } else {
 
+                httpClient.saveRequestData(requestDataDto);
+
                 return ResponseEntity
                         .status(HttpStatus.OK)
                         .body(eventRepository.findAll(predicate, PageRequest.of(from, size)));
@@ -1277,9 +1281,9 @@ queryFactory.selectFrom(customer)
         Optional<Event> event = eventRepository.findById(eventId);
 
         RequestDataDto requestDataDto = new RequestDataDto(
-                "main-service",
-                request.getRemoteAddr(),
+                "ewm-main-service",
                 request.getRequestURI(),
+                request.getRemoteAddr(),
                 String.valueOf(LocalDateTime.now())
         );
 

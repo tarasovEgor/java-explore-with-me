@@ -52,7 +52,7 @@ public class RequestDataController {
             @RequestParam String start,
             @RequestParam String end,
             @RequestParam(required = false) String[] uris,
-            @RequestParam(required = false, defaultValue = "false") Boolean unique) {
+            @RequestParam(required = false) Boolean unique) {
         return requestDataService.getAllRequestDataByPeriod(start, end, uris, unique);
     }
 }
