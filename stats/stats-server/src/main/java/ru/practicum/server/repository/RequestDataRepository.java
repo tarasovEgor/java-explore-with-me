@@ -40,4 +40,23 @@ public interface RequestDataRepository extends JpaRepository<RequestData, Long> 
             " order by hits DESC")
     List<ViewStatsDto> findAllByPeriodAndUris(String[] uris, String start, String end);
 
+
+//    @Query("select new ru.practicum.dto.ViewStatsDto (rd.app, rd.uri, COUNT(rd.ip) as hits)" +
+//            " from RequestData rd" +
+//            " where rd.uri like %?1%" +
+//            " and rd.timestamp >= ?2 and rd.timestamp <= ?3" +
+//            " group by rd.ip, rd.uri, rd.app" +
+//            " order by hits DESC")
+//    List<ViewStatsDto> findAllByPeriodAndUris(String[] uris, String start, String end);
+
+    // ------------ NEW METHODS -----------
+
+    @Query("select new ru.practicum.dto.ViewStatsDto (rd.app, rd.uri, COUNT(rd.ip) as hits)" +
+            " from RequestData rd" +
+            " where rd.id = ?1")
+    List<ViewStatsDto> findAllById(long id);
+
+
+
+
 }

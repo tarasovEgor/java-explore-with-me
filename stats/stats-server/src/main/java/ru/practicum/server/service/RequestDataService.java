@@ -1,19 +1,29 @@
 package ru.practicum.server.service;
 
+import org.springframework.http.ResponseEntity;
 import ru.practicum.dto.RequestDataDto;
-import ru.practicum.dto.ViewStatsDto;
-import ru.practicum.server.model.RequestData;
-
-import java.util.List;
 
 public interface RequestDataService {
 
+    //   ---------------  OLD METHODS ----------------- //
    // RequestDataDto saveRequestData(RequestData requestDataDto);
 
-    List<ViewStatsDto> getAllRequestDataByPeriod(String start, String end, String[] uris, Boolean unique);
+    // ---> List<ViewStatsDto> getAllRequestDataByPeriod(String start, String end, String[] uris, Boolean unique);
 
-    // ------------------   MODEL CHANGED TO DTO IN METHOD PARAMS
 
-    RequestData saveRequestData(RequestDataDto requestDataDto);
+    // ---> RequestData saveRequestData(RequestDataDto requestDataDto);
+
+    //   ---------------  OLD METHODS ----------------- //
+
+
+
+
+
+
+    // -----------------    REFACTORED METHODS    ------------------ //
+
+    ResponseEntity<?> saveRequestData(RequestDataDto requestDataDto);
+
+    ResponseEntity<?> getAllRequestDataByPeriod(String start, String end, String[] uris, Boolean unique);
 
 }

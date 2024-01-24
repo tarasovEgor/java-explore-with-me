@@ -877,7 +877,7 @@ public class EventServiceImpl implements EventService {
                             .sorted(Comparator.comparing(EventWithLDT::getEventDate).reversed())
                             .collect(Collectors.toList());
 
-                      httpClient.saveRequestData(requestDataDto);
+                    httpClient.saveRequestData(requestDataDto);
 
                     return ResponseEntity
                             .status(HttpStatus.OK)

@@ -1,15 +1,13 @@
 package ru.practicum.server.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import ru.practicum.dto.RequestDataDto;
 import ru.practicum.dto.ViewStatsDto;
 
-import ru.practicum.server.model.RequestData;
 import ru.practicum.server.service.RequestDataService;
-
-import java.util.List;
 
 @RestController
 public class RequestDataController {
@@ -26,7 +24,9 @@ public class RequestDataController {
 //        return requestDataService.saveRequestData(requestData);
 //    }
 
-    @PostMapping("/hit")
+
+    //   ---------------  OLD METHODS ----------------- //
+    /*@PostMapping("/hit")
     public RequestData saveRequestData(@RequestBody RequestDataDto requestDataDto) {
         return requestDataService.saveRequestData(requestDataDto);
     }
@@ -38,6 +38,22 @@ public class RequestDataController {
             @RequestParam(required = false) String[] uris,
             @RequestParam(required = false, defaultValue = "false") Boolean unique) {
         return requestDataService.getAllRequestDataByPeriod(start, end, uris, unique);
+    }*/
+    //   ---------------  OLD METHODS ----------------- //
+
+
+    @PostMapping("/hit")
+    public ResponseEntity<?> saveRequestData(@RequestBody RequestDataDto requestDataDto) {
+        return requestDataService.saveRequestData(requestDataDto);
     }
 
+
+    @GetMapping("/stats")
+    public ResponseEntity<?> getAllRequestDataByPeriod(
+            @RequestParam String start,
+            @RequestParam String end,
+            @RequestParam(required = false) String[] uris,
+            @RequestParam(required = false, defaultValue = "false") Boolean unique) {
+        return requestDataService.getAllRequestDataByPeriod(start, end, uris, unique);
+    }
 }
