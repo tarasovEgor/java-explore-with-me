@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import ru.practicum.dto.RequestDataDto;
-import ru.practicum.dto.ViewStatsDto;
 
 import ru.practicum.server.service.RequestDataService;
 
