@@ -19,7 +19,6 @@ public class ParticipationRequestController {
     @PostMapping("/users/{userId}/requests")
     public ResponseEntity<Object> saveParticipationRequestPrivate(@PathVariable long userId,
                                                                   @RequestParam long eventId) {
-                                                                   //@RequestBody ParticipationRequestDto requestDto) {
         return requestService.saveParticipationRequestPrivate(userId, eventId);
     }
 
@@ -33,4 +32,5 @@ public class ParticipationRequestController {
                                                                             @PathVariable long requestId) {
         return requestService.cancelParticipationRequestByUserIdPrivate(userId, requestId);
     }
+
 }

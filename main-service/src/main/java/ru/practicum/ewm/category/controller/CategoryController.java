@@ -23,9 +23,6 @@ public class CategoryController {
 
     @PostMapping("/admin/categories")
     public ResponseEntity<Object> saveCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .body(categoryService.saveCategory(newCategoryDto));
         return categoryService.saveCategory(newCategoryDto);
     }
 
@@ -42,14 +39,12 @@ public class CategoryController {
 
     @PatchMapping("/admin/categories/{categoryId}")
     public ResponseEntity<Object> updateCategory(@PathVariable long categoryId,
-                                   @Valid @RequestBody NewCategoryDto newCategoryDto) {
+                                                 @Valid @RequestBody NewCategoryDto newCategoryDto) {
         return categoryService.patchCategory(categoryId, newCategoryDto);
     }
 
     @DeleteMapping("/admin/categories/{categoryId}")
     public ResponseEntity<Object> deleteCategory(@PathVariable long categoryId) {
-//        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-//                .body(categoryService.deleteCategory(categoryId));
         return categoryService.deleteCategory(categoryId);
     }
 

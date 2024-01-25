@@ -22,12 +22,7 @@ public class UserController {
 
     @PostMapping("/admin/users")
     public ResponseEntity<Object> saveUser(@Valid @RequestBody UserDto userDto) {
-        /*
-        *   REFACTOR!!!
-        * */
         return userService.saveUser(userDto);
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .body(userService.saveUser(userDto));
     }
 
     @GetMapping("/admin/users")
@@ -39,10 +34,6 @@ public class UserController {
 
     @DeleteMapping("/admin/users/{userId}")
     public ResponseEntity<Object> deleteUser(@PathVariable long userId) {
-        /*
-        *   REFACTOR!!!
-        * */
-        //return userService.deleteUser(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .body(userService.deleteUser(userId));
     }

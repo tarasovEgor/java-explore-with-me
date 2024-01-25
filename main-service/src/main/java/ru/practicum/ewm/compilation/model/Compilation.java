@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.DynamicUpdate;
+
 import ru.practicum.ewm.event.model.Event;
 
 @Data
@@ -36,18 +37,6 @@ public class Compilation {
             updatable = false
     )
     private Long id;
-
-//    @ManyToMany
-//    @JoinTable(
-//            name = "compilation_event",
-//            joinColumns = @JoinColumn(name = "compilation_id"),
-//            inverseJoinColumns = @JoinColumn(name = "event_id")
-//    )
-
-
-//    @OneToMany(mappedBy = "compilation")
-//    private List<Event> events;
-
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "compilation_event",

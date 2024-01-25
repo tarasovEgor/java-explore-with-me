@@ -12,10 +12,9 @@ public class EventRequestStatusUpdateRequest {
     private Long[] requestIds;
     private Status status;
 
-    public EventRequestStatusUpdateRequest(Long[] requestsIds,
-                                           Status status) {
+    public EventRequestStatusUpdateRequest(Long[] requestsIds, Status status) {
         this.requestIds = requestsIds;
         this.status = status;
-
     }
+
 }

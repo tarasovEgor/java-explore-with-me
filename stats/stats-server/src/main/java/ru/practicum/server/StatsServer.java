@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-//@EnableJpaRepositories("ru.practicum.*")
 @ComponentScan(basePackages = { "ru.practicum.*" })
 @EntityScan("ru.practicum.*")
 public class StatsServer {

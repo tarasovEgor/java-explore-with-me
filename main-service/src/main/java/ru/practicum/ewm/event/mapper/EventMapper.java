@@ -8,11 +8,11 @@ import ru.practicum.ewm.user.mapper.UserMapper;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class EventMapper {
-
 
     public static Event toEvent(EventDto eventDto) {
         return new Event(
@@ -80,10 +80,10 @@ public class EventMapper {
 
         for (Event e : events) {
             dtos.add(toEventWithLDT(e));
-           // e.setEventDate(LocalDateTime.parse(e.getEventDate(), formatter));
         }
 
         return dtos;
+
     }
 
 }

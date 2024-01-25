@@ -8,7 +8,6 @@ import java.util.Optional;
 import ru.practicum.ewm.request.model.ParticipationRequest;
 import ru.practicum.ewm.user.model.User;
 
-
 public interface ParticipationRequestRepository extends JpaRepository<ParticipationRequest, Long> {
 
     Optional<ParticipationRequest> findByRequester(User requester);
@@ -17,12 +16,6 @@ public interface ParticipationRequestRepository extends JpaRepository<Participat
 
     Optional<List<ParticipationRequest>> findAllByEventId(long eventId);
 
-    Optional<List<ParticipationRequest>> findAllByRequesterIdAndEventId(long requesterId, long eventId);
-
-    Optional<ParticipationRequest> findByRequesterIdAndEventId(long requesterId, long eventId);
-
     Optional<List<ParticipationRequest>> findAllByIdIn(Long[] ids);
-
-
 
 }

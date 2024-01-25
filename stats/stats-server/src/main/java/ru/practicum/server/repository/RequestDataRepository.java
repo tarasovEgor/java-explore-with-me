@@ -1,7 +1,5 @@
 package ru.practicum.server.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -41,64 +39,5 @@ public interface RequestDataRepository extends JpaRepository<RequestData, Long> 
             " group by rd.ip, rd.uri, rd.app" +
             " order by hits DESC")
     List<ViewStatsDto> findAllByPeriodAndUris(String[] uris, String start, String end);
-
-
-//    @Query("select new ru.practicum.dto.ViewStatsDto (rd.app, rd.uri, COUNT(rd.ip) as hits)" +
-//            " from RequestData rd" +
-//            " where rd.uri like %?1%" +
-//            " and rd.timestamp >= ?2 and rd.timestamp <= ?3" +
-//            " group by rd.ip, rd.uri, rd.app" +
-//            " order by hits DESC")
-//    List<ViewStatsDto> findAllByPeriodAndUris(String[] uris, String start, String end);
-
-    // ------------ NEW METHODS -----------
-
-    @Query("select new ru.practicum.dto.ViewStatsDto (rd.app, rd.uri, COUNT(rd.ip) as hits)" +
-            " from RequestData rd" +
-            " where rd.id = ?1")
-    List<ViewStatsDto> findAllById(long id);
-
-
-    @Query("select new ru.practicum.dto.ViewStatsDto (rd.app, rd.uri, COUNT(rd.ip) as hits)" +
-            " from RequestData rd" +
-            " where rd.id = ?1" +
-            " group by rd.ip, rd.uri, rd.app" +
-            " order by hits DESC")
-    List<ViewStatsDto> findAllViewStats(long id);
-
-
-    @Query("select new ru.practicum.dto.ViewStatsDto (rd.app, rd.uri, COUNT(rd.ip) as hits)" +
-            " from RequestData rd" +
-            " where rd.timestamp >= ?1 and rd.timestamp <= ?2" +
-            " group by rd.ip, rd.uri, rd.app" +
-            " order by hits DESC")
-    List<ViewStatsDto> findByStartAndEndDate(String start, String end);
-
-
-    @Query("select new ru.practicum.dto.ViewStatsDto (rd.app, rd.uri, COUNT(rd.ip) as hits)" +
-            " from RequestData rd" +
-            " where rd.timestamp >= ?1 and rd.timestamp <= ?2" +
-            " group by rd.ip, rd.uri, rd.app" +
-            " order by hits DESC")
-    List<ViewStatsDto> findByStartAndEndDateUnique(String start, String end);
-
-    // ----------
-    @Query("select new ru.practicum.dto.ViewStatsDto (rd.app, rd.uri, COUNT(rd.ip) as hits)" +
-            " from RequestData rd" +
-            " where rd.uri like ?1%" +
-            " and rd.timestamp >= ?2 and rd.timestamp <= ?3" +
-            " group by rd.ip, rd.uri, rd.app" +
-            " order by hits DESC")
-    Page<List<ViewStatsDto>> findAllByPeriodAndUris(String uri, String start, String end, Pageable pageable);
-
-
-    @Query("select new ru.practicum.dto.ViewStatsDto (rd.app, rd.uri, COUNT(distinct rd.ip) as hits)" +
-            " from RequestData rd" +
-            " where rd.uri like ?1%" +
-            " and rd.timestamp >= ?2 and rd.timestamp <= ?3" +
-            " group by rd.ip, rd.uri, rd.app" +
-            " order by hits DESC")
-    Page<List<ViewStatsDto>> findAllByPeriodAndUrisUnique(String uri, String start, String end, Pageable pageable);
-
 
 }

@@ -13,13 +13,4 @@ public interface CompilationRepository extends JpaRepository<Compilation, Long> 
 
     List<Compilation> getAllByPinnedFalse(Pageable pageable);
 
-//    @Query("select compilation_id from compilation_event" +
-//            " where event_id = ?1")
-//    List<Long> getAllEventIdsByCategory(long eventId);
-
-    // List<Long> getAll
-
-//    @Query("select e from Event e" +
-//            " where e.compilation = ?1")
-//    Optional<List<Event>> getAllEventEdsByCompilation(Compilation compilation);
 }

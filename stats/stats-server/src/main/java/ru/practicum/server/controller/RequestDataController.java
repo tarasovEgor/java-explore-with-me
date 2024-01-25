@@ -18,29 +18,6 @@ public class RequestDataController {
         this.requestDataService = requestDataService;
     }
 
-//    @PostMapping("/hit")
-//    public RequestDataDto saveRequestData(@RequestBody RequestData requestData) {
-//        return requestDataService.saveRequestData(requestData);
-//    }
-
-
-    //   ---------------  OLD METHODS ----------------- //
-    /*@PostMapping("/hit")
-    public RequestData saveRequestData(@RequestBody RequestDataDto requestDataDto) {
-        return requestDataService.saveRequestData(requestDataDto);
-    }
-
-    @GetMapping("/stats")
-    public List<ViewStatsDto> getAllRequestDataByPeriod(
-            @RequestParam String start,
-            @RequestParam String end,
-            @RequestParam(required = false) String[] uris,
-            @RequestParam(required = false, defaultValue = "false") Boolean unique) {
-        return requestDataService.getAllRequestDataByPeriod(start, end, uris, unique);
-    }*/
-    //   ---------------  OLD METHODS ----------------- //
-
-
     @PostMapping("/hit")
     public ResponseEntity<?> saveRequestData(@RequestBody RequestDataDto requestDataDto) {
         return requestDataService.saveRequestData(requestDataDto);

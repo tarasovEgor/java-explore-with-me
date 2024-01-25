@@ -33,8 +33,6 @@ import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.repository.UserRepository;
 import ru.practicum.ewm.utils.QPredicates;
 import ru.practicum.ewm.validation.EventValidation;
-//import ru.practicum.server.model.RequestData;
-//import ru.practicum.server.model.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -49,9 +47,6 @@ import static java.time.LocalDateTime.*;
 @Slf4j
 @Service
 public class EventServiceImpl implements EventService {
-//
-//    @Autowired
-//    private EntityManager em;
 
     private final EventRepository eventRepository;
     private final LocationRepository locationRepository;
@@ -89,9 +84,6 @@ public class EventServiceImpl implements EventService {
             Optional<Category> category = categoryRepository.findById(eventDto.getCategory());
             if (category.isPresent() && category.get().getClass().equals(Category.class)) {
 
-//        LocalDateTime time = LocalDateTime.parse(event.getEventDate(), formatter);
-
-                //LocalDateTime eventDate = LocalDateTime.parse(event.getEventDate(), formatter);
                 if (event.getPaid() == null) {
                     event.setPaid(false);
                 }
@@ -152,37 +144,6 @@ public class EventServiceImpl implements EventService {
 
         }
 
-
-        /*
-         *   CHECKS!!!
-         * *//*
-
-        //if (eventDto.getAnnotation() == null)
-
-        Event event = EventMapper.toEvent(eventDto);
-
-        // переделать
-        Optional<User> initiator = userRepository.findById(userId);
-        Optional<Category> category = categoryRepository.findById(eventDto.getCategory());
-
-        if (initiator.isEmpty() || category.isEmpty())
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiError());
-
-        //   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String createdOn = now().format(formatter);
-
-        event.setInitiator(initiator.get());
-        event.setCategory(category.get());
-        event.setCreatedOn(createdOn);
-        event.setState(State.PENDING);
-
-        locationRepository.save(eventDto.getLocation());
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(eventRepository.save(event));*/
     }
 
     @Override
@@ -200,6 +161,7 @@ public class EventServiceImpl implements EventService {
                                     )
                             )
                     );
+
         } else {
 
             return ResponseEntity
@@ -254,11 +216,6 @@ public class EventServiceImpl implements EventService {
     @Override
     public ResponseEntity<Object> patchEventByEventIdAndUserIdPrivate(UpdateEventUserDto updateEventUserDto,
                                                                       long userId, long eventId) {
-
-        /*
-        - изменить можно только отмененные события или события в состоянии ожидания модерации (Ожидается код ошибки 409)
-        - дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента (Ожидается код ошибки 409)
-        */
 
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent() && user.get().getClass().equals(User.class)) {
@@ -340,30 +297,6 @@ public class EventServiceImpl implements EventService {
 
                     if (updateEventUserDto.getStateAction() != null) {
 
-//                        if (event.get().getState().equals(State.PENDING)) {
-//
-//                            if (updateEventUserDto.getStateAction()
-//                                    .equals(String.valueOf(UserStateActions.SEND_TO_REVIEW))) {
-//
-//                                event.get().setState(State.PENDING);
-//
-//                            } else if (updateEventUserDto.getStateAction()
-//                                    .equals(String.valueOf(UserStateActions.CANCEL_REVIEW))) {
-//
-//                                event.get().setState(State.CANCELED);
-//
-//                            } else {
-//
-//                                return ResponseEntity
-//                                        .status(HttpStatus.BAD_REQUEST)
-//                                        .body(new ApiError(
-//                                                "400",
-//                                                "Bad Request.",
-//                                                "Invalid state action."
-//                                        ));
-//                            }
-//                        }
-
                         if (updateEventUserDto.getStateAction()
                                 .equals(String.valueOf(UserStateActions.CANCEL_REVIEW))) {
 
@@ -386,10 +319,6 @@ public class EventServiceImpl implements EventService {
                     if (updateEventUserDto.getTitle() != null) {
                         event.get().setTitle(updateEventUserDto.getTitle());
                     }
-
-//                    if (!event.get().getState().equals(State.CANCELED)) {
-//                        event.get().setState(State.PENDING);
-//                    }
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
@@ -429,132 +358,6 @@ public class EventServiceImpl implements EventService {
                     ));
         }
 
-//        Optional<User> user = userRepository.findById(userId);
-//        Optional<Event> event;
-//
-//        if (user.isPresent() && user.get().getClass().equals(User.class)) {
-//
-//            event = eventRepository.findByIdAndInitiator(eventId, user.get());
-//            if (event.isPresent() && event.get().getClass().equals(Event.class)) {
-//
-//                if (event.get().getState().equals(State.PENDING)
-//                        || event.get().getState().equals(State.CANCELLED)) {
-//
-//                    if (updateEventUserDto.getStateAction() != null
-//                            && updateEventUserDto.getStateAction()
-//                            .equals(String.valueOf(UserStateActions.SEND_TO_REVIEW))) {
-//
-//                        if (EventValidation.isEventDateValidForUpdate(updateEventUserDto, event.get())
-//                                && event.get().getEventDate() != null && updateEventUserDto.getEventDate() != null) {
-//
-//                            Category category = categoryRepository
-//                                    .findById(updateEventUserDto.getCategory()).get();
-//
-//                            event.get().setAnnotation(updateEventUserDto.getAnnotation());
-//                            event.get().setCategory(category);
-//                            event.get().setDescription(updateEventUserDto.getDescription());
-//                            event.get().setEventDate(updateEventUserDto.getEventDate());
-//                            event.get().setLocation(updateEventUserDto.getLocation());
-//                            event.get().setPaid(updateEventUserDto.getPaid());
-//                            event.get().setParticipantLimit(updateEventUserDto.getParticipantLimit());
-//                            event.get().setRequestModeration(updateEventUserDto.getRequestModeration());
-//                            event.get().setTitle(updateEventUserDto.getTitle());
-//                            event.get().setState(State.PENDING);
-//
-//                            return ResponseEntity
-//                                    .status(HttpStatus.OK)
-//                                    .body(eventRepository.save(event.get()));
-//
-//                        } else {
-//
-//                            return ResponseEntity
-//                                    .status(HttpStatus.BAD_REQUEST)
-//                                    .body(new ApiError(
-//                                            "400",
-//                                            "Bad Request.",
-//                                            "Invalid event date, method not allowed."
-//                                    ));
-//                        }
-//
-//                    } else if (updateEventUserDto.getStateAction() != null
-//                            && updateEventUserDto.getStateAction()
-//                            .equals(String.valueOf(UserStateActions.CANCEL_REVIEW))) {
-//
-//                        if (EventValidation.isEventDateValidForUpdate(updateEventUserDto, event.get())
-//                                && event.get().getEventDate() != null && updateEventUserDto.getEventDate() != null) {
-//
-//                            Category category = categoryRepository
-//                                    .findById(updateEventUserDto.getCategory()).get();
-//
-//                            event.get().setAnnotation(updateEventUserDto.getAnnotation());
-//                            event.get().setCategory(category);
-//                            event.get().setDescription(updateEventUserDto.getDescription());
-//                            event.get().setEventDate(updateEventUserDto.getEventDate());
-//                            event.get().setLocation(updateEventUserDto.getLocation());
-//                            event.get().setPaid(updateEventUserDto.getPaid());
-//                            event.get().setParticipantLimit(updateEventUserDto.getParticipantLimit());
-//                            event.get().setRequestModeration(updateEventUserDto.getRequestModeration());
-//                            event.get().setTitle(updateEventUserDto.getTitle());
-//                            event.get().setState(State.CANCELLED);
-//
-//                            return ResponseEntity
-//                                    .status(HttpStatus.OK)
-//                                    .body(eventRepository.save(event.get()));
-//
-//                        } else {
-//
-//                            return ResponseEntity
-//                                    .status(HttpStatus.BAD_REQUEST)
-//                                    .body(new ApiError(
-//                                            "400",
-//                                            "Bad Request.",
-//                                            "Invalid event date, method not allowed."
-//                                    ));
-//                        }
-//
-//                    } else {
-//
-//                        return ResponseEntity
-//                                .status(HttpStatus.BAD_REQUEST)
-//                                .body(new ApiError(
-//                                        "400",
-//                                        "Bad Request.",
-//                                        "Invalid state action, method not allowed."
-//                                ));
-//                    }
-//
-//                } else {
-//
-//                    return ResponseEntity
-//                            .status(HttpStatus.FORBIDDEN)
-//                            .body(new ApiError(
-//                                    "403",
-//                                    "Forbidden.",
-//                                    "Only pending or canceled events can be changed."
-//                            ));
-//                }
-//
-//            } else {
-//
-//                return ResponseEntity
-//                        .status(HttpStatus.NOT_FOUND)
-//                        .body(new ApiError(
-//                                "404",
-//                                "Not found.",
-//                                "Event doesn't exist."
-//                        ));
-//            }
-//
-//        } else {
-//
-//            return ResponseEntity
-//                    .status(HttpStatus.NOT_FOUND)
-//                    .body(new ApiError(
-//                            "404",
-//                            "Not found.",
-//                            "User doesn't exist."
-//                    ));
-//        }
     }
 
     @Override
@@ -567,11 +370,7 @@ public class EventServiceImpl implements EventService {
             if (event.isPresent() && event.get().getClass().equals(Event.class)) {
 
                 Optional<List<ParticipationRequest>> participationRequests =
-//                        requestRepository.findAllByRequesterIdAndEventId(
-//                                requester.get().getId(),
-//                                event.get().getId()
-//                        );
-                requestRepository.findAllByEventId(event.get().getId());
+                        requestRepository.findAllByEventId(event.get().getId());
 
                 if (!participationRequests.get().isEmpty()) {
 
@@ -615,71 +414,12 @@ public class EventServiceImpl implements EventService {
                     ));
         }
 
-//        Optional<User> requester = userRepository.findById(userId);
-//        if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
-//            Optional<Event> event = eventRepository.findById(eventId);
-//
-//            if (event.isPresent() && event.get().getClass().equals(Event.class)) {
-//
-//                Optional<ParticipationRequest> participationRequest =
-//                        requestRepository.findByRequesterIdAndEventId(
-//                                requester.get().getId(),
-//                                event.get().getId()
-//                        );
-//
-//                if (participationRequest.isPresent() && participationRequest.get().getClass()
-//                        .equals(ParticipationRequest.class)) {
-//
-//                    return ResponseEntity
-//                            .status(HttpStatus.OK)
-//                            .body(ParticipationRequestMapper
-//                                    .toParticipationRequestDto(participationRequest.get())
-//                            );
-//                } else {
-//
-//                    return ResponseEntity
-//                            .status(HttpStatus.NOT_FOUND)
-//                            .body(new ApiError(
-//                                    "404",
-//                                    "Not Found.",
-//                                    "Participation request doesn't exist."
-//                            ));
-//                }
-//
-//            } else {
-//
-//                return ResponseEntity
-//                        .status(HttpStatus.NOT_FOUND)
-//                        .body(new ApiError(
-//                                "404",
-//                                "Not Found.",
-//                                "Event doesn't exist."
-//                        ));
-//            }
-//
-//        } else {
-//
-//            return ResponseEntity
-//                    .status(HttpStatus.NOT_FOUND)
-//                    .body(new ApiError(
-//                            "404",
-//                            "Not Found.",
-//                            "Requester doesn't exist."
-//                    ));
-//        }
     }
 
     @Override
     public ResponseEntity<Object> patchUserEventRequestStatusByUserIdAndEventIdPrivate(
-            EventRequestStatusUpdateRequest updateRequest, long userId, long eventId) {
-
-        /*
-        - если для события лимит заявок равен 0 или отключена пре-модерация заявок, то подтверждение заявок не требуется
-        - нельзя подтвердить заявку, если уже достигнут лимит по заявкам на данное событие (Ожидается код ошибки 409)
-        - статус можно изменить только у заявок, находящихся в состоянии ожидания (Ожидается код ошибки 409)
-        - если при подтверждении данной заявки, лимит заявок для события исчерпан, то все неподтверждённые заявки необходимо отклонить
-        */
-
+            EventRequestStatusUpdateRequest updateRequest, long userId, long eventId
+    ) {
 
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent() && user.get().getClass().equals(User.class)) {
@@ -795,34 +535,14 @@ public class EventServiceImpl implements EventService {
     public ResponseEntity<Object> getAllEventsPublic(HttpServletRequest request, String text, long[] categories,
                                                      Boolean paid, String rangeStart, String rangeEnd,
                                                      Boolean onlyAvailable, String sort, int from, int size) {
-        /*
-        - только опубликованные события                         -   DONE (ALMOST)
-        - текстовый поиск должен быть без учета регистра букв   -   DONE
-        - если в запросе не указан диапазон дат [rangeStart-rangeEnd], то нужно выгружать события,
-         которые произойдут позже текущей даты и времени
-        - информация о каждом событии должна включать в себя количество просмотров и
-         количество уже одобренных заявок на участие
-        - информацию о том, что по этому эндпоинту был осуществлен и обработан запрос,
-         нужно сохранить в сервисе статистикиэто публичный эндпоинт,
-          соответственно в выдаче должны быть только опубликованные события
-        - в случае, если по заданным фильтрам не найдено ни одного события, возвращает пустой список
-        */
-
-
-        //  ---------------------------------------------------------------------------------------
-
 
         Predicate predicate = QPredicates.builder()
-
                 .add(text, QEvent.event.annotation::containsIgnoreCase)
                 .add(text, QEvent.event.description::containsIgnoreCase)
                 .add(paid, QEvent.event.paid::eq)
                 .add(rangeStart, QEvent.event.eventDate::goe)
                 .add(rangeEnd, QEvent.event.eventDate::loe)
-
                 .buildAnd();
-
-        //.add(onlyAvailable, QEvent.event.participantLimit.lt(QEvent.event.)) - out of use
 
         RequestDataDto requestDataDto = new RequestDataDto(
                 "ewm-main-service",
@@ -830,8 +550,6 @@ public class EventServiceImpl implements EventService {
                 request.getRemoteAddr(),
                 String.valueOf(LocalDateTime.now())
         );
-
-        //httpClient.saveRequestData(requestDataDto);
 
         Page<Event> result;
 
@@ -871,7 +589,6 @@ public class EventServiceImpl implements EventService {
                     eventsByCatLTD = foundEvents.stream()
                             .distinct()
                             .filter(x -> x.getConfirmedRequests() < x.getParticipantLimit())
-                            //.filter(x -> x.getState().equals(State.PENDING))
                             .filter(x -> categoryIds.contains(
                                             x.getCategory().getId()
                                     )
@@ -949,14 +666,7 @@ public class EventServiceImpl implements EventService {
                                 ));
                     }
 
-//                    result = eventRepository.findAll(
-//                            predicate,
-//                            PageRequest.of(from, size)
-//                    );
-
                     result = eventRepository.findByEventDateAfter(rangeStart, PageRequest.of(from, size));
-
-                    //List<EventWithLDT> foundEventsLDT = EventMapper.toEventWithLDT(result.getContent());
 
                     List<Event> foundEvents = result.getContent();
 
@@ -966,20 +676,7 @@ public class EventServiceImpl implements EventService {
                                             x.getCategory().getId()
                                     )
                             )
-                            //.sorted(Comparator.comparing(Event::getEventDate).reversed())
                             .collect(Collectors.toList());
-
-//                    eventsByCatLTD = foundEvents.stream()
-//                            .distinct()
-//                            // .filter(x -> x.getConfirmedRequests() < x.getParticipantLimit())
-//                            //.filter(x -> x.getState().equals(State.PENDING))
-//                            .filter(x -> categoryIds.contains(
-//                                            x.getCategory().getId()
-//                                    )
-//                            )
-//                            .sorted(Comparator.comparing(EventWithLDT::getEventDate).reversed())
-//                            .collect(Collectors.toList());
-
 
                     httpClient.saveRequestData(requestDataDto);
 
@@ -996,7 +693,6 @@ public class EventServiceImpl implements EventService {
 
                     eventsByCat = result.getContent().stream()
                             .distinct()
-                            //.filter(x -> x.getConfirmedRequests() < x.getParticipantLimit())
                             .filter(x -> categoryIds.contains(
                                             x.getCategory().getId()
                                     )
@@ -1018,7 +714,6 @@ public class EventServiceImpl implements EventService {
 
                     eventsByCat = result.getContent().stream()
                             .distinct()
-                            //  .filter(x -> x.getConfirmedRequests() < x.getParticipantLimit())
                             .filter(x -> categoryIds.contains(
                                             x.getCategory().getId()
                                     )
@@ -1032,11 +727,6 @@ public class EventServiceImpl implements EventService {
                             .body(eventsByCat);
                 }
             }
-//                categoryIds  = Arrays
-//                        .stream(categories)
-//                        .boxed()
-//                        .collect(Collectors.toList());
-
 
         } else {
 
@@ -1054,7 +744,6 @@ public class EventServiceImpl implements EventService {
                     eventsByCatLTD = foundEvents.stream()
                             .distinct()
                             .filter(x -> x.getConfirmedRequests() < x.getParticipantLimit())
-                            //.filter(x -> x.getState().equals(State.PENDING))
                             .filter(x -> x.getEventDate().isAfter(LocalDateTime.now()))
                             .sorted(Comparator.comparing(EventWithLDT::getEventDate).reversed())
                             .collect(Collectors.toList());
@@ -1086,7 +775,6 @@ public class EventServiceImpl implements EventService {
                     return ResponseEntity
                             .status(HttpStatus.OK)
                             .body(eventsByCatLTD);
-
 
                 } else {
 
@@ -1137,9 +825,6 @@ public class EventServiceImpl implements EventService {
 
                     eventsByCatLTD = foundEvents.stream()
                             .distinct()
-                            //.filter(x -> x.getConfirmedRequests() < x.getParticipantLimit())
-                            //.filter(x -> x.getState().equals(State.PENDING))
-                            //.filter(x -> x.getEventDate().isAfter(LocalDateTime.now()))
                             .sorted(Comparator.comparing(EventWithLDT::getEventDate).reversed())
                             .collect(Collectors.toList());
 
@@ -1160,8 +845,6 @@ public class EventServiceImpl implements EventService {
 
                     eventsByCatLTD = foundEvents.stream()
                             .distinct()
-                           // .filter(x -> x.getConfirmedRequests() < x.getParticipantLimit())
-                           // .filter(x -> x.getEventDate().isAfter(LocalDateTime.now()))
                             .sorted(Comparator.comparing(EventWithLDT::getViews).reversed())
                             .collect(Collectors.toList());
 
@@ -1182,8 +865,6 @@ public class EventServiceImpl implements EventService {
 
                     eventsByCatLTD = foundEvents.stream()
                             .distinct()
-                            //.filter(x -> x.getConfirmedRequests() < x.getParticipantLimit())
-                            //.filter(x -> x.getEventDate().isAfter(LocalDateTime.now()))
                             .collect(Collectors.toList());
 
                     httpClient.saveRequestData(requestDataDto);
@@ -1205,78 +886,10 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-
-
-
-
-    //  Iterable<Event> result2 = eventRepository.findAll(predicate, PageRequest.of(from, size));
-
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(eventRepository.findAll(predicate, PageRequest.of(from, size)));
-
-        //  ---------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-//        BooleanExpression byAnnotation = QEvent.event.annotation.containsIgnoreCase(text);
-//        BooleanExpression byDescription = QEvent.event.description.containsIgnoreCase(text);
-//        BooleanExpression byPaid = QEvent.event.paid.eq(paid);
-//        BooleanExpression byRangeStart = QEvent.event.eventDate.gt(rangeStart);
-//        BooleanExpression byRangeEnd = QEvent.event.eventDate.lt(rangeEnd);
-
-//        OrderSpecifier<String> bySort = QEvent.event.eventDate.desc();
-
-
-//        Iterable<Event> foundEvents = eventRepository.findAll(
-//                byAnnotation
-//                        .and(byDescription)
-//                        .and(byPaid)
-//                        .and(byRangeStart)
-//                        .and(byRangeEnd)
-//        );
-
-       // JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-
-//        QEvent event = QEvent.event;
-//        queryFactory.selectFrom(event)
-//                .orderBy(event.eventDate.desc());
-        /*QCustomer customer = QCustomer.customer;
-queryFactory.selectFrom(customer)
-    .orderBy(customer.lastName.asc(), customer.firstName.desc())
-    .fetch();*/
-
-     //   return ResponseEntity.status(HttpStatus.OK).body(foundEvents);
-
-//
-//        List<BooleanExpression> categoryIds = new ArrayList<>();
-
-
-        //BooleanExpression byCategories = QEvent.event.category.id.in(Arrays.stream(categories).c);
-
-
-//        BooleanExpression byPaid = QEvent.event.paid.eq(paid);
-
-
-
     }
 
     @Override
     public ResponseEntity<Object> getEventByIdPublic(long eventId, HttpServletRequest request) {
-
-        /*
-        - событие должно быть опубликовано
-        - информация о событии должна включать в себя количество просмотров и количество подтвержденных запросов
-        - информацию о том, что по этому эндпоинту был осуществлен и обработан запрос,
-         нужно сохранить в сервисе статистики
-        - в случае, если события с заданным id не найдено, возвращает статус код 404
-         */
 
         Optional<Event> event = eventRepository.findById(eventId);
 
@@ -1290,8 +903,6 @@ queryFactory.selectFrom(customer)
         if (event.isPresent() && event.get().getClass().equals(Event.class)) {
 
             if (event.get().getState().equals(State.PUBLISHED)) {
-
-                //eventRepository.incrementEventViewsByOne(eventId);
 
                 event.get().setViews(event.get().getViews() + 1);
 
@@ -1323,51 +934,8 @@ queryFactory.selectFrom(customer)
                             "Event doesn't exist."
                     ));
         }
-//
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(event);
 
-//        if (event.isEmpty()) {
-//
-//            return ResponseEntity
-//                    .status(HttpStatus.NOT_FOUND)
-//                    .body(new ApiError());
-//        } else {
-//
-//            if (event.get().getState() == State.PUBLISHED) {
-//
-//                RequestDataDto requestDataDto = new RequestDataDto(
-//                        "main-service",
-//                        request.getRemoteAddr(),
-//                        request.getRequestURI(),
-//                        String.valueOf(LocalDateTime.now())
-//                );
-//
-////                eventRepository.incrementEventViewsByOne(eventId);
-////                httpClient.saveRequestData(requestDataDto);
-//
-//            } else {
-//
-//                return ResponseEntity
-//                        .status(HttpStatus.NOT_FOUND)
-//                        .body(new ApiError(
-//                                "404",
-//                                "Event has not been published yet.",
-//                                "Event unavailable.")
-//                        );
-//            }
-//
-//            return ResponseEntity
-//                    .status(HttpStatus.BAD_REQUEST)
-//                    .body(new ApiError(
-//                            "400",
-//                            "Bad Request.",
-//                            "Method unavailable.")
-//                    );
-//        }
     }
-
 
     // ---------------------   ADMIN   --------------------- //
 
@@ -1377,28 +945,13 @@ queryFactory.selectFrom(customer)
                                                     String rangeStart, String rangeEnd,
                                                     int from, int size) {
 
-        /*
-        - Эндпоинт возвращает полную информацию обо всех событиях подходящих под переданные условия
-        - В случае, если по заданным фильтрам не найдено ни одного события, возвращает пустой список
-        */
-
         Page<Event> result;
-
         List<Event> events;
 
         Predicate predicate = QPredicates.builder()
                 .add(rangeStart, QEvent.event.eventDate::gt)
                 .add(rangeEnd, QEvent.event.eventDate::lt)
                 .buildAnd();
-
-        // requestDataDto....
-
-//        RequestDataDto requestDataDto = new RequestDataDto(
-//                "main-service",
-//                request.getRemoteAddr(),
-//                request.getRequestURI(),
-//                String.valueOf(LocalDateTime.now())
-//        );
 
         if (users == null) {
             users = new long[]{};
@@ -1451,8 +1004,6 @@ queryFactory.selectFrom(customer)
                     )
                     .collect(Collectors.toList());
 
-            //  httpClient.saveRequestData(requestDataDto);
-
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(events);
@@ -1476,8 +1027,6 @@ queryFactory.selectFrom(customer)
                     )
                     .collect(Collectors.toList());
 
-            //  httpClient.saveRequestData(requestDataDto);
-
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(events);
@@ -1500,8 +1049,6 @@ queryFactory.selectFrom(customer)
                             )
                     )
                     .collect(Collectors.toList());
-
-            //  httpClient.saveRequestData(requestDataDto);
 
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -1545,8 +1092,6 @@ queryFactory.selectFrom(customer)
                     )
                     .collect(Collectors.toList());
 
-            //  httpClient.saveRequestData(requestDataDto);
-
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(events);
@@ -1566,8 +1111,6 @@ queryFactory.selectFrom(customer)
                     )
                     .collect(Collectors.toList());
 
-            //  httpClient.saveRequestData(requestDataDto);
-
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(events);
@@ -1586,8 +1129,6 @@ queryFactory.selectFrom(customer)
                             )
                     )
                     .collect(Collectors.toList());
-
-            //  httpClient.saveRequestData(requestDataDto);
 
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -1610,12 +1151,6 @@ queryFactory.selectFrom(customer)
 
     @Override
     public ResponseEntity<Object> patchEventDataAdmin(UpdateEventAdminDto updateEventAdminDto, long eventId) {
-
-        /*
-        - Дата начала изменяемого события должна быть не ранее чем за час от даты публикации. (Ожидается код ошибки 409)
-        - Событие можно публиковать, только если оно в состоянии ожидания публикации (Ожидается код ошибки 409)
-        - Событие можно отклонить, только если оно еще не опубликовано (Ожидается код ошибки 409)
-        */
 
         Optional<Event> event = eventRepository.findById(eventId);
 

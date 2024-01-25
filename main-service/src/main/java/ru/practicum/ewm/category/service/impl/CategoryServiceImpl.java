@@ -32,9 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity<Object> saveCategory(NewCategoryDto newCategoryDto) {
-        /*
-        *   CHECKS !!!
-        * */
+
         Category category = CategoryMapper.toCategory(newCategoryDto);
 
         try {
@@ -59,30 +57,28 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity<Object> getCategoryById(long categoryId) {
-        /*
-        *   CHECKS !!!
-        * */
+
         Optional<Category> category = repository.findById(categoryId);
+
         if (category.isEmpty()) return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ApiError());
-        return ResponseEntity.status(HttpStatus.OK).body(category);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(category);
+
     }
 
     @Override
     public List<Category> getAllCategories(int from, int size) {
-        /*
-        *   CHECKS !!!
-        * */
         Page<Category> page = repository.findAll(PageRequest.of(from, size));
         return page.getContent();
     }
 
     @Override
     public ResponseEntity<Object> patchCategory(long categoryId, NewCategoryDto newCategoryDto) {
-        /*
-        *   CHECKS !!!
-        * */
+
         Category category = CategoryMapper.toCategory(newCategoryDto);
         category.setId(categoryId);
 
@@ -103,7 +99,6 @@ public class CategoryServiceImpl implements CategoryService {
                             "Invalid method."
                     ));
         }
-       // return category;
     }
 
     @Override
@@ -138,18 +133,12 @@ public class CategoryServiceImpl implements CategoryService {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(new ApiError(
-
+                            "404",
+                            "Not Found.",
+                            "Category doesn't exist."
                     ));
         }
 
-//        if (category.isEmpty()) {
-//
-//
-//
-//        }
-//
-//
-//        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(category);
     }
 
 

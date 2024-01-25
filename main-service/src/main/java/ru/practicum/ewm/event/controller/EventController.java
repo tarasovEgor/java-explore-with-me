@@ -54,18 +54,20 @@ public class EventController {
 
     @GetMapping("/users/{userId}/events/{eventId}/requests")
     public ResponseEntity<Object> getUserEventRequestByUserIdPrivate(@PathVariable long userId,
-                                                                    @PathVariable long eventId) {
+                                                                     @PathVariable long eventId) {
         return eventService.getUserEventRequestByUserIdAndEventIdPrivate(userId, eventId);
     }
 
     @PatchMapping("/users/{userId}/events/{eventId}/requests")
-    public ResponseEntity<Object> patchUserEventRequestStatusByUserIdAndEventIdPrivate(@PathVariable long userId,
-                                                                                       @PathVariable long eventId,
-                                                                                       @RequestBody EventRequestStatusUpdateRequest updateRequest) {
+    public ResponseEntity<Object> patchUserEventRequestStatusByUserIdAndEventIdPrivate(
+                                                                    @PathVariable long userId,
+                                                                    @PathVariable long eventId,
+                                                                    @RequestBody EventRequestStatusUpdateRequest updateRequest) {
         return eventService.patchUserEventRequestStatusByUserIdAndEventIdPrivate(updateRequest, userId, eventId);
     }
 
     // ------------------  PUBLIC  ------------------
+
     @GetMapping("/events")
     public ResponseEntity<Object> getAllEventsPublic(HttpServletRequest request,
                                                      @RequestParam(required = false) String text,
@@ -78,7 +80,8 @@ public class EventController {
                                                      @RequestParam(required = false, defaultValue = "0") int from,
                                                      @RequestParam(required = false, defaultValue = "10") int size) {
         return eventService
-                .getAllEventsPublic(request, text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+                .getAllEventsPublic(request, text, categories, paid,
+                        rangeStart, rangeEnd, onlyAvailable, sort, from, size);
 
     }
 
@@ -86,7 +89,6 @@ public class EventController {
     public ResponseEntity<Object> getEventByIdPublic(@PathVariable long eventId, HttpServletRequest request) {
         return eventService.getEventByIdPublic(eventId, request);
     }
-
 
     // ------------------  ADMIN  ------------------
 
@@ -99,22 +101,14 @@ public class EventController {
                                                     @RequestParam(required = false) String rangeEnd,
                                                     @RequestParam(required = false, defaultValue = "0") int from,
                                                     @RequestParam(required = false, defaultValue = "10") int size) {
-        return eventService.getAllEventsAdmin(request, users, states, categories, rangeStart, rangeEnd, from, size);
+        return eventService.getAllEventsAdmin(request, users, states,
+                categories, rangeStart, rangeEnd, from, size);
     }
 
-    /*HttpServletRequest request, long[] users,
-                                                    String[] statesStr, long[] categories,
-                                                    String rangeStart, String rangeEnd,
-                                                    int from, int size*/
     @PatchMapping("/admin/events/{eventId}")
     public ResponseEntity<Object> patchEventByIdAdmin(@PathVariable long eventId,
                                                       @Valid @RequestBody UpdateEventAdminDto updatedEventDto) {
         return eventService.patchEventDataAdmin(updatedEventDto, eventId);
     }
 
-
-
-    /*String text, long[] categories, Boolean paid,
-                                                     String rangeStart, String rangeEnd, Boolean onlyAvailable,
-                                                     String sort, int from, int size*/
 }

@@ -24,23 +24,13 @@ public interface EventService {
 
     ResponseEntity<Object> patchUserEventRequestStatusByUserIdAndEventIdPrivate(EventRequestStatusUpdateRequest updateRequest, long userId, long eventId);
 
-
-
     // ---------------------   PUBLIC   --------------------- //
-
-    ResponseEntity<Object> getAllEventsPublic(HttpServletRequest request, String text,
-                                              long[] categories, Boolean paid,
-                                              String rangeStart, String rangeEnd,
-                                              Boolean onlyAvailable, String sort,
-                                              int from, int size);
+    ResponseEntity<Object> getAllEventsPublic(HttpServletRequest request, String text, long[] categories, Boolean paid, String rangeStart, String rangeEnd, Boolean onlyAvailable, String sort, int from, int size);
 
     ResponseEntity<Object> getEventByIdPublic(long eventId, HttpServletRequest request);
 
     // ---------------------   ADMIN   --------------------- //
-
-    ResponseEntity<Object> getAllEventsAdmin(HttpServletRequest request, long[] users, String[] states, long[] categories,  // GET: /admin/events
-                                             String rangeStart, String rangeEnd,
-                                             int from, int size);
+    ResponseEntity<Object> getAllEventsAdmin(HttpServletRequest request, long[] users, String[] states, long[] categories, String rangeStart, String rangeEnd, int from, int size);
 
     ResponseEntity<Object> patchEventDataAdmin(UpdateEventAdminDto updateEventAdminDto, long eventId);
 

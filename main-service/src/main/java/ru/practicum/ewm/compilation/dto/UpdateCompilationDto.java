@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Size;
+
 import java.util.List;
 
 @Data
@@ -16,8 +17,7 @@ public class UpdateCompilationDto {
 
     private Boolean pinned;
 
-//    @NotNull(message = "Title can't be null.")
-//    @NotBlank(message = "Title can't be blank.")
     @Size(min = 1, max = 50, message = "Title can't be shorter than 1 or greater than 50 characters.")
     private String title;
+
 }

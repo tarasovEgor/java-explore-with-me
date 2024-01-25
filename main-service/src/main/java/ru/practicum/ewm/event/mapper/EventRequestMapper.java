@@ -37,9 +37,4 @@ public class EventRequestMapper {
 
     }
 
-//    public static List<EventRequestStatusUpdateResult> toEventRequestStatusUpdateResults(List<ParticipationRequest> requests) {
-//
-//
-//        return toEventRequestStatusUpdateResult(requests);
-//    }
 }

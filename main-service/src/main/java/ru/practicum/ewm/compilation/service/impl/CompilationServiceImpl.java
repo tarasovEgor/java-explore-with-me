@@ -87,16 +87,6 @@ public class CompilationServiceImpl implements CompilationService {
         Optional<Compilation> compilation = compilationRepository.findById(compId);
         if (compilation.isPresent() && compilation.get().getClass().equals(Compilation.class)) {
 
-//            Optional<List<Event>> events =
-//                    compilationRepository.getAllEventEdsByCompilation(compilation.get());
-
-//            if (events.isPresent() && !events.get().isEmpty()) {
-//                compilation.get().setEvents(events.get());
-//            }
-
-//            List<EventShortDto> eventShortDtos =
-//                    CompilationMapper.toEventShortDtoList(compilationRepository.getAllEventEdsByCategory(compilation.get()));
-
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(CompilationMapper
@@ -129,15 +119,10 @@ public class CompilationServiceImpl implements CompilationService {
                     newCompilationDto.getTitle()
             );
 
-//            for (Event e : events.get()) {
-//                e.setCompilation(compilation);
-//            }
-
             if (compilation.getPinned() == null) {
                 compilation.setPinned(false);
             }
 
-            //eventRepository.saveAll(events.get());
             compilationRepository.save(compilation);
 
             return ResponseEntity
@@ -157,19 +142,10 @@ public class CompilationServiceImpl implements CompilationService {
                         newCompilationDto.getTitle()
                 );
 
-              //  events.get().get(0).setCompilation(compilation);
-//                for (Event e : events.get()) {
-//                    e.setCompilation(compilation);
-//                    //eventRepository.save(e);
-//                }
-
-                //System.out.println(events);
-
                 if (compilation.getPinned() == null) {
                     compilation.setPinned(false);
                 }
 
-                //eventRepository.saveAll(events.get());
                 compilationRepository.save(compilation);
 
                 return ResponseEntity
@@ -234,30 +210,6 @@ public class CompilationServiceImpl implements CompilationService {
                             "Compilation doesn't exist."
                     ));
         }
-//        Optional<Compilation> compilation = compilationRepository.findById(compId);
-//        if (compilation.isPresent() && compilation.get().getClass().equals(Compilation.class)) {
-//
-//            Optional<Set<Event>> events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
-//
-//            compilation.get().setEvents(events.get());
-//            compilation.get().setPinned(newCompilationDto.getPinned());
-//            compilation.get().setTitle(newCompilationDto.getTitle());
-//
-//            return ResponseEntity
-//                    .status(HttpStatus.OK)
-//                    .body(CompilationMapper
-//                            .toCompilationWithShortEventDto(
-//                                    compilationRepository.save(compilation.get())
-//                            ));
-//        } else {
-//
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                    .body(new ApiError(
-//                            "404",
-//                            "Not Found.",
-//                            "Compilation doesn't exist."
-//                    ));
-//        }
 
     }
 

@@ -11,6 +11,7 @@ import ru.practicum.ewm.compilation.model.Compilation;
 import ru.practicum.ewm.user.model.User;
 
 import javax.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,6 @@ public class Event {
 
     @Column(
             name = "annotation"
-           // nullable = false
     )
     private String annotation;
 
@@ -71,33 +71,28 @@ public class Event {
 
     @Column(
             name = "event_date"
-            //nullable = false
     )
     private String eventDate;
 
     @ManyToOne
     @JoinColumn(
             name = "initiator_id"
-           // nullable = false
     )
     private User initiator;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(
             name = "location_id"
-           // nullable = false
     )
     private Location location;
 
     @Column(
             name = "paid"
-           // nullable = false
     )
     private Boolean paid;
 
     @Column(
             name = "participant_lim"
-         //   nullable = false
     )
     private Integer participantLimit;
 
@@ -119,7 +114,6 @@ public class Event {
 
     @Column(
             name = "title"
-           // nullable = false
     )
     private String title;
 
@@ -128,62 +122,28 @@ public class Event {
     )
     private Long views = 0L;
 
-
-//    @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(
-//            name = "compilation_id"
-//    )
-//    private Compilation compilation;
-
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "compilation_event",
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "compilation_id"))
     private List<Compilation> compilations = new ArrayList<>();
 
-    /*@ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="employee_task",
-            joinColumns=  @JoinColumn(name="employee_id", referencedColumnName="id"),
-            inverseJoinColumns= @JoinColumn(name="task_id", referencedColumnName="id") )
-    private Set<EmployeeTask> tasks = new HashSet<EmployeeTask>();*/
-
-
-
-    //private List<CompilationEvent> compilation;
-
-   // private Long compilation_id;
-
     public Event(String annotation,
-          //       Category category,
-          //       Integer confirmedRequests,
-          //       String createdOn,
                  String description,
                  String eventDate,
-          //       User initiator,
                  Location location,
                  Boolean paid,
                  Integer participantLimit,
-          //       String publishedOn,
                  Boolean requestModeration,
-          //       State state,
                  String title
-          //       Long views
     ) {
         this.annotation = annotation;
-    //    this.category = category;
-    //    this.confirmedRequests = confirmedRequests;
-    //    this.createdOn = createdOn;
         this.description = description;
         this.eventDate = eventDate;
-    //    this.initiator = initiator;
         this.location = location;
         this.paid = paid;
         this.participantLimit = participantLimit;
-    //    this.publishedOn = publishedOn;
         this.requestModeration = requestModeration;
-    //    this.state = state;
         this.title = title;
-    //    this.views = views;
     }
 }

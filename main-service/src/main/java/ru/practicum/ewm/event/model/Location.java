@@ -42,12 +42,6 @@ public class Location {
     )
     private float lon;
 
-//    @ManyToOne
-//    @JoinColumn(
-//            name = "event_id"
-//    )
-//    private Event eventId;
-
     public Location(float lat, float lon) {
         this.lat = lat;
         this.lon = lon;

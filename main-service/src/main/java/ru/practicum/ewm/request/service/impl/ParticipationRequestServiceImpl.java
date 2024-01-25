@@ -46,14 +46,6 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     @Override
     public ResponseEntity<Object> saveParticipationRequestPrivate(long userId, long eventId) {
 
-        /*
-        - нельзя добавить повторный запрос (Ожидается код ошибки 409)
-        - инициатор события не может добавить запрос на участие в своём событии (Ожидается код ошибки 409)
-        - нельзя участвовать в неопубликованном событии (Ожидается код ошибки 409)
-        - если у события достигнут лимит запросов на участие - необходимо вернуть ошибку (Ожидается код ошибки 409)
-        - если для события отключена пре-модерация запросов на участие, то запрос должен автоматически перейти в состояние подтвержденного
-        */
-
         Optional<User> requester = userRepository.findById(userId);
         if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
 
@@ -90,7 +82,6 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
                     }
 
-
                     if (event.get().getParticipantLimit() < event.get().getConfirmedRequests() + 1
                             && event.get().getParticipantLimit() != 0) {
 
@@ -104,26 +95,12 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
                     }
 
-//                    if (event.get().getParticipantLimit().equals(event.get().getConfirmedRequests())
-//                            && event.get().getParticipantLimit() != 0) {
-//
-//                        return ResponseEntity
-//                                .status(HttpStatus.CONFLICT)
-//                                .body(new ApiError(
-//                                        "409",
-//                                        "Conflict.",
-//                                        "Participant limit is full."
-//                                ));
-//
-//                    }
-
                     DateTimeFormatter formatter =
                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
                     String createdOn = now().format(formatter);
 
                     ParticipationRequest newParticipationRequest;
-
 
                     if (!event.get().getRequestModeration() || event.get().getParticipantLimit() == 0) {
 
@@ -150,11 +127,6 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                                 );
                     }
 
-
-//                if (!event.get().getRequestModeration()) {
-//                    participationRequest.setStatus(Status.CONFIRMED);
-//                }
-
                     ParticipationRequestDto participationRequestDto =
                             ParticipationRequestMapper.toParticipationRequestDto(
                                     requestRepository.save(newParticipationRequest)
@@ -175,7 +147,6 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                             ));
 
                 }
-
 
             } else {
 
@@ -201,53 +172,10 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
         }
 
-
-//        Optional<User> requester = userRepository.findById(userId);
-//        if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
-//
-//            Optional<Event> event = eventRepository.findById(participationRequestDto.getEvent());
-//            if (event.isPresent() && event.get().getClass().equals(Event.class)) {
-//
-//                DateTimeFormatter formatter
-//                        = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//
-//                ParticipationRequest participationRequest =
-//                        ParticipationRequestMapper.toParticipantRequest(
-//                                requester.get(),
-//                                event.get(),
-//                                Status.PENDING
-//                        );
-//
-//                String createdOn = now().format(formatter);
-//                participationRequest.setCreated(createdOn);
-//
-//                ParticipationRequest savedRequest =
-//                        requestRepository.save(participationRequest);
-//
-//                participationRequestDto.setId(savedRequest.getId());
-//                participationRequestDto.setRequester(requester.get().getId());
-//                participationRequestDto.setEvent(event.get().getId());
-//                participationRequestDto.setCreated(LocalDateTime.parse(createdOn, formatter));
-//                participationRequestDto.setStatus(Status.PENDING);
-//
-//
-//                return ResponseEntity
-//                        .status(HttpStatus.CREATED)
-//                        .body(participationRequestDto);
-//            }
-//        }
-//
-//        return null;
-
-
     }
 
     @Override
     public ResponseEntity<Object> getParticipationRequestByUserIdPrivate(long userId) {
-
-        /*
-        *   CHECKS !!!
-        * */
 
         Optional<User> requester = userRepository.findById(userId);
         if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
@@ -288,27 +216,9 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
         }
 
-//        Optional<User> requester = userRepository.findById(userId);
-//        if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
-//            Optional<ParticipationRequest> participationRequest =
-//                    requestRepository.findByRequester(requester.get());
-//
-//            if (participationRequest.isPresent() && participationRequest.get().getClass()
-//                    .equals(ParticipationRequest.class)) {
-//
-//                ParticipationRequestDto foundRequest =
-//                        ParticipationRequestMapper.toParticipationRequestDto(participationRequest.get());
-//
-//                return ResponseEntity
-//                        .status(HttpStatus.OK)
-//                        .body(foundRequest);
-//            }
-//        }
-//
     }
 
     @Override
-    //@Transactional(readOnly = false)
     public ResponseEntity<Object> cancelParticipationRequestByUserIdPrivate(long userId, long requestId) {
 
         Optional<User> requester = userRepository.findById(userId);

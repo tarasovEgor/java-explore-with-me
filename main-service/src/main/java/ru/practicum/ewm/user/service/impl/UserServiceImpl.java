@@ -29,9 +29,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<Object> saveUser(UserDto userDto) {
-        /*
-        *   CHECKS !!!
-        * */
+
         User user = UserMapper.toUser(userDto);
 
         try {
@@ -49,21 +47,12 @@ public class UserServiceImpl implements UserService {
                             "MEthod not allowed."
                     ));
         }
-//        User user = UserMapper.toUser(userDto);
-//
-//
-//
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .body(repository.save(user));
 
     }
 
     @Override
     public ResponseEntity<Object> getUsersById(long[] ids, int from, int size) {
-        /*
-        *   CHECKS !!!
-        * */
+
         Page<User> page = repository.findAll(PageRequest.of(from, size));
         if (ids == null) {
 
@@ -83,14 +72,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User deleteUser(long userId) {
-        /*
-        *   CHECKS !!!
-        * */
         User user = repository.findById(userId).get();
         repository.delete(user);
         log.info("Successfully deleted user with the id of - {}", userId);
         return user;
     }
-
 
 }
