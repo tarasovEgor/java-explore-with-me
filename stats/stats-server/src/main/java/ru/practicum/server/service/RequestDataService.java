@@ -1,7 +1,5 @@
 package ru.practicum.server.service;
 
-import org.springframework.http.ResponseEntity;
-
 import ru.practicum.dto.RequestDataDto;
 import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.server.model.RequestData;

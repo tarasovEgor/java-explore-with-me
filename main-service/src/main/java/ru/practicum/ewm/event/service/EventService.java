@@ -1,7 +1,5 @@
 package ru.practicum.ewm.event.service;
 
-import org.springframework.http.ResponseEntity;
-
 import ru.practicum.ewm.event.dto.*;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.request.dto.ParticipationRequestDto;

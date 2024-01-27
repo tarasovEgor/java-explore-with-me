@@ -1,11 +1,8 @@
 package ru.practicum.ewm.compilation.service;
 
-import org.springframework.http.ResponseEntity;
-
 import ru.practicum.ewm.compilation.dto.CompilationWithShortEventDto;
 import ru.practicum.ewm.compilation.dto.NewCompilationDto;
 import ru.practicum.ewm.compilation.dto.UpdateCompilationDto;
-import ru.practicum.ewm.compilation.model.Compilation;
 
 import java.util.List;
 
