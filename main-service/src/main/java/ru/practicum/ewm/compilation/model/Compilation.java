@@ -1,7 +1,6 @@
 package ru.practicum.ewm.compilation.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -12,13 +11,17 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import ru.practicum.ewm.event.model.Event;
 
-@Data
+//@Data
 @Entity
 @Table(
         name  = "compilation",
         schema = "public"
 )
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
+//@NoArgsConstructor
 @DynamicUpdate
 public class Compilation {
 

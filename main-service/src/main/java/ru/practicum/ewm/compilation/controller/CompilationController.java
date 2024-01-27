@@ -1,5 +1,6 @@
 package ru.practicum.ewm.compilation.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,30 +23,43 @@ public class CompilationController {
 
     @GetMapping("/compilations")
     public ResponseEntity<Object> getAllCompilationsPublic(@RequestParam(required = false) Boolean pinned,
-                                                           @RequestParam(required = false, defaultValue = "0") int from,
-                                                           @RequestParam(required = false, defaultValue = "10") int size) {
-        return compilationService.getAllCompilationsPublic(pinned, from, size);
+                                                           @RequestParam(defaultValue = "0") int from,
+                                                           @RequestParam(defaultValue = "10") int size) {
+        //return compilationService.getAllCompilationsPublic(pinned, from, size);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(compilationService.getAllCompilationsPublic(pinned, from, size));
     }
 
     @GetMapping("/compilations/{compId}")
     public ResponseEntity<Object> getCompilationByIdPublic(@PathVariable long compId) {
-        return compilationService.getCompilationByIdPublic(compId);
+        //return compilationService.getCompilationByIdPublic(compId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(compilationService.getCompilationByIdPublic(compId));
     }
 
     @PostMapping("/admin/compilations")
     public ResponseEntity<Object> saveCompilationAdmin(@Valid @RequestBody NewCompilationDto newCompilationDto) {
-        return compilationService.saveCompilationAdmin(newCompilationDto);
+        //return compilationService.saveCompilationAdmin(newCompilationDto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(compilationService.saveCompilationAdmin(newCompilationDto));
     }
 
     @PatchMapping("/admin/compilations/{compId}")
     public ResponseEntity<Object> patchCompilationAdmin(@Valid @RequestBody UpdateCompilationDto newCompilationDto,
                                                         @PathVariable long compId) {
-        return compilationService.patchCompilationAdmin(newCompilationDto, compId);
+       // return compilationService.patchCompilationAdmin(newCompilationDto, compId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(compilationService.patchCompilationAdmin(newCompilationDto, compId));
     }
 
     @DeleteMapping("/admin/compilations/{compId}")
     public ResponseEntity<Object> deleteCompilationAdmin(@PathVariable long compId) {
-        return compilationService.deleteCompilationAdmin(compId);
+        compilationService.deleteCompilationAdmin(compId);
+        return ResponseEntity.noContent().build();
     }
 
 }

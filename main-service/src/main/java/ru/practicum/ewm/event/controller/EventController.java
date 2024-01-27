@@ -1,6 +1,7 @@
 package ru.practicum.ewm.event.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,33 +30,48 @@ public class EventController {
     @PostMapping("/users/{userId}/events")
     public ResponseEntity<Object> saveEventPrivate(@Valid @RequestBody EventDto eventDto,
                                                    @PathVariable long userId) {
-        return eventService.saveEventPrivate(eventDto, userId);
+        //return eventService.saveEventPrivate(eventDto, userId);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(eventService.saveEventPrivate(eventDto, userId));
     }
 
     @GetMapping("/users/{userId}/events")
     public ResponseEntity<Object> getAllEventsByUserPrivate(@PathVariable long userId,
                                                             @RequestParam(required = false, defaultValue = "0") int from,
                                                             @RequestParam(required = false, defaultValue = "10") int size) {
-        return eventService.getAllEventsByUserPrivate(userId, from, size);
+        //return eventService.getAllEventsByUserPrivate(userId, from, size);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventService.getAllEventsByUserPrivate(userId, from, size));
     }
 
     @GetMapping("/users/{userId}/events/{eventId}")
     public ResponseEntity<Object> getEventByEventIdAndUserIdPrivate(@PathVariable long userId,
                                                                     @PathVariable long eventId) {
-        return eventService.getEventByEventIdAndUserIdPrivate(userId, eventId);
+        //return eventService.getEventByEventIdAndUserIdPrivate(userId, eventId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventService.getEventByEventIdAndUserIdPrivate(userId, eventId));
     }
 
     @PatchMapping("/users/{userId}/events/{eventId}")
     public ResponseEntity<Object> patchEventByEventIdAndUserIdPrivate(@PathVariable long userId,
                                                                       @PathVariable long eventId,
                                                                       @Valid @RequestBody UpdateEventUserDto updatedEventDto) {
-        return eventService.patchEventByEventIdAndUserIdPrivate(updatedEventDto, userId, eventId);
+        //return eventService.patchEventByEventIdAndUserIdPrivate(updatedEventDto, userId, eventId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventService.patchEventByEventIdAndUserIdPrivate(updatedEventDto, userId, eventId));
     }
 
     @GetMapping("/users/{userId}/events/{eventId}/requests")
     public ResponseEntity<Object> getUserEventRequestByUserIdPrivate(@PathVariable long userId,
                                                                      @PathVariable long eventId) {
-        return eventService.getUserEventRequestByUserIdAndEventIdPrivate(userId, eventId);
+        //return eventService.getUserEventRequestByUserIdAndEventIdPrivate(userId, eventId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventService.getUserEventRequestByUserIdAndEventIdPrivate(userId, eventId));
     }
 
     @PatchMapping("/users/{userId}/events/{eventId}/requests")
@@ -63,7 +79,10 @@ public class EventController {
                                                                     @PathVariable long userId,
                                                                     @PathVariable long eventId,
                                                                     @RequestBody EventRequestStatusUpdateRequest updateRequest) {
-        return eventService.patchUserEventRequestStatusByUserIdAndEventIdPrivate(updateRequest, userId, eventId);
+        //return eventService.patchUserEventRequestStatusByUserIdAndEventIdPrivate(updateRequest, userId, eventId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventService.patchUserEventRequestStatusByUserIdAndEventIdPrivate(updateRequest, userId, eventId));
     }
 
     // ------------------  PUBLIC  ------------------
@@ -79,15 +98,24 @@ public class EventController {
                                                      @RequestParam(required = false) String sort,
                                                      @RequestParam(required = false, defaultValue = "0") int from,
                                                      @RequestParam(required = false, defaultValue = "10") int size) {
-        return eventService
-                .getAllEventsPublic(request, text, categories, paid,
-                        rangeStart, rangeEnd, onlyAvailable, sort, from, size);
-
+//        return eventService
+//                .getAllEventsPublic(request, text, categories, paid,
+//                        rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventService.getAllEventsPublic(
+                        request, text, categories, paid,
+                        rangeStart, rangeEnd, onlyAvailable,
+                        sort, from, size)
+                );
     }
 
     @GetMapping("/events/{eventId}")
     public ResponseEntity<Object> getEventByIdPublic(@PathVariable long eventId, HttpServletRequest request) {
-        return eventService.getEventByIdPublic(eventId, request);
+        //return eventService.getEventByIdPublic(eventId, request);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventService.getEventByIdPublic(eventId, request));
     }
 
     // ------------------  ADMIN  ------------------
@@ -101,14 +129,21 @@ public class EventController {
                                                     @RequestParam(required = false) String rangeEnd,
                                                     @RequestParam(required = false, defaultValue = "0") int from,
                                                     @RequestParam(required = false, defaultValue = "10") int size) {
-        return eventService.getAllEventsAdmin(request, users, states,
-                categories, rangeStart, rangeEnd, from, size);
+//        return eventService.getAllEventsAdmin(request, users, states,
+//                categories, rangeStart, rangeEnd, from, size);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventService.getAllEventsAdmin(request, users, states,
+                        categories, rangeStart, rangeEnd, from, size));
     }
 
     @PatchMapping("/admin/events/{eventId}")
     public ResponseEntity<Object> patchEventByIdAdmin(@PathVariable long eventId,
                                                       @Valid @RequestBody UpdateEventAdminDto updatedEventDto) {
-        return eventService.patchEventDataAdmin(updatedEventDto, eventId);
+        //return eventService.patchEventDataAdmin(updatedEventDto, eventId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventService.patchEventDataAdmin(updatedEventDto, eventId));
     }
 
 }

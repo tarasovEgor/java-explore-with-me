@@ -2,19 +2,34 @@ package ru.practicum.ewm.compilation.service;
 
 import org.springframework.http.ResponseEntity;
 
+import ru.practicum.ewm.compilation.dto.CompilationWithShortEventDto;
 import ru.practicum.ewm.compilation.dto.NewCompilationDto;
 import ru.practicum.ewm.compilation.dto.UpdateCompilationDto;
+import ru.practicum.ewm.compilation.model.Compilation;
+
+import java.util.List;
 
 public interface CompilationService {
 
-    ResponseEntity<Object> saveCompilationAdmin(NewCompilationDto newCompilationDto);
+    //ResponseEntity<Object> saveCompilationAdmin(NewCompilationDto newCompilationDto);
 
-    ResponseEntity<Object> deleteCompilationAdmin(long compId);
+    CompilationWithShortEventDto saveCompilationAdmin(NewCompilationDto newCompilationDto);
 
-    ResponseEntity<Object> patchCompilationAdmin(UpdateCompilationDto newCompilationDto, long compId);
 
-    ResponseEntity<Object> getAllCompilationsPublic(Boolean pinned, int from, int size);
+//    ResponseEntity<Object> deleteCompilationAdmin(long compId);
 
-    ResponseEntity<Object> getCompilationByIdPublic(long compId);
+    void deleteCompilationAdmin(long compId);
+
+  //  ResponseEntity<Object> patchCompilationAdmin(UpdateCompilationDto newCompilationDto, long compId);
+
+    CompilationWithShortEventDto patchCompilationAdmin(UpdateCompilationDto newCompilationDto, long compId);
+
+//    ResponseEntity<Object> getAllCompilationsPublic(Boolean pinned, int from, int size);
+
+    List<CompilationWithShortEventDto> getAllCompilationsPublic(Boolean pinned, int from, int size);
+
+    //ResponseEntity<Object> getCompilationByIdPublic(long compId);
+
+    CompilationWithShortEventDto getCompilationByIdPublic(long compId);
 
 }

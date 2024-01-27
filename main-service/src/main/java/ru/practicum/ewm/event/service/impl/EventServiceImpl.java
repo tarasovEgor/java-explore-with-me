@@ -25,6 +25,14 @@ import ru.practicum.ewm.event.model.State;
 import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.event.repository.LocationRepository;
 import ru.practicum.ewm.event.service.EventService;
+import ru.practicum.ewm.exception.BadRequestMethodException;
+import ru.practicum.ewm.exception.InvalidMethodException;
+import ru.practicum.ewm.exception.category.CategoryDoesNotExistException;
+import ru.practicum.ewm.exception.event.*;
+import ru.practicum.ewm.exception.request.ParticipationRequestDoesNotExistException;
+import ru.practicum.ewm.exception.request.ParticipationRequestLimitIsFullException;
+import ru.practicum.ewm.exception.user.UserDoesNotExistException;
+import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 import ru.practicum.ewm.request.mapper.ParticipationRequestMapper;
 import ru.practicum.ewm.request.model.ParticipationRequest;
 import ru.practicum.ewm.request.model.Status;
@@ -74,8 +82,7 @@ public class EventServiceImpl implements EventService {
     // ---------------------   PRIVATE   --------------------- //
 
     @Override
-    public ResponseEntity<Object> saveEventPrivate(EventDto eventDto, long userId) {
-
+    public Event saveEventPrivate(EventDto eventDto, long userId) {
         Event event = EventMapper.toEvent(eventDto);
 
         Optional<User> initiator = userRepository.findById(userId);
@@ -105,79 +112,88 @@ public class EventServiceImpl implements EventService {
 
                     locationRepository.save(eventDto.getLocation());
 
-                    return ResponseEntity
-                            .status(HttpStatus.CREATED)
-                            .body(eventRepository.save(event));
+                    return eventRepository.save(event);
+//                    return ResponseEntity
+//                            .status(HttpStatus.CREATED)
+//                            .body(eventRepository.save(event));
 
                 } else {
 
-                    return ResponseEntity
-                            .status(HttpStatus.BAD_REQUEST)
-                            .body(new ApiError(
-                                    "400",
-                                    "Bad Request.",
-                                    "Invalid event date."
-                            ));
+                    throw new InvalidEventDateException("Invalid event date.");
+//                    return ResponseEntity
+//                            .status(HttpStatus.BAD_REQUEST)
+//                            .body(new ApiError(
+//                                    "400",
+//                                    "Bad Request.",
+//                                    "Invalid event date."
+//                            ));
                 }
 
             } else {
 
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiError(
-                                "404",
-                                "Not Found.",
-                                "Category doesn't exist."
-                        ));
+                throw new CategoryDoesNotExistException("Category doesn't exist.");
+//                return ResponseEntity
+//                        .status(HttpStatus.NOT_FOUND)
+//                        .body(new ApiError(
+//                                "404",
+//                                "Not Found.",
+//                                "Category doesn't exist."
+//                        ));
 
             }
 
         } else {
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError(
-                            "404",
-                            "Not Found.",
-                            "User doesn't exist."
-                    ));
+            throw new UserDoesNotExistException("User doesn't exist.");
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "404",
+//                            "Not Found.",
+//                            "User doesn't exist."
+//                    ));
 
         }
 
     }
 
     @Override
-    public ResponseEntity<Object> getAllEventsByUserPrivate(long userId, int from, int size) {
-
+    public List<EventShortDto> getAllEventsByUserPrivate(long userId, int from, int size) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent() && user.get().getClass().equals(User.class)) {
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(EventMapper.toEventShortDto(
-                                    eventRepository.findAllByInitiator(
-                                            user.get(),
-                                            PageRequest.of(from, size)
-                                    )
-                            )
-                    );
+            return EventMapper.toEventShortDto(
+                    eventRepository.findAllByInitiator(
+                            user.get(),
+                            PageRequest.of(from, size)
+                    )
+            );
+
+//            return ResponseEntity
+//                    .status(HttpStatus.OK)
+//                    .body(EventMapper.toEventShortDto(
+//                                    eventRepository.findAllByInitiator(
+//                                            user.get(),
+//                                            PageRequest.of(from, size)
+//                                    )
+//                            )
+//                    );
 
         } else {
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError(
-                            "400",
-                            "Not Found.",
-                            "User doesn't exist."
-                    ));
+            throw new UserDoesNotExistException("User doesn't exist.");
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "400",
+//                            "Not Found.",
+//                            "User doesn't exist."
+//                    ));
         }
-
     }
 
     @Override
-    public ResponseEntity<Object> getEventByEventIdAndUserIdPrivate(long userId, long eventId) {
-
+    public Event getEventByEventIdAndUserIdPrivate(long userId, long eventId) {
         Optional<User> user = userRepository.findById(userId);
         Optional<Event> event;
 
@@ -186,37 +202,39 @@ public class EventServiceImpl implements EventService {
             event = eventRepository.findByIdAndInitiator(eventId, user.get());
             if (event.isPresent() && event.get().getClass().equals(Event.class)) {
 
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(event.get());
+                return event.get();
+//                return ResponseEntity
+//                        .status(HttpStatus.OK)
+//                        .body(event.get());
 
             } else {
 
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiError(
-                                "404",
-                                "Not Found.",
-                                "Event doesn't exist."
-                        ));
+                throw new EventDoesNotExistException("Event doesn't exist.");
+//                return ResponseEntity
+//                        .status(HttpStatus.NOT_FOUND)
+//                        .body(new ApiError(
+//                                "404",
+//                                "Not Found.",
+//                                "Event doesn't exist."
+//                        ));
             }
 
         } else {
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError(
-                            "404",
-                            "Not Found.",
-                            "User doesn't exist."
-                    ));
+            throw new UserDoesNotExistException("User doesn't exist.");
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "404",
+//                            "Not Found.",
+//                            "User doesn't exist."
+//                    ));
         }
     }
 
     @Override
-    public ResponseEntity<Object> patchEventByEventIdAndUserIdPrivate(UpdateEventUserDto updateEventUserDto,
+    public Event patchEventByEventIdAndUserIdPrivate(UpdateEventUserDto updateEventUserDto,
                                                                       long userId, long eventId) {
-
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent() && user.get().getClass().equals(User.class)) {
 
@@ -242,13 +260,14 @@ public class EventServiceImpl implements EventService {
 
                         } else {
 
-                            return ResponseEntity
-                                    .status(HttpStatus.NOT_FOUND)
-                                    .body(new ApiError(
-                                            "404",
-                                            "Not Found.",
-                                            "Category doesn't exist."
-                                    ));
+                            throw new CategoryDoesNotExistException("Category doesn't exist.");
+//                            return ResponseEntity
+//                                    .status(HttpStatus.NOT_FOUND)
+//                                    .body(new ApiError(
+//                                            "404",
+//                                            "Not Found.",
+//                                            "Category doesn't exist."
+//                                    ));
 
                         }
 
@@ -268,13 +287,14 @@ public class EventServiceImpl implements EventService {
 
                         } else {
 
-                            return ResponseEntity
-                                    .status(HttpStatus.BAD_REQUEST)
-                                    .body(new ApiError(
-                                            "400",
-                                            "Bad Request.",
-                                            "Invalid event date."
-                                    ));
+                            throw new InvalidEventDateException("Invalid event date.");
+//                            return ResponseEntity
+//                                    .status(HttpStatus.BAD_REQUEST)
+//                                    .body(new ApiError(
+//                                            "400",
+//                                            "Bad Request.",
+//                                            "Invalid event date."
+//                                    ));
                         }
 
                     }
@@ -305,13 +325,14 @@ public class EventServiceImpl implements EventService {
                         } else if (!updateEventUserDto.getStateAction()
                                 .equals(String.valueOf(UserStateActions.SEND_TO_REVIEW))) {
 
-                            return ResponseEntity
-                                        .status(HttpStatus.BAD_REQUEST)
-                                        .body(new ApiError(
-                                                "400",
-                                                "Bad Request.",
-                                                "Invalid state action."
-                                        ));
+                            throw new InvalidStateActionException("Invalid state action.");
+//                            return ResponseEntity
+//                                        .status(HttpStatus.BAD_REQUEST)
+//                                        .body(new ApiError(
+//                                                "400",
+//                                                "Bad Request.",
+//                                                "Invalid state action."
+//                                        ));
 
                         }
                     }
@@ -320,49 +341,52 @@ public class EventServiceImpl implements EventService {
                         event.get().setTitle(updateEventUserDto.getTitle());
                     }
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(eventRepository.save(event.get()));
+                    return eventRepository.save(event.get());
+//                    return ResponseEntity
+//                            .status(HttpStatus.OK)
+//                            .body(eventRepository.save(event.get()));
 
                 } else {
 
-                    return ResponseEntity
-                            .status(HttpStatus.CONFLICT)
-                            .body(new ApiError(
-                                    "409",
-                                    "Conflict.",
-                                    "Event is not in the right state."
-                            ));
+                    throw new InvalidEventStateException("Event is not in the right state.");
+
+//                    return ResponseEntity
+//                            .status(HttpStatus.CONFLICT)
+//                            .body(new ApiError(
+//                                    "409",
+//                                    "Conflict.",
+//                                    "Event is not in the right state."
+//                            ));
                 }
 
             } else {
 
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiError(
-                                "404",
-                                "Not Found.",
-                                "Event doesn't exist."
-                        ));
+                throw new EventDoesNotExistException("Event doesn't exist.");
+//                return ResponseEntity
+//                        .status(HttpStatus.NOT_FOUND)
+//                        .body(new ApiError(
+//                                "404",
+//                                "Not Found.",
+//                                "Event doesn't exist."
+//                        ));
 
             }
 
         } else {
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError(
-                            "404",
-                            "Not Found.",
-                            "User doesn't exist."
-                    ));
+            throw new UserDoesNotExistException("User doesn't exist.");
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "404",
+//                            "Not Found.",
+//                            "User doesn't exist."
+//                    ));
         }
-
     }
 
     @Override
-    public ResponseEntity<Object> getUserEventRequestByUserIdAndEventIdPrivate(long userId, long eventId) {
-
+    public List<ParticipationRequestDto> getUserEventRequestByUserIdAndEventIdPrivate(long userId, long eventId) {
         Optional<User> requester = userRepository.findById(userId);
         if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
 
@@ -374,53 +398,56 @@ public class EventServiceImpl implements EventService {
 
                 if (!participationRequests.get().isEmpty()) {
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(ParticipationRequestMapper
-                                    .toParticipationRequestDto(participationRequests.get())
-                            );
+                    return ParticipationRequestMapper
+                            .toParticipationRequestDto(participationRequests.get());
+//                    return ResponseEntity
+//                            .status(HttpStatus.OK)
+//                            .body(ParticipationRequestMapper
+//                                    .toParticipationRequestDto(participationRequests.get())
+//                            );
 
                 } else {
 
-                    return ResponseEntity
-                            .status(HttpStatus.NOT_FOUND)
-                            .body(new ApiError(
-                                    "404",
-                                    "Not Found.",
-                                    "Participant requests don't exist."
-                            ));
+                    throw new ParticipationRequestDoesNotExistException("Participation requests don't exist.");
+//                    return ResponseEntity
+//                            .status(HttpStatus.NOT_FOUND)
+//                            .body(new ApiError(
+//                                    "404",
+//                                    "Not Found.",
+//                                    "Participant requests don't exist."
+//                            ));
 
                 }
 
             } else {
 
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiError(
-                                "404",
-                                "Not Found.",
-                                "Event doesn't exist."
-                        ));
+                throw new EventDoesNotExistException("Event doesn't exist.");
+//                return ResponseEntity
+//                        .status(HttpStatus.NOT_FOUND)
+//                        .body(new ApiError(
+//                                "404",
+//                                "Not Found.",
+//                                "Event doesn't exist."
+//                        ));
             }
 
         } else {
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError(
-                            "404",
-                            "Not Found.",
-                            "User doesn't exist."
-                    ));
+            throw new UserDoesNotExistException("User doesn't exist.");
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "404",
+//                            "Not Found.",
+//                            "User doesn't exist."
+//                    ));
         }
-
     }
 
     @Override
-    public ResponseEntity<Object> patchUserEventRequestStatusByUserIdAndEventIdPrivate(
+    public  EventRequestStatusUpdateResult patchUserEventRequestStatusByUserIdAndEventIdPrivate(
             EventRequestStatusUpdateRequest updateRequest, long userId, long eventId
     ) {
-
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent() && user.get().getClass().equals(User.class)) {
             Optional<Event> event = eventRepository.findById(eventId);
@@ -430,13 +457,14 @@ public class EventServiceImpl implements EventService {
                 if (event.get().getParticipantLimit().equals(event.get().getConfirmedRequests())
                         && event.get().getParticipantLimit() != 0) {
 
-                    return ResponseEntity
-                            .status(HttpStatus.CONFLICT)
-                            .body(new ApiError(
-                                    "409",
-                                    "Conflict.",
-                                    "Participant limit is full."
-                            ));
+                    throw new ParticipationRequestLimitIsFullException("Participation request limit is full.");
+//                    return ResponseEntity
+//                            .status(HttpStatus.CONFLICT)
+//                            .body(new ApiError(
+//                                    "409",
+//                                    "Conflict.",
+//                                    "Participant limit is full."
+//                            ));
 
                 }
 
@@ -462,10 +490,12 @@ public class EventServiceImpl implements EventService {
                         event.get().setConfirmedRequests(event.get().getConfirmedRequests() + requests.get().size());
                         eventRepository.save(event.get());
 
-                        return ResponseEntity
-                                .status(HttpStatus.OK)
-                                .body(EventRequestMapper
-                                        .toEventRequestStatusUpdateResult(requests.get()));
+                        return EventRequestMapper
+                                .toEventRequestStatusUpdateResult(requests.get());
+//                        return ResponseEntity
+//                                .status(HttpStatus.OK)
+//                                .body(EventRequestMapper
+//                                        .toEventRequestStatusUpdateResult(requests.get()));
 
                     } else if (updateRequest.getStatus().equals(Status.REJECTED)) {
 
@@ -477,65 +507,71 @@ public class EventServiceImpl implements EventService {
                             }
                         }
 
-                        return ResponseEntity
-                                .status(HttpStatus.OK)
-                                .body(EventRequestMapper
-                                        .toEventRequestStatusUpdateResult(requests.get()));
+                        return EventRequestMapper
+                                .toEventRequestStatusUpdateResult(requests.get());
+
+//                        return ResponseEntity
+//                                .status(HttpStatus.OK)
+//                                .body(EventRequestMapper
+//                                        .toEventRequestStatusUpdateResult(requests.get()));
 
                     } else {
 
-                        return ResponseEntity
-                                .status(HttpStatus.BAD_REQUEST)
-                                .body(new ApiError(
-                                        "400",
-                                        "Bad Request.",
-                                        "Method not allowed."
-                                ));
+                        throw new BadRequestMethodException("Method not allowed.");
+//                        return ResponseEntity
+//                                .status(HttpStatus.BAD_REQUEST)
+//                                .body(new ApiError(
+//                                        "400",
+//                                        "Bad Request.",
+//                                        "Method not allowed."
+//                                ));
 
                     }
 
                 } else {
 
-                    return ResponseEntity
-                            .status(HttpStatus.NOT_FOUND)
-                            .body(new ApiError(
-                                    "404",
-                                    "Not Found.",
-                                    "Requests do not exist."
-                            ));
+                    throw new ParticipationRequestDoesNotExistException("Participation requests don't exist.");
+//                    return ResponseEntity
+//                            .status(HttpStatus.NOT_FOUND)
+//                            .body(new ApiError(
+//                                    "404",
+//                                    "Not Found.",
+//                                    "Requests do not exist."
+//                            ));
 
                 }
 
             } else {
 
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiError(
-                                "404",
-                                "Not Found.",
-                                "Event doesn't exist."
-                        ));
+                throw new EventDoesNotExistException("Event doesn't exist.");
+//                return ResponseEntity
+//                        .status(HttpStatus.NOT_FOUND)
+//                        .body(new ApiError(
+//                                "404",
+//                                "Not Found.",
+//                                "Event doesn't exist."
+//                        ));
 
             }
 
         } else {
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError(
-                            "404",
-                            "Not Found.",
-                            "User doesn't exist."
-                    ));
+            throw new UserDoesNotExistException("User doesn't exist.");
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "404",
+//                            "Not Found.",
+//                            "User doesn't exist."
+//                    ));
         }
     }
 
     // ---------------------   PUBLIC   --------------------- //
 
     @Override
-    public ResponseEntity<Object> getAllEventsPublic(HttpServletRequest request, String text, long[] categories,
+    public List<Event> getAllEventsPublic(HttpServletRequest request, String text, long[] categories,
                                                      Boolean paid, String rangeStart, String rangeEnd,
                                                      Boolean onlyAvailable, String sort, int from, int size) {
-
         Predicate predicate = QPredicates.builder()
                 .add(text, QEvent.event.annotation::containsIgnoreCase)
                 .add(text, QEvent.event.description::containsIgnoreCase)
@@ -563,9 +599,10 @@ public class EventServiceImpl implements EventService {
 
             httpClient.saveRequestData(requestDataDto);
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(events.getContent());
+            return events.getContent();
+//            return ResponseEntity
+//                    .status(HttpStatus.OK)
+//                    .body(events.getContent());
         }
 
         if (categories.length != 0) {
@@ -598,9 +635,10 @@ public class EventServiceImpl implements EventService {
 
                     httpClient.saveRequestData(requestDataDto);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(eventsByCatLTD);
+                    return EventMapper.toEventList(eventsByCatLTD);
+//                    return ResponseEntity
+//                            .status(HttpStatus.OK)
+//                            .body(eventsByCatLTD);
 
                 } else if (sort != null && sort.equals(String.valueOf(SortTypes.VIEWS))) {
 
@@ -621,9 +659,10 @@ public class EventServiceImpl implements EventService {
 
                     httpClient.saveRequestData(requestDataDto);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(eventsByCat);
+//                    return ResponseEntity
+//                            .status(HttpStatus.OK)
+//                            .body(eventsByCat);
+                    return eventsByCat;
 
                 } else {
 
@@ -643,9 +682,10 @@ public class EventServiceImpl implements EventService {
 
                     httpClient.saveRequestData(requestDataDto);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(eventsByCat);
+                    return eventsByCat;
+//                    return ResponseEntity
+//                            .status(HttpStatus.OK)
+//                            .body(eventsByCat);
                 }
 
             } else {
@@ -657,13 +697,15 @@ public class EventServiceImpl implements EventService {
 
                     if (start.isAfter(end)) {
 
-                        return ResponseEntity
-                                .status(HttpStatus.BAD_REQUEST)
-                                .body(new ApiError(
-                                        "400",
-                                        "Bad Request.",
-                                        "Start date can't come before the end date."
-                                ));
+                        throw new InvalidEventDateException("Start date can't come before the end date.");
+
+//                        return ResponseEntity
+//                                .status(HttpStatus.BAD_REQUEST)
+//                                .body(new ApiError(
+//                                        "400",
+//                                        "Bad Request.",
+//                                        "Start date can't come before the end date."
+//                                ));
                     }
 
                     result = eventRepository.findByEventDateAfter(rangeStart, PageRequest.of(from, size));
@@ -680,9 +722,10 @@ public class EventServiceImpl implements EventService {
 
                     httpClient.saveRequestData(requestDataDto);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(eventsByCat);
+                    return eventsByCat;
+//                    return ResponseEntity
+//                            .status(HttpStatus.OK)
+//                            .body(eventsByCat);
 
                 } else if (sort != null && sort.equals(String.valueOf(SortTypes.VIEWS))) {
 
@@ -702,9 +745,10 @@ public class EventServiceImpl implements EventService {
 
                     httpClient.saveRequestData(requestDataDto);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(eventsByCat);
+                    return eventsByCat;
+//                    return ResponseEntity
+//                            .status(HttpStatus.OK)
+//                            .body(eventsByCat);
                 } else {
 
                     result = eventRepository.findAll(
@@ -722,9 +766,10 @@ public class EventServiceImpl implements EventService {
 
                     httpClient.saveRequestData(requestDataDto);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(eventsByCat);
+                    return eventsByCat;
+//                    return ResponseEntity
+//                            .status(HttpStatus.OK)
+//                            .body(eventsByCat);
                 }
             }
 
@@ -750,9 +795,10 @@ public class EventServiceImpl implements EventService {
 
                     httpClient.saveRequestData(requestDataDto);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(eventsByCatLTD);
+//                    return ResponseEntity
+//                            .status(HttpStatus.OK)
+//                            .body(eventsByCatLTD);
+                    return EventMapper.toEventList(eventsByCatLTD);
 
                 } else if (sort != null && sort.equals(String.valueOf(SortTypes.VIEWS))) {
 
@@ -772,9 +818,10 @@ public class EventServiceImpl implements EventService {
 
                     httpClient.saveRequestData(requestDataDto);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(eventsByCatLTD);
+//                    return ResponseEntity
+//                            .status(HttpStatus.OK)
+//                            .body(eventsByCatLTD);
+                    return EventMapper.toEventList(eventsByCatLTD);
 
                 } else {
 
@@ -793,9 +840,10 @@ public class EventServiceImpl implements EventService {
 
                     httpClient.saveRequestData(requestDataDto);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(eventsByCatLTD);
+//                    return ResponseEntity
+//                            .status(HttpStatus.OK)
+//                            .body(eventsByCatLTD);
+                    return EventMapper.toEventList(eventsByCatLTD);
                 }
 
             } else if (onlyAvailable != null) {
@@ -805,13 +853,14 @@ public class EventServiceImpl implements EventService {
 
                 if (start.isAfter(end)) {
 
-                    return ResponseEntity
-                            .status(HttpStatus.BAD_REQUEST)
-                            .body(new ApiError(
-                                    "400",
-                                    "Bad Request.",
-                                    "Start date can't come before the end date."
-                            ));
+                    throw new InvalidEventDateException("Start date can't come before the end date.");
+//                    return ResponseEntity
+//                            .status(HttpStatus.BAD_REQUEST)
+//                            .body(new ApiError(
+//                                    "400",
+//                                    "Bad Request.",
+//                                    "Start date can't come before the end date."
+//                            ));
                 }
 
                 if (sort != null && sort.equals(String.valueOf(SortTypes.EVENT_DATE))) {
@@ -830,9 +879,10 @@ public class EventServiceImpl implements EventService {
 
                     httpClient.saveRequestData(requestDataDto);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(eventsByCatLTD);
+                    return EventMapper.toEventList(eventsByCatLTD);
+//                    return ResponseEntity
+//                            .status(HttpStatus.OK)
+//                            .body(eventsByCatLTD);
 
                 } else if (sort != null && sort.equals(String.valueOf(SortTypes.VIEWS))) {
 
@@ -850,9 +900,10 @@ public class EventServiceImpl implements EventService {
 
                     httpClient.saveRequestData(requestDataDto);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(eventsByCatLTD);
+                    return EventMapper.toEventList(eventsByCatLTD);
+//                    return ResponseEntity
+//                            .status(HttpStatus.OK)
+//                            .body(eventsByCatLTD);
 
                 } else {
 
@@ -869,9 +920,10 @@ public class EventServiceImpl implements EventService {
 
                     httpClient.saveRequestData(requestDataDto);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(eventsByCatLTD);
+                    return EventMapper.toEventList(eventsByCatLTD);
+//                    return ResponseEntity
+//                            .status(HttpStatus.OK)
+//                            .body(eventsByCatLTD);
 
                 }
 
@@ -879,18 +931,19 @@ public class EventServiceImpl implements EventService {
 
                 httpClient.saveRequestData(requestDataDto);
 
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(eventRepository.findAll(predicate, PageRequest.of(from, size)));
+                return eventRepository
+                        .findAll(predicate, PageRequest.of(from, size))
+                        .getContent();
+//                return ResponseEntity
+//                        .status(HttpStatus.OK)
+//                        .body(eventRepository.findAll(predicate, PageRequest.of(from, size)));
 
             }
         }
-
     }
 
     @Override
-    public ResponseEntity<Object> getEventByIdPublic(long eventId, HttpServletRequest request) {
-
+    public Event getEventByIdPublic(long eventId, HttpServletRequest request) {
         Optional<Event> event = eventRepository.findById(eventId);
 
         RequestDataDto requestDataDto = new RequestDataDto(
@@ -908,43 +961,44 @@ public class EventServiceImpl implements EventService {
 
                 httpClient.saveRequestData(requestDataDto);
 
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(event.get());
+                return event.get();
+//                return ResponseEntity
+//                        .status(HttpStatus.OK)
+//                        .body(event.get());
 
             } else {
 
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiError(
-                                "404",
-                                "Not Found.",
-                                "Event hasn't been published."
-                        ));
+                throw new EventHasNotBeenPublishedYetException("Event hasn't been published.");
+//                return ResponseEntity
+//                        .status(HttpStatus.NOT_FOUND)
+//                        .body(new ApiError(
+//                                "404",
+//                                "Not Found.",
+//                                "Event hasn't been published."
+//                        ));
 
             }
 
         } else {
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError(
-                            "404",
-                            "Not Found.",
-                            "Event doesn't exist."
-                    ));
+            throw new EventDoesNotExistException("Event doesn't exist.");
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "404",
+//                            "Not Found.",
+//                            "Event doesn't exist."
+//                    ));
         }
-
     }
 
     // ---------------------   ADMIN   --------------------- //
 
     @Override
-    public ResponseEntity<Object> getAllEventsAdmin(HttpServletRequest request, long[] users,
+    public List<Event> getAllEventsAdmin(HttpServletRequest request, long[] users,
                                                     String[] statesStr, long[] categories,
                                                     String rangeStart, String rangeEnd,
                                                     int from, int size) {
-
         Page<Event> result;
         List<Event> events;
 
@@ -967,9 +1021,10 @@ public class EventServiceImpl implements EventService {
 
             Page<Event> foundEvents = eventRepository.findAll(PageRequest.of(from, size));
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(foundEvents.getContent());
+            return foundEvents.getContent();
+//            return ResponseEntity
+//                    .status(HttpStatus.OK)
+//                    .body(foundEvents.getContent());
         }
 
         Optional<List<Long>> userIds = Optional.of(Arrays.stream(users)
@@ -1004,9 +1059,10 @@ public class EventServiceImpl implements EventService {
                     )
                     .collect(Collectors.toList());
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(events);
+            return events;
+//            return ResponseEntity
+//                    .status(HttpStatus.OK)
+//                    .body(events);
 
         } else if (!userIds.get().isEmpty() && !states.get().isEmpty()) {
 
@@ -1027,9 +1083,10 @@ public class EventServiceImpl implements EventService {
                     )
                     .collect(Collectors.toList());
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(events);
+            return events;
+//            return ResponseEntity
+//                    .status(HttpStatus.OK)
+//                    .body(events);
 
         } else if (!userIds.get().isEmpty() && !categoryIds.get().isEmpty()) {
 
@@ -1050,9 +1107,10 @@ public class EventServiceImpl implements EventService {
                     )
                     .collect(Collectors.toList());
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(events);
+            return events;
+//            return ResponseEntity
+//                    .status(HttpStatus.OK)
+//                    .body(events);
 
         } else if (!states.get().isEmpty() && !categoryIds.get().isEmpty()) {
 
@@ -1073,9 +1131,10 @@ public class EventServiceImpl implements EventService {
                     )
                     .collect(Collectors.toList());
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(events);
+            return events;
+//            return ResponseEntity
+//                    .status(HttpStatus.OK)
+//                    .body(events);
 
         } else if (!userIds.get().isEmpty()) {
 
@@ -1092,9 +1151,10 @@ public class EventServiceImpl implements EventService {
                     )
                     .collect(Collectors.toList());
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(events);
+            return events;
+//            return ResponseEntity
+//                    .status(HttpStatus.OK)
+//                    .body(events);
 
         } else if (!categoryIds.get().isEmpty()) {
 
@@ -1111,9 +1171,10 @@ public class EventServiceImpl implements EventService {
                     )
                     .collect(Collectors.toList());
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(events);
+            return events;
+//            return ResponseEntity
+//                    .status(HttpStatus.OK)
+//                    .body(events);
 
         } else if (!states.get().isEmpty()) {
 
@@ -1130,9 +1191,10 @@ public class EventServiceImpl implements EventService {
                     )
                     .collect(Collectors.toList());
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(events);
+            return events;
+//            return ResponseEntity
+//                    .status(HttpStatus.OK)
+//                    .body(events);
 
         } else {
 
@@ -1141,17 +1203,16 @@ public class EventServiceImpl implements EventService {
                     PageRequest.of(from, size)
             );
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(result.getContent());
+            return result.getContent();
+//            return ResponseEntity
+//                    .status(HttpStatus.OK)
+//                    .body(result.getContent());
 
         }
-
     }
 
     @Override
-    public ResponseEntity<Object> patchEventDataAdmin(UpdateEventAdminDto updateEventAdminDto, long eventId) {
-
+    public Event patchEventDataAdmin(UpdateEventAdminDto updateEventAdminDto, long eventId) {
         Optional<Event> event = eventRepository.findById(eventId);
 
         if (event.isPresent() && event.get().getClass().equals(Event.class)) {
@@ -1170,13 +1231,14 @@ public class EventServiceImpl implements EventService {
 
                 } else {
 
-                    return ResponseEntity
-                            .status(HttpStatus.NOT_FOUND)
-                            .body(new ApiError(
-                                    "404",
-                                    "Not Found.",
-                                    "Category doesn't exist."
-                            ));
+                    throw new CategoryDoesNotExistException("Category doesn't exist exception.");
+//                    return ResponseEntity
+//                            .status(HttpStatus.NOT_FOUND)
+//                            .body(new ApiError(
+//                                    "404",
+//                                    "Not Found.",
+//                                    "Category doesn't exist."
+//                            ));
 
                 }
             }
@@ -1195,13 +1257,14 @@ public class EventServiceImpl implements EventService {
 
                 } else {
 
-                    return ResponseEntity
-                            .status(HttpStatus.BAD_REQUEST)
-                            .body(new ApiError(
-                                    "400",
-                                    "Bad Request.",
-                                    "Invalid event date."
-                            ));
+                    throw new InvalidEventDateException("Invalid event date.");
+//                    return ResponseEntity
+//                            .status(HttpStatus.BAD_REQUEST)
+//                            .body(new ApiError(
+//                                    "400",
+//                                    "Bad Request.",
+//                                    "Invalid event date."
+//                            ));
                 }
 
             }
@@ -1238,24 +1301,26 @@ public class EventServiceImpl implements EventService {
 
                     } else {
 
-                        return ResponseEntity
-                                .status(HttpStatus.BAD_REQUEST)
-                                .body(new ApiError(
-                                        "400",
-                                        "Bad Request.",
-                                        "Invalid state action."
-                                ));
+                        throw new InvalidStateActionException("Invalid state action.");
+//                        return ResponseEntity
+//                                .status(HttpStatus.BAD_REQUEST)
+//                                .body(new ApiError(
+//                                        "400",
+//                                        "Bad Request.",
+//                                        "Invalid state action."
+//                                ));
                     }
 
                 } else {
 
-                    return ResponseEntity
-                            .status(HttpStatus.CONFLICT)
-                            .body(new ApiError(
-                               "409",
-                               "Conflict.",
-                               "Event is not in the right state."
-                            ));
+                    throw new InvalidEventStateException("Event is not in the right state.");
+//                    return ResponseEntity
+//                            .status(HttpStatus.CONFLICT)
+//                            .body(new ApiError(
+//                               "409",
+//                               "Conflict.",
+//                               "Event is not in the right state."
+//                            ));
 
                 }
 
@@ -1265,19 +1330,21 @@ public class EventServiceImpl implements EventService {
                 event.get().setTitle(updateEventAdminDto.getTitle());
             }
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(eventRepository.save(event.get()));
+            return eventRepository.save(event.get());
+//            return ResponseEntity
+//                    .status(HttpStatus.OK)
+//                    .body(eventRepository.save(event.get()));
 
         } else {
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError(
-                       "404",
-                       "Not Found.",
-                            "Event doesn't exist."
-                    ));
+            throw new EventDoesNotExistException("Event doesn't exist.");
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                       "404",
+//                       "Not Found.",
+//                            "Event doesn't exist."
+//                    ));
 
         }
     }

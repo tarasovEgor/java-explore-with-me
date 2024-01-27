@@ -12,7 +12,6 @@ import java.util.List;
 public class CompilationMapper {
 
     public static List<EventShortDto> toEventShortDtoList(List<Event> events) {
-
         List<EventShortDto> shortEventDtos = new ArrayList<>();
 
         for (Event e : events) {
@@ -23,7 +22,6 @@ public class CompilationMapper {
     }
 
     public static CompilationWithShortEventDto toCompilationWithShortEventDto(Compilation compilation) {
-
         List<EventShortDto> eventShortDtos = toEventShortDtoList(compilation.getEvents());
 
 
@@ -33,11 +31,9 @@ public class CompilationMapper {
                 compilation.getPinned(),
                 compilation.getTitle()
         );
-
     }
 
     public static List<CompilationWithShortEventDto> toCompilationWithShortEventDto(List<Compilation> compilations) {
-
         List<CompilationWithShortEventDto> dtos = new ArrayList<>();
 
         for (Compilation c : compilations) {

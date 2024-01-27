@@ -1,11 +1,10 @@
 package ru.practicum.ewm.category.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+//@Data
 @Entity
 @Table(
         name = "category",
@@ -14,7 +13,11 @@ import javax.persistence.*;
                 @UniqueConstraint(name = "category_name", columnNames = "name")
         }
 )
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+//@NoArgsConstructor
+@RequiredArgsConstructor
 public class Category {
 
     @Id

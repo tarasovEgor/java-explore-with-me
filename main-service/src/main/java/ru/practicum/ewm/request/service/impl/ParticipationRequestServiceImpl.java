@@ -11,6 +11,14 @@ import ru.practicum.ewm.error.ApiError;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.State;
 import ru.practicum.ewm.event.repository.EventRepository;
+import ru.practicum.ewm.exception.BadRequestMethodException;
+import ru.practicum.ewm.exception.event.EventDoesNotExistException;
+import ru.practicum.ewm.exception.event.InvalidEventStateException;
+import ru.practicum.ewm.exception.request.InvalidInitiatorException;
+import ru.practicum.ewm.exception.request.ParticipationRequestDoesNotExistException;
+import ru.practicum.ewm.exception.request.ParticipationRequestLimitIsFullException;
+import ru.practicum.ewm.exception.request.RepeatedRequestException;
+import ru.practicum.ewm.exception.user.UserDoesNotExistException;
 import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 import ru.practicum.ewm.request.mapper.ParticipationRequestMapper;
 import ru.practicum.ewm.request.model.ParticipationRequest;
@@ -44,8 +52,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     }
 
     @Override
-    public ResponseEntity<Object> saveParticipationRequestPrivate(long userId, long eventId) {
-
+    public ParticipationRequestDto saveParticipationRequestPrivate(long userId, long eventId) {
         Optional<User> requester = userRepository.findById(userId);
         if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
 
@@ -60,38 +67,41 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                     if (participationRequest.isPresent() && participationRequest.get().getClass()
                             .equals(ParticipationRequest.class)) {
 
-                        return ResponseEntity
-                                .status(HttpStatus.CONFLICT)
-                                .body(new ApiError(
-                                        "409",
-                                        "Conflict.",
-                                        "Unable to send a repeated request."
-                                ));
+                        throw new RepeatedRequestException("Unable to send a repeated request.");
+//                        return ResponseEntity
+//                                .status(HttpStatus.CONFLICT)
+//                                .body(new ApiError(
+//                                        "409",
+//                                        "Conflict.",
+//                                        "Unable to send a repeated request."
+//                                ));
 
                     }
 
                     if (event.get().getInitiator().getId().equals(requester.get().getId())) {
 
-                        return ResponseEntity
-                                .status(HttpStatus.CONFLICT)
-                                .body(new ApiError(
-                                        "409",
-                                        "Conflict.",
-                                        "Initiator can't send a request to his own event."
-                                ));
+                        throw new InvalidInitiatorException("Initiator can't send a request to his own event.");
+//                        return ResponseEntity
+//                                .status(HttpStatus.CONFLICT)
+//                                .body(new ApiError(
+//                                        "409",
+//                                        "Conflict.",
+//                                        "Initiator can't send a request to his own event."
+//                                ));
 
                     }
 
                     if (event.get().getParticipantLimit() < event.get().getConfirmedRequests() + 1
                             && event.get().getParticipantLimit() != 0) {
 
-                        return ResponseEntity
-                                .status(HttpStatus.CONFLICT)
-                                .body(new ApiError(
-                                        "409",
-                                        "Conflict.",
-                                        "Participant limit is full."
-                                ));
+                        throw new ParticipationRequestLimitIsFullException("Participation request limit is full.");
+//                        return ResponseEntity
+//                                .status(HttpStatus.CONFLICT)
+//                                .body(new ApiError(
+//                                        "409",
+//                                        "Conflict.",
+//                                        "Participant limit is full."
+//                                ));
 
                     }
 
@@ -127,56 +137,59 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                                 );
                     }
 
-                    ParticipationRequestDto participationRequestDto =
-                            ParticipationRequestMapper.toParticipationRequestDto(
-                                    requestRepository.save(newParticipationRequest)
-                            );
+//                    ParticipationRequestDto participationRequestDto =
+//                            ParticipationRequestMapper.toParticipationRequestDto(
+//                                    requestRepository.save(newParticipationRequest)
+//                            );
 
-                    return ResponseEntity
-                            .status(HttpStatus.CREATED)
-                            .body(participationRequestDto);
+                    return ParticipationRequestMapper
+                            .toParticipationRequestDto(requestRepository.save(newParticipationRequest));
+//                    return ResponseEntity
+//                            .status(HttpStatus.CREATED)
+//                            .body(participationRequestDto);
 
                 } else {
 
-                    return ResponseEntity
-                            .status(HttpStatus.CONFLICT)
-                            .body(new ApiError(
-                                    "409",
-                                    "Conflict.",
-                                    "Event hasn't been published yet."
-                            ));
+//                    return ResponseEntity
+//                            .status(HttpStatus.CONFLICT)
+//                            .body(new ApiError(
+//                                    "409",
+//                                    "Conflict.",
+//                                    "Event hasn't been published yet."
+//                            ));
+                    throw new InvalidEventStateException("Event hasn't been published yet.");
 
                 }
 
             } else {
 
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiError(
-                                "404",
-                                "Not Found.",
-                                "Event doesn't exist."
-                        ));
+                throw new EventDoesNotExistException("Event doesn't exist.");
+//                return ResponseEntity
+//                        .status(HttpStatus.NOT_FOUND)
+//                        .body(new ApiError(
+//                                "404",
+//                                "Not Found.",
+//                                "Event doesn't exist."
+//                        ));
 
             }
 
         } else {
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError(
-                            "404",
-                            "Not Found.",
-                            "Requester doesn't exist."
-                    ));
+            throw new UserDoesNotExistException("Requester doesn't exist.");
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "404",
+//                            "Not Found.",
+//                            "Requester doesn't exist."
+//                    ));
 
         }
-
     }
 
     @Override
-    public ResponseEntity<Object> getParticipationRequestByUserIdPrivate(long userId) {
-
+    public List<ParticipationRequestDto> getParticipationRequestByUserIdPrivate(long userId) {
         Optional<User> requester = userRepository.findById(userId);
         if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
 
@@ -188,39 +201,40 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                 List<ParticipationRequestDto> foundRequest =
                         ParticipationRequestMapper.toParticipationRequestDto(participationRequests.get());
 
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(foundRequest);
+                return foundRequest;
+//                return ResponseEntity
+//                        .status(HttpStatus.OK)
+//                        .body(foundRequest);
 
             } else {
 
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiError(
-                                "404",
-                                "Not Found.",
-                                "Participation requests do not exist."
-                        ));
+                throw new ParticipationRequestDoesNotExistException("Participation requests don't exist.");
+//                return ResponseEntity
+//                        .status(HttpStatus.NOT_FOUND)
+//                        .body(new ApiError(
+//                                "404",
+//                                "Not Found.",
+//                                "Participation requests do not exist."
+//                        ));
 
             }
 
         } else {
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError(
-                            "404",
-                            "Not Found.",
-                            "User does not exist."
-                    ));
+            throw new UserDoesNotExistException("User doesn't exist.");
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "404",
+//                            "Not Found.",
+//                            "User does not exist."
+//                    ));
 
         }
-
     }
 
     @Override
-    public ResponseEntity<Object> cancelParticipationRequestByUserIdPrivate(long userId, long requestId) {
-
+    public ParticipationRequestDto cancelParticipationRequestByUserIdPrivate(long userId, long requestId) {
         Optional<User> requester = userRepository.findById(userId);
         if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
 
@@ -234,45 +248,51 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
                     participationRequest.get().setStatus(Status.CANCELED);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(ParticipationRequestMapper
-                                    .toParticipationRequestDto(
-                                            requestRepository.save(participationRequest.get())
-                                    ));
+                    return ParticipationRequestMapper
+                            .toParticipationRequestDto(
+                                    requestRepository.save(participationRequest.get())
+                            );
+//                    return ResponseEntity
+//                            .status(HttpStatus.OK)
+//                            .body(ParticipationRequestMapper
+//                                    .toParticipationRequestDto(
+//                                            requestRepository.save(participationRequest.get())
+//                                    ));
 
                 } else {
 
-                    return ResponseEntity
-                            .status(HttpStatus.BAD_REQUEST)
-                            .body(new ApiError(
-                                    "400",
-                                    "Bad Request.",
-                                    "Method not allowed."
-                            ));
+                    throw new BadRequestMethodException("Method not allowed.");
+//                    return ResponseEntity
+//                            .status(HttpStatus.BAD_REQUEST)
+//                            .body(new ApiError(
+//                                    "400",
+//                                    "Bad Request.",
+//                                    "Method not allowed."
+//                            ));
                 }
 
             } else {
 
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiError(
-                                "404",
-                                "Not Found.",
-                                "Participant request doesn't exist."
-                        ));
+                throw new ParticipationRequestDoesNotExistException("Participation request doesn't exist.");
+//                return ResponseEntity
+//                        .status(HttpStatus.NOT_FOUND)
+//                        .body(new ApiError(
+//                                "404",
+//                                "Not Found.",
+//                                "Participant request doesn't exist."
+//                        ));
             }
 
         } else {
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError(
-                            "404",
-                            "Not Found.",
-                            "User doesn't exist."
-                    ));
+            throw new UserDoesNotExistException("User doesn't exist.");
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "404",
+//                            "Not Found.",
+//                            "User doesn't exist."
+//                    ));
         }
-
     }
 }

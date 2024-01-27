@@ -21,19 +21,25 @@ public class UserController {
     }
 
     @PostMapping("/admin/users")
-    public ResponseEntity<Object> saveUser(@Valid @RequestBody UserDto userDto) {
-        return userService.saveUser(userDto);
+    public ResponseEntity<?> saveUser(@Valid @RequestBody UserDto userDto) {
+        //return userService.saveUser(userDto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(userService.saveUser(userDto));
     }
 
     @GetMapping("/admin/users")
-    public ResponseEntity<Object> getUsersById(@RequestParam(required = false) long[] ids,
+    public ResponseEntity<?> getUsersById(@RequestParam(required = false) long[] ids,
                                                @RequestParam(required = false, defaultValue = "0") int from,
                                                @RequestParam(required = false, defaultValue = "10") int size) {
-        return userService.getUsersById(ids, from, size);
+        //return userService.getUsersById(ids, from, size);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userService.getUsersById(ids, from, size));
     }
 
     @DeleteMapping("/admin/users/{userId}")
-    public ResponseEntity<Object> deleteUser(@PathVariable long userId) {
+    public ResponseEntity<?> deleteUser(@PathVariable long userId) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .body(userService.deleteUser(userId));
     }

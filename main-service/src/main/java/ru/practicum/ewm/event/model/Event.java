@@ -1,7 +1,6 @@
 package ru.practicum.ewm.event.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -16,15 +15,19 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+//@Data
 @Entity
 @Table(
         name = "events",
         schema = "public"
 )
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @DynamicUpdate
 @DynamicInsert
-@NoArgsConstructor
+//@NoArgsConstructor
 public class Event {
 
     @Id
@@ -145,5 +148,39 @@ public class Event {
         this.participantLimit = participantLimit;
         this.requestModeration = requestModeration;
         this.title = title;
+    }
+
+    public Event(Long id,
+                 String annotation,
+                 Category category,
+                 Integer confirmedRequests,
+                 String createdOn,
+                 String description,
+                 String eventDate,
+                 User initiator,
+                 Location location,
+                 Boolean paid,
+                 Integer participantLimit,
+                 LocalDateTime publishedOn,
+                 Boolean requestModeration,
+                 State state,
+                 String title,
+                 Long views) {
+        this.id = id;
+        this.annotation = annotation;
+        this.category = category;
+        this.confirmedRequests = confirmedRequests;
+        this.createdOn = createdOn;
+        this.description = description;
+        this.eventDate = eventDate;
+        this.initiator = initiator;
+        this.location = location;
+        this.paid = paid;
+        this.participantLimit = participantLimit;
+        this.publishedOn = publishedOn;
+        this.requestModeration = requestModeration;
+        this.state = state;
+        this.title = title;
+        this.views = views;
     }
 }

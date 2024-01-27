@@ -12,7 +12,6 @@ import ru.practicum.ewm.request.model.Status;
 public class EventRequestMapper {
 
     public static EventRequestStatusUpdateResult toEventRequestStatusUpdateResult(List<ParticipationRequest> requests) {
-
         List<ParticipationRequestDto> confirmedRequests = new ArrayList<>();
         List<ParticipationRequestDto> rejectedRequests = new ArrayList<>();
 
@@ -34,7 +33,6 @@ public class EventRequestMapper {
               confirmedRequests,
               rejectedRequests
         );
-
     }
 
 }

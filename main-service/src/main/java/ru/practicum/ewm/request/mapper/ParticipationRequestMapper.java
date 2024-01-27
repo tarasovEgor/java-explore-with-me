@@ -14,7 +14,6 @@ import java.util.List;
 public class ParticipationRequestMapper {
 
     public static ParticipationRequest toParticipantRequest(Event event, User requester, Status status, String created) {
-
         return new ParticipationRequest(
                 event,
                 requester,
@@ -25,7 +24,6 @@ public class ParticipationRequestMapper {
     }
 
     public static ParticipationRequestDto toParticipationRequestDto(ParticipationRequest participationRequest) {
-
         DateTimeFormatter formatter =
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -38,11 +36,9 @@ public class ParticipationRequestMapper {
                 participationRequest.getStatus(),
                 createdOn
         );
-
     }
 
     public static List<ParticipationRequestDto> toParticipationRequestDto(List<ParticipationRequest> participationRequests) {
-
         List<ParticipationRequestDto> dtos = new ArrayList<>();
 
         for (ParticipationRequest req : participationRequests) {

@@ -1,17 +1,20 @@
 package ru.practicum.ewm.user.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+//@Data
 @Entity
 @Table(
         name = "users",
         schema = "public"
 )
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
+//@NoArgsConstructor
 public class User {
 
     @Id

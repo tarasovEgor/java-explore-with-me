@@ -27,6 +27,40 @@ public class EventMapper {
         );
     }
 
+    public static Event toEvent(EventWithLDT eventWithLDT) {
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        String eventDate = eventWithLDT.getEventDate().format(formatter);
+
+        return new Event(
+                eventWithLDT.getId(),
+                eventWithLDT.getAnnotation(),
+                eventWithLDT.getCategory(),
+                eventWithLDT.getConfirmedRequests(),
+                eventWithLDT.getCreatedOn(),
+                eventWithLDT.getDescription(),
+                eventDate,
+                eventWithLDT.getInitiator(),
+                eventWithLDT.getLocation(),
+                eventWithLDT.getPaid(),
+                eventWithLDT.getParticipantLimit(),
+                eventWithLDT.getPublishedOn(),
+                eventWithLDT.getRequestModeration(),
+                eventWithLDT.getState(),
+                eventWithLDT.getTitle(),
+                eventWithLDT.getViews()
+        );
+    }
+
+    public static List<Event> toEventList(List<EventWithLDT> eventsWithLDT) {
+        List<Event> events = new ArrayList<>();
+        for (EventWithLDT e : eventsWithLDT) {
+            events.add(toEvent(e));
+        }
+        return events;
+    }
+
     public static EventShortDto toEventShortDto(Event event) {
         return new EventShortDto(
                 event.getId(),
@@ -50,7 +84,6 @@ public class EventMapper {
     }
 
     public static EventWithLDT toEventWithLDT(Event event) {
-
         DateTimeFormatter formatter =
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -75,7 +108,6 @@ public class EventMapper {
     }
 
     public static List<EventWithLDT> toEventWithLDT(List<Event> events) {
-
         List<EventWithLDT> dtos = new ArrayList<>();
 
         for (Event e : events) {
@@ -83,7 +115,6 @@ public class EventMapper {
         }
 
         return dtos;
-
     }
 
 }

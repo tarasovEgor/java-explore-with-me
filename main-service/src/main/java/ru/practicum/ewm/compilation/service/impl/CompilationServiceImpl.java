@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import ru.practicum.ewm.compilation.dto.CompilationWithShortEventDto;
 import ru.practicum.ewm.compilation.dto.NewCompilationDto;
 import ru.practicum.ewm.compilation.dto.UpdateCompilationDto;
 import ru.practicum.ewm.compilation.mapper.CompilationMapper;
@@ -18,6 +19,8 @@ import ru.practicum.ewm.compilation.service.CompilationService;
 import ru.practicum.ewm.error.ApiError;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.repository.EventRepository;
+import ru.practicum.ewm.exception.compilation.CompilationDoesNotExistException;
+import ru.practicum.ewm.exception.event.EventDoesNotExistException;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,8 +40,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    public ResponseEntity<Object> getAllCompilationsPublic(Boolean pinned, int from, int size) {
-
+    public List<CompilationWithShortEventDto> getAllCompilationsPublic(Boolean pinned, int from, int size) {
         if (pinned != null) {
 
             List<Compilation> compilations;
@@ -48,22 +50,28 @@ public class CompilationServiceImpl implements CompilationService {
                 compilations = compilationRepository
                         .getAllByPinnedTrue(PageRequest.of(from, size));
 
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(CompilationMapper
-                                .toCompilationWithShortEventDto(compilations)
-                        );
+                return CompilationMapper
+                        .toCompilationWithShortEventDto(compilations);
+
+//                return ResponseEntity
+//                        .status(HttpStatus.OK)
+//                        .body(CompilationMapper
+//                                .toCompilationWithShortEventDto(compilations)
+//                        );
 
             } else {
 
                 compilations = compilationRepository
                         .getAllByPinnedFalse(PageRequest.of(from, size));
 
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(CompilationMapper
-                                .toCompilationWithShortEventDto(compilations)
-                        );
+                return CompilationMapper
+                        .toCompilationWithShortEventDto(compilations);
+
+//                return ResponseEntity
+//                        .status(HttpStatus.OK)
+//                        .body(CompilationMapper
+//                                .toCompilationWithShortEventDto(compilations)
+//                        );
             }
 
         } else {
@@ -71,44 +79,47 @@ public class CompilationServiceImpl implements CompilationService {
             Page<Compilation> compilations = compilationRepository
                     .findAll(PageRequest.of(from, size));
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(CompilationMapper
-                            .toCompilationWithShortEventDto(compilations.getContent())
-                    );
+            return CompilationMapper
+                    .toCompilationWithShortEventDto(compilations.getContent());
+
+//            return ResponseEntity
+//                    .status(HttpStatus.OK)
+//                    .body(CompilationMapper
+//                            .toCompilationWithShortEventDto(compilations.getContent())
+//                    );
 
         }
-
     }
 
     @Override
-    public ResponseEntity<Object> getCompilationByIdPublic(long compId) {
-
+    public CompilationWithShortEventDto getCompilationByIdPublic(long compId) {
         Optional<Compilation> compilation = compilationRepository.findById(compId);
         if (compilation.isPresent() && compilation.get().getClass().equals(Compilation.class)) {
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(CompilationMapper
-                            .toCompilationWithShortEventDto(compilation.get())
-                    );
+            return CompilationMapper
+                    .toCompilationWithShortEventDto(compilation.get());
+
+//            return ResponseEntity
+//                    .status(HttpStatus.OK)
+//                    .body(CompilationMapper
+//                            .toCompilationWithShortEventDto(compilation.get())
+//                    );
 
         } else {
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError(
-                            "404",
-                            "Not Found.",
-                            "Compilation doesn't exist."
-                    ));
+            throw new CompilationDoesNotExistException("Compilation doesn't exist.");
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "404",
+//                            "Not Found.",
+//                            "Compilation doesn't exist."
+//                    ));
         }
-
     }
 
     @Override
-    public ResponseEntity<Object> saveCompilationAdmin(NewCompilationDto newCompilationDto) {
-
+    public CompilationWithShortEventDto saveCompilationAdmin(NewCompilationDto newCompilationDto) {
         Compilation compilation;
 
         if (newCompilationDto.getEvents() == null) {
@@ -125,11 +136,14 @@ public class CompilationServiceImpl implements CompilationService {
 
             compilationRepository.save(compilation);
 
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(CompilationMapper
-                            .toCompilationWithShortEventDto(compilation)
-                    );
+            return CompilationMapper
+                    .toCompilationWithShortEventDto(compilation);
+
+//            return ResponseEntity
+//                    .status(HttpStatus.CREATED)
+//                    .body(CompilationMapper
+//                            .toCompilationWithShortEventDto(compilation)
+//                    );
 
         } else {
 
@@ -148,21 +162,25 @@ public class CompilationServiceImpl implements CompilationService {
 
                 compilationRepository.save(compilation);
 
-                return ResponseEntity
-                        .status(HttpStatus.CREATED)
-                        .body(CompilationMapper
-                                .toCompilationWithShortEventDto(compilation)
-                        );
+                return CompilationMapper
+                        .toCompilationWithShortEventDto(compilation);
+
+//                return ResponseEntity
+//                        .status(HttpStatus.CREATED)
+//                        .body(CompilationMapper
+//                                .toCompilationWithShortEventDto(compilation)
+//                        );
 
             } else {
 
-                return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError(
-                            "404",
-                            "Not Found.",
-                            "Event doesn't exist."
-                    ));
+                throw new EventDoesNotExistException("Event doesn't exist.");
+//                return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "404",
+//                            "Not Found.",
+//                            "Event doesn't exist."
+//                    ));
 
             }
 
@@ -170,8 +188,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    public ResponseEntity<Object> patchCompilationAdmin(UpdateCompilationDto newCompilationDto, long compId) {
-
+    public CompilationWithShortEventDto patchCompilationAdmin(UpdateCompilationDto newCompilationDto, long compId) {
         Optional<Compilation> compilation = compilationRepository.findById(compId);
         if (compilation.isPresent() && compilation.get().getClass().equals(Compilation.class)) {
 
@@ -192,47 +209,52 @@ public class CompilationServiceImpl implements CompilationService {
                 compilation.get().setTitle(newCompilationDto.getTitle());
             }
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(CompilationMapper.toCompilationWithShortEventDto(
-                            compilationRepository.save(
-                                    compilation.get()
-                            )
-                    ));
+            return CompilationMapper
+                    .toCompilationWithShortEventDto(
+                            compilationRepository.save(compilation.get())
+                    );
+
+//            return ResponseEntity
+//                    .status(HttpStatus.OK)
+//                    .body(CompilationMapper.toCompilationWithShortEventDto(
+//                            compilationRepository.save(
+//                                    compilation.get()
+//                            )
+//                    ));
 
         } else {
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError(
-                            "404",
-                            "Not Found.",
-                            "Compilation doesn't exist."
-                    ));
+            throw new CompilationDoesNotExistException("Compilation doesn't exist.");
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "404",
+//                            "Not Found.",
+//                            "Compilation doesn't exist."
+//                    ));
         }
-
     }
 
     @Override
-    public ResponseEntity<Object> deleteCompilationAdmin(long compId) {
-
+    public void deleteCompilationAdmin(long compId) {
         Optional<Compilation> compilation = compilationRepository.findById(compId);
         if (compilation.isPresent() && compilation.get().getClass().equals(Compilation.class)) {
 
             compilationRepository.delete(compilation.get());
 
-            return ResponseEntity
-                    .noContent().build();
+//            return ResponseEntity
+//                    .noContent().build();
 
         } else {
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError(
-                            "404",
-                            "Not Found.",
-                            "Compilation doesn't exist."
-                    ));
+            throw new CompilationDoesNotExistException("Compilation doesn't exist.");
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiError(
+//                            "404",
+//                            "Not Found.",
+//                            "Compilation doesn't exist."
+//                    ));
         }
     }
 

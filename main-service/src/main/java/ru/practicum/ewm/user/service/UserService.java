@@ -5,12 +5,17 @@ import org.springframework.http.ResponseEntity;
 import ru.practicum.ewm.user.dto.UserDto;
 import ru.practicum.ewm.user.model.User;
 
+import java.util.List;
 
 public interface UserService {
 
-    ResponseEntity<Object> saveUser(UserDto userDto);
+    //ResponseEntity<Object> saveUser(UserDto userDto);
 
-    ResponseEntity<Object> getUsersById(long[] ids, int from, int size);
+    User saveUser(UserDto userDto);
+
+    //ResponseEntity<Object> getUsersById(long[] ids, int from, int size);
+
+    List<User> getUsersById(long[] ids, int from, int size);
 
     User deleteUser(long userId);
 }
