@@ -29,8 +29,8 @@ public class UserController {
 
     @GetMapping("/admin/users")
     public ResponseEntity<?> getUsersById(@RequestParam(required = false) long[] ids,
-                                               @RequestParam(required = false, defaultValue = "0") int from,
-                                               @RequestParam(required = false, defaultValue = "10") int size) {
+                                               @RequestParam(defaultValue = "0") int from,
+                                               @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userService.getUsersById(ids, from, size));
