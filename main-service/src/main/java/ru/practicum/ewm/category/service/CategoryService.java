@@ -1,7 +1,5 @@
 package ru.practicum.ewm.category.service;
 
-import org.springframework.http.ResponseEntity;
-
 import ru.practicum.ewm.category.dto.NewCategoryDto;
 import ru.practicum.ewm.category.model.Category;
 

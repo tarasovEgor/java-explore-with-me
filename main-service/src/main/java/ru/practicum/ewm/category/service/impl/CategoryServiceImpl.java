@@ -3,11 +3,8 @@ package ru.practicum.ewm.category.service.impl;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import ru.practicum.ewm.category.dto.NewCategoryDto;
@@ -15,7 +12,6 @@ import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.repository.CategoryRepository;
 import ru.practicum.ewm.category.service.CategoryService;
 import ru.practicum.ewm.category.mapper.CategoryMapper;
-import ru.practicum.ewm.error.ApiError;
 import ru.practicum.ewm.exception.InvalidMethodException;
 import ru.practicum.ewm.exception.category.CategoryDoesNotExistException;
 
