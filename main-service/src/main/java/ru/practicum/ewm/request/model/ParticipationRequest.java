@@ -9,7 +9,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
-@Data
 @Entity
 @Table(
         name = "request",
@@ -19,7 +18,6 @@ import javax.persistence.*;
 @Setter
 @ToString
 @RequiredArgsConstructor
-//@NoArgsConstructor
 @DynamicUpdate
 public class ParticipationRequest {
 

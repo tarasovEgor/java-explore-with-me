@@ -21,7 +21,6 @@ public class RequestDataController {
 
     @PostMapping("/hit")
     public ResponseEntity<?> saveRequestData(@RequestBody RequestDataDto requestDataDto) {
-       // return requestDataService.saveRequestData(requestDataDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(requestDataService.saveRequestData(requestDataDto));
@@ -33,7 +32,6 @@ public class RequestDataController {
             @RequestParam String end,
             @RequestParam(required = false) String[] uris,
             @RequestParam(required = false) Boolean unique) {
-        //return requestDataService.getAllRequestDataByPeriod(start, end, uris, unique);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(requestDataService.getAllRequestDataByPeriod(start, end, uris, unique));

@@ -6,13 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import ru.practicum.ewm.category.dto.NewCategoryDto;
-import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.service.CategoryService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.List;
 
 @RestController
 public class CategoryController {
@@ -25,39 +23,37 @@ public class CategoryController {
     }
 
     @PostMapping("/admin/categories")
-    public ResponseEntity<Object> saveCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
-       // return categoryService.saveCategory(newCategoryDto);
+    public ResponseEntity<?> saveCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(categoryService.saveCategory(newCategoryDto));
     }
 
     @GetMapping("/categories/{categoryId}")
-    public ResponseEntity<Object> getCategoryById(@PathVariable long categoryId) {
-        //return categoryService.getCategoryById(categoryId);
+    public ResponseEntity<?> getCategoryById(@PathVariable long categoryId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(categoryService.getCategoryById(categoryId));
     }
 
     @GetMapping("/categories")
-    public List<Category> getAllCategories(@PositiveOrZero @RequestParam(defaultValue = "0") int from,
+    public ResponseEntity<?> getAllCategories(@PositiveOrZero @RequestParam(defaultValue = "0") int from,
                                            @Positive @RequestParam(defaultValue = "10") int size) {
-        return categoryService.getAllCategories(from, size);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(categoryService.getAllCategories(from, size));
     }
 
     @PatchMapping("/admin/categories/{categoryId}")
-    public ResponseEntity<Object> updateCategory(@PathVariable long categoryId,
+    public ResponseEntity<?> updateCategory(@PathVariable long categoryId,
                                                  @Valid @RequestBody NewCategoryDto newCategoryDto) {
-        //return categoryService.patchCategory(categoryId, newCategoryDto);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(categoryService.patchCategory(categoryId, newCategoryDto));
     }
 
     @DeleteMapping("/admin/categories/{categoryId}")
-    public ResponseEntity<Object> deleteCategory(@PathVariable long categoryId) {
-        //return categoryService.deleteCategory(categoryId);
+    public ResponseEntity<?> deleteCategory(@PathVariable long categoryId) {
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.noContent().build();
     }

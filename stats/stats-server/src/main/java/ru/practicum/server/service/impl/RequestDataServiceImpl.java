@@ -31,138 +31,61 @@ public class RequestDataServiceImpl implements RequestDataService {
 
     @Override
     public RequestData saveRequestData(RequestDataDto requestDataDto) {
-
         RequestData requestData = RequestDataMapper.toRequestData(requestDataDto);
-
         return requestDataRepository.save(requestData);
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .body(requestDataRepository.save(requestData));
-
     }
 
     @Override
     public List<ViewStatsDto> getAllRequestDataByPeriod(String start, String end, String[] uris, Boolean unique) {
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         LocalDateTime startLDT = LocalDateTime.parse(start, formatter);
         LocalDateTime endLDT = LocalDateTime.parse(end, formatter);
 
         if (startLDT.isAfter(endLDT)) {
-
             throw new InvalidRequestDataDateException("Start date can't come after the end date.");
-//            return ResponseEntity
-//                    .badRequest().build();
-
         }
-
         if (uris != null && unique != null) {
-
             if (unique) {
-
                 return requestDataRepository
                                 .findAllByPeriodAndUrisAndIpIsUnique(
                                         uris,
                                         start,
                                         end
                                 );
-
-//                return ResponseEntity
-//                        .status(HttpStatus.OK)
-//                        .body(requestDataRepository
-//                                .findAllByPeriodAndUrisAndIpIsUnique(
-//                                        uris,
-//                                        start,
-//                                        end
-//                                )
-//                        );
-
             } else {
-
                 return requestDataRepository
                         .findAllByPeriodAndUris(
                                 uris,
                                 start,
                                 end
                         );
-//                return ResponseEntity
-//                        .status(HttpStatus.OK)
-//                        .body(requestDataRepository
-//                                .findAllByPeriodAndUris(
-//                                        uris,
-//                                        start,
-//                                        end
-//                                )
-//                        );
-
             }
-
         } else if (uris != null) {
-
             return requestDataRepository
                     .findAllByPeriodAndUrisAndIpIsUnique(
                             uris,
                             start,
                             end
                     );
-//            return ResponseEntity
-//                    .status(HttpStatus.OK)
-//                    .body(requestDataRepository
-//                            .findAllByPeriodAndUrisAndIpIsUnique(
-//                                    uris,
-//                                    start,
-//                                    end
-//                            )
-//                    );
-
         } else if (unique != null) {
-
             if (unique) {
-
                 return requestDataRepository
                         .findAllByPeriodIpIsUnique(
                                 start, end
                         );
-//                return ResponseEntity
-//                        .status(HttpStatus.OK)
-//                        .body(requestDataRepository
-//                                .findAllByPeriodIpIsUnique(
-//                                        start, end
-//                                )
-//                        );
-
             } else {
-
                 return requestDataRepository
                         .findAllByPeriod(
                                 start, end
                         );
-//                return ResponseEntity
-//                        .status(HttpStatus.OK)
-//                        .body(requestDataRepository
-//                                .findAllByPeriod(
-//                                        start, end
-//                                )
-//                        );
             }
-
         } else {
-
             return requestDataRepository
                     .findAllByPeriod(
                             start, end
                     );
-//            return ResponseEntity
-//                    .status(HttpStatus.OK)
-//                    .body(requestDataRepository
-//                            .findAllByPeriod(
-//                                    start, end
-//                            )
-//                    );
-
         }
-
     }
 
 }

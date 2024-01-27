@@ -12,10 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CompilationWithShortEventDto {
-
     private Long id;
     private List<EventShortDto> events;
     private Boolean pinned;
     private String title;
-
 }

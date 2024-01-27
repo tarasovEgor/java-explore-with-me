@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class RequestDataDto {
-
     private String app;
     private String uri;
     private String ip;
@@ -22,5 +21,4 @@ public class RequestDataDto {
         this.ip = ip;
         this.timestamp = timestamp;
     }
-
 }

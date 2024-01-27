@@ -109,11 +109,9 @@ public class EventMapper {
 
     public static List<EventWithLDT> toEventWithLDT(List<Event> events) {
         List<EventWithLDT> dtos = new ArrayList<>();
-
         for (Event e : events) {
             dtos.add(toEventWithLDT(e));
         }
-
         return dtos;
     }
 

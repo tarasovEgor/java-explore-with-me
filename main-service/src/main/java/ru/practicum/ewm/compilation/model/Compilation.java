@@ -11,7 +11,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import ru.practicum.ewm.event.model.Event;
 
-//@Data
 @Entity
 @Table(
         name  = "compilation",
@@ -21,7 +20,6 @@ import ru.practicum.ewm.event.model.Event;
 @Setter
 @ToString
 @RequiredArgsConstructor
-//@NoArgsConstructor
 @DynamicUpdate
 public class Compilation {
 

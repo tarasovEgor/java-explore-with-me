@@ -20,7 +20,6 @@ public class ParticipationRequestController {
     @PostMapping("/users/{userId}/requests")
     public ResponseEntity<?> saveParticipationRequestPrivate(@PathVariable long userId,
                                                                   @RequestParam long eventId) {
-        //return requestService.saveParticipationRequestPrivate(userId, eventId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(requestService.saveParticipationRequestPrivate(userId, eventId));
@@ -28,7 +27,6 @@ public class ParticipationRequestController {
 
     @GetMapping("/users/{userId}/requests")
     public ResponseEntity<?> getParticipationRequestByUserIdPrivate(@PathVariable long userId) {
-        //return requestService.getParticipationRequestByUserIdPrivate(userId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(requestService.getParticipationRequestByUserIdPrivate(userId));
@@ -37,7 +35,6 @@ public class ParticipationRequestController {
     @PatchMapping("/users/{userId}/requests/{requestId}/cancel")
     public ResponseEntity<?> cancelParticipationRequestByUserIdPrivate(@PathVariable long userId,
                                                                             @PathVariable long requestId) {
-        //return requestService.cancelParticipationRequestByUserIdPrivate(userId, requestId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(requestService.cancelParticipationRequestByUserIdPrivate(userId, requestId));

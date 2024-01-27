@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 
-//@Data
 @Entity
 @Table(
         name = "category",
@@ -16,7 +15,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-//@NoArgsConstructor
 @RequiredArgsConstructor
 public class Category {
 

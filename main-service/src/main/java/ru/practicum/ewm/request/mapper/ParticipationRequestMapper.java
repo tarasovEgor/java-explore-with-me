@@ -20,7 +20,6 @@ public class ParticipationRequestMapper {
                 status,
                 created
         );
-
     }
 
     public static ParticipationRequestDto toParticipationRequestDto(ParticipationRequest participationRequest) {
@@ -40,11 +39,9 @@ public class ParticipationRequestMapper {
 
     public static List<ParticipationRequestDto> toParticipationRequestDto(List<ParticipationRequest> participationRequests) {
         List<ParticipationRequestDto> dtos = new ArrayList<>();
-
         for (ParticipationRequest req : participationRequests) {
             dtos.add(toParticipationRequestDto(req));
         }
-
         return dtos;
     }
 }

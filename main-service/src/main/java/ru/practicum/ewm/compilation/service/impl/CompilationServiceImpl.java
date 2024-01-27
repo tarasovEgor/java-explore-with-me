@@ -39,52 +39,26 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public List<CompilationWithShortEventDto> getAllCompilationsPublic(Boolean pinned, int from, int size) {
         if (pinned != null) {
-
             List<Compilation> compilations;
-
             if (pinned) {
-
                 compilations = compilationRepository
                         .getAllByPinnedTrue(PageRequest.of(from, size));
 
                 return CompilationMapper
                         .toCompilationWithShortEventDto(compilations);
-
-//                return ResponseEntity
-//                        .status(HttpStatus.OK)
-//                        .body(CompilationMapper
-//                                .toCompilationWithShortEventDto(compilations)
-//                        );
-
             } else {
-
                 compilations = compilationRepository
                         .getAllByPinnedFalse(PageRequest.of(from, size));
 
                 return CompilationMapper
                         .toCompilationWithShortEventDto(compilations);
-
-//                return ResponseEntity
-//                        .status(HttpStatus.OK)
-//                        .body(CompilationMapper
-//                                .toCompilationWithShortEventDto(compilations)
-//                        );
             }
-
         } else {
-
             Page<Compilation> compilations = compilationRepository
                     .findAll(PageRequest.of(from, size));
 
             return CompilationMapper
                     .toCompilationWithShortEventDto(compilations.getContent());
-
-//            return ResponseEntity
-//                    .status(HttpStatus.OK)
-//                    .body(CompilationMapper
-//                            .toCompilationWithShortEventDto(compilations.getContent())
-//                    );
-
         }
     }
 
@@ -92,95 +66,47 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationWithShortEventDto getCompilationByIdPublic(long compId) {
         Optional<Compilation> compilation = compilationRepository.findById(compId);
         if (compilation.isPresent() && compilation.get().getClass().equals(Compilation.class)) {
-
             return CompilationMapper
                     .toCompilationWithShortEventDto(compilation.get());
-
-//            return ResponseEntity
-//                    .status(HttpStatus.OK)
-//                    .body(CompilationMapper
-//                            .toCompilationWithShortEventDto(compilation.get())
-//                    );
-
         } else {
-
             throw new CompilationDoesNotExistException("Compilation doesn't exist.");
-//            return ResponseEntity
-//                    .status(HttpStatus.NOT_FOUND)
-//                    .body(new ApiError(
-//                            "404",
-//                            "Not Found.",
-//                            "Compilation doesn't exist."
-//                    ));
         }
     }
 
     @Override
     public CompilationWithShortEventDto saveCompilationAdmin(NewCompilationDto newCompilationDto) {
         Compilation compilation;
-
         if (newCompilationDto.getEvents() == null) {
-
             compilation = new Compilation(
                     List.of(),
                     newCompilationDto.getPinned(),
                     newCompilationDto.getTitle()
             );
-
             if (compilation.getPinned() == null) {
                 compilation.setPinned(false);
             }
-
             compilationRepository.save(compilation);
 
             return CompilationMapper
                     .toCompilationWithShortEventDto(compilation);
-
-//            return ResponseEntity
-//                    .status(HttpStatus.CREATED)
-//                    .body(CompilationMapper
-//                            .toCompilationWithShortEventDto(compilation)
-//                    );
-
         } else {
-
             Optional<List<Event>> events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
             if (events.isPresent() && events.get().size() == newCompilationDto.getEvents().size()) {
-
                 compilation = new Compilation(
                         events.get(),
                         newCompilationDto.getPinned(),
                         newCompilationDto.getTitle()
                 );
-
                 if (compilation.getPinned() == null) {
                     compilation.setPinned(false);
                 }
-
                 compilationRepository.save(compilation);
 
                 return CompilationMapper
                         .toCompilationWithShortEventDto(compilation);
-
-//                return ResponseEntity
-//                        .status(HttpStatus.CREATED)
-//                        .body(CompilationMapper
-//                                .toCompilationWithShortEventDto(compilation)
-//                        );
-
             } else {
-
                 throw new EventDoesNotExistException("Event doesn't exist.");
-//                return ResponseEntity
-//                    .status(HttpStatus.NOT_FOUND)
-//                    .body(new ApiError(
-//                            "404",
-//                            "Not Found.",
-//                            "Event doesn't exist."
-//                    ));
-
             }
-
         }
     }
 
@@ -188,47 +114,23 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationWithShortEventDto patchCompilationAdmin(UpdateCompilationDto newCompilationDto, long compId) {
         Optional<Compilation> compilation = compilationRepository.findById(compId);
         if (compilation.isPresent() && compilation.get().getClass().equals(Compilation.class)) {
-
             if (newCompilationDto.getEvents() != null) {
-
                 Optional<List<Event>> events =
                         eventRepository.findAllByIdIn(newCompilationDto.getEvents());
-
                 compilation.get().setEvents(events.get());
-
             }
-
             if (newCompilationDto.getPinned() != null) {
                 compilation.get().setPinned(newCompilationDto.getPinned());
             }
-
             if (newCompilationDto.getTitle() != null) {
                 compilation.get().setTitle(newCompilationDto.getTitle());
             }
-
             return CompilationMapper
                     .toCompilationWithShortEventDto(
                             compilationRepository.save(compilation.get())
                     );
-
-//            return ResponseEntity
-//                    .status(HttpStatus.OK)
-//                    .body(CompilationMapper.toCompilationWithShortEventDto(
-//                            compilationRepository.save(
-//                                    compilation.get()
-//                            )
-//                    ));
-
         } else {
-
             throw new CompilationDoesNotExistException("Compilation doesn't exist.");
-//            return ResponseEntity
-//                    .status(HttpStatus.NOT_FOUND)
-//                    .body(new ApiError(
-//                            "404",
-//                            "Not Found.",
-//                            "Compilation doesn't exist."
-//                    ));
         }
     }
 
@@ -236,22 +138,9 @@ public class CompilationServiceImpl implements CompilationService {
     public void deleteCompilationAdmin(long compId) {
         Optional<Compilation> compilation = compilationRepository.findById(compId);
         if (compilation.isPresent() && compilation.get().getClass().equals(Compilation.class)) {
-
             compilationRepository.delete(compilation.get());
-
-//            return ResponseEntity
-//                    .noContent().build();
-
         } else {
-
             throw new CompilationDoesNotExistException("Compilation doesn't exist.");
-//            return ResponseEntity
-//                    .status(HttpStatus.NOT_FOUND)
-//                    .body(new ApiError(
-//                            "404",
-//                            "Not Found.",
-//                            "Compilation doesn't exist."
-//                    ));
         }
     }
 

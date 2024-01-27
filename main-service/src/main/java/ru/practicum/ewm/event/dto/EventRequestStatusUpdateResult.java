@@ -10,7 +10,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class EventRequestStatusUpdateResult {
-
     private List<ParticipationRequestDto> confirmedRequests;
     private List<ParticipationRequestDto> rejectedRequests;
 
@@ -19,5 +18,4 @@ public class EventRequestStatusUpdateResult {
         this.confirmedRequests = confirmedRequests;
         this.rejectedRequests = rejectedRequests;
     }
-
 }

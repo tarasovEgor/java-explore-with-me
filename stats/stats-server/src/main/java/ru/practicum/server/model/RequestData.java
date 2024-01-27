@@ -1,17 +1,18 @@
 package ru.practicum.server.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
 @Entity
 @Table(
         name = "request_data",
         schema = "public"
 )
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 public class RequestData {
 
     @Id

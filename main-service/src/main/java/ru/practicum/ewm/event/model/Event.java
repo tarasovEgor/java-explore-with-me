@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Data
 @Entity
 @Table(
         name = "events",
@@ -27,7 +26,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @DynamicUpdate
 @DynamicInsert
-//@NoArgsConstructor
 public class Event {
 
     @Id

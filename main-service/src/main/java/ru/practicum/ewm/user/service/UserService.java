@@ -7,11 +7,7 @@ import java.util.List;
 
 public interface UserService {
 
-    //ResponseEntity<Object> saveUser(UserDto userDto);
-
     User saveUser(UserDto userDto);
-
-    //ResponseEntity<Object> getUsersById(long[] ids, int from, int size);
 
     List<User> getUsersById(long[] ids, int from, int size);
 

@@ -30,23 +30,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveUser(UserDto userDto) {
         User user = UserMapper.toUser(userDto);
-
         try {
-
             return userRepository.save(user);
-//            return ResponseEntity
-//                    .status(HttpStatus.CREATED)
-//                    .body(repository.save(user));
-
         } catch (RuntimeException e) {
-
             throw new InvalidMethodException("Method not allowed.");
-//            return ResponseEntity.status(HttpStatus.CONFLICT)
-//                    .body(new ApiError(
-//                            "409",
-//                            "Conflict.",
-//                            "MEthod not allowed."
-//                    ));
         }
     }
 
@@ -55,16 +42,9 @@ public class UserServiceImpl implements UserService {
         Page<User> page = userRepository.findAll(PageRequest.of(from, size));
         if (ids == null) {
             return page.getContent();
-//            return ResponseEntity
-//                    .status(HttpStatus.OK)
-//                    .body(page.getContent());
-
         } else {
             page = userRepository.findAllByIdIn(ids, PageRequest.of(from, size));
             return page.getContent();
-//            return ResponseEntity
-//                    .status(HttpStatus.OK)
-//                    .body(page.getContent());
         }
     }
 

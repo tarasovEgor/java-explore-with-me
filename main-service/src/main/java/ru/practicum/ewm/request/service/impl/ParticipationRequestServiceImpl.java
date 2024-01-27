@@ -57,51 +57,19 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
             if (event.isPresent() && event.get().getClass().equals(Event.class)) {
 
                 if (!event.get().getState().equals(State.PENDING)) {
-
                     Optional<ParticipationRequest> participationRequest =
                             requestRepository.findByRequester(requester.get());
-
                     if (participationRequest.isPresent() && participationRequest.get().getClass()
                             .equals(ParticipationRequest.class)) {
-
                         throw new RepeatedRequestException("Unable to send a repeated request.");
-//                        return ResponseEntity
-//                                .status(HttpStatus.CONFLICT)
-//                                .body(new ApiError(
-//                                        "409",
-//                                        "Conflict.",
-//                                        "Unable to send a repeated request."
-//                                ));
-
                     }
-
                     if (event.get().getInitiator().getId().equals(requester.get().getId())) {
-
                         throw new InvalidInitiatorException("Initiator can't send a request to his own event.");
-//                        return ResponseEntity
-//                                .status(HttpStatus.CONFLICT)
-//                                .body(new ApiError(
-//                                        "409",
-//                                        "Conflict.",
-//                                        "Initiator can't send a request to his own event."
-//                                ));
-
                     }
-
                     if (event.get().getParticipantLimit() < event.get().getConfirmedRequests() + 1
                             && event.get().getParticipantLimit() != 0) {
-
                         throw new ParticipationRequestLimitIsFullException("Participation request limit is full.");
-//                        return ResponseEntity
-//                                .status(HttpStatus.CONFLICT)
-//                                .body(new ApiError(
-//                                        "409",
-//                                        "Conflict.",
-//                                        "Participant limit is full."
-//                                ));
-
                     }
-
                     DateTimeFormatter formatter =
                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -110,7 +78,6 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                     ParticipationRequest newParticipationRequest;
 
                     if (!event.get().getRequestModeration() || event.get().getParticipantLimit() == 0) {
-
                         event.get().setConfirmedRequests(event.get().getConfirmedRequests() + 1);
 
                         eventRepository.save(event.get());
@@ -122,9 +89,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                                         Status.CONFIRMED,
                                         createdOn
                                 );
-
                     } else {
-
                         newParticipationRequest =
                                 ParticipationRequestMapper.toParticipantRequest(
                                         event.get(),
@@ -133,55 +98,16 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                                         createdOn
                                 );
                     }
-
-//                    ParticipationRequestDto participationRequestDto =
-//                            ParticipationRequestMapper.toParticipationRequestDto(
-//                                    requestRepository.save(newParticipationRequest)
-//                            );
-
                     return ParticipationRequestMapper
                             .toParticipationRequestDto(requestRepository.save(newParticipationRequest));
-//                    return ResponseEntity
-//                            .status(HttpStatus.CREATED)
-//                            .body(participationRequestDto);
-
                 } else {
-
-//                    return ResponseEntity
-//                            .status(HttpStatus.CONFLICT)
-//                            .body(new ApiError(
-//                                    "409",
-//                                    "Conflict.",
-//                                    "Event hasn't been published yet."
-//                            ));
                     throw new InvalidEventStateException("Event hasn't been published yet.");
-
                 }
-
             } else {
-
                 throw new EventDoesNotExistException("Event doesn't exist.");
-//                return ResponseEntity
-//                        .status(HttpStatus.NOT_FOUND)
-//                        .body(new ApiError(
-//                                "404",
-//                                "Not Found.",
-//                                "Event doesn't exist."
-//                        ));
-
             }
-
         } else {
-
             throw new UserDoesNotExistException("Requester doesn't exist.");
-//            return ResponseEntity
-//                    .status(HttpStatus.NOT_FOUND)
-//                    .body(new ApiError(
-//                            "404",
-//                            "Not Found.",
-//                            "Requester doesn't exist."
-//                    ));
-
         }
     }
 
@@ -189,56 +115,27 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     public List<ParticipationRequestDto> getParticipationRequestByUserIdPrivate(long userId) {
         Optional<User> requester = userRepository.findById(userId);
         if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
-
             Optional<List<ParticipationRequest>> participationRequests =
                     requestRepository.findAllByRequesterId(requester.get().getId());
-
             if (!participationRequests.get().isEmpty()) {
-
-                List<ParticipationRequestDto> foundRequest =
-                        ParticipationRequestMapper.toParticipationRequestDto(participationRequests.get());
-
-                return foundRequest;
-//                return ResponseEntity
-//                        .status(HttpStatus.OK)
-//                        .body(foundRequest);
-
+                return ParticipationRequestMapper.toParticipationRequestDto(participationRequests.get());
             } else {
-
                 throw new ParticipationRequestDoesNotExistException("Participation requests don't exist.");
-//                return ResponseEntity
-//                        .status(HttpStatus.NOT_FOUND)
-//                        .body(new ApiError(
-//                                "404",
-//                                "Not Found.",
-//                                "Participation requests do not exist."
-//                        ));
-
             }
-
         } else {
-
             throw new UserDoesNotExistException("User doesn't exist.");
-//            return ResponseEntity
-//                    .status(HttpStatus.NOT_FOUND)
-//                    .body(new ApiError(
-//                            "404",
-//                            "Not Found.",
-//                            "User does not exist."
-//                    ));
-
         }
     }
 
     @Override
     public ParticipationRequestDto cancelParticipationRequestByUserIdPrivate(long userId, long requestId) {
         Optional<User> requester = userRepository.findById(userId);
-        if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
 
+        if (requester.isPresent() && requester.get().getClass().equals(User.class)) {
             Optional<ParticipationRequest> participationRequest = requestRepository.findById(requestId);
+
             if (participationRequest.isPresent() && participationRequest.get().getClass()
                     .equals(ParticipationRequest.class)) {
-
                 if (participationRequest.get().getRequester().equals(requester.get())
                         && (participationRequest.get().getStatus().equals(Status.PENDING)
                         || participationRequest.get().getStatus().equals(Status.CONFIRMED))) {
@@ -249,47 +146,14 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                             .toParticipationRequestDto(
                                     requestRepository.save(participationRequest.get())
                             );
-//                    return ResponseEntity
-//                            .status(HttpStatus.OK)
-//                            .body(ParticipationRequestMapper
-//                                    .toParticipationRequestDto(
-//                                            requestRepository.save(participationRequest.get())
-//                                    ));
-
                 } else {
-
                     throw new BadRequestMethodException("Method not allowed.");
-//                    return ResponseEntity
-//                            .status(HttpStatus.BAD_REQUEST)
-//                            .body(new ApiError(
-//                                    "400",
-//                                    "Bad Request.",
-//                                    "Method not allowed."
-//                            ));
                 }
-
             } else {
-
                 throw new ParticipationRequestDoesNotExistException("Participation request doesn't exist.");
-//                return ResponseEntity
-//                        .status(HttpStatus.NOT_FOUND)
-//                        .body(new ApiError(
-//                                "404",
-//                                "Not Found.",
-//                                "Participant request doesn't exist."
-//                        ));
             }
-
         } else {
-
             throw new UserDoesNotExistException("User doesn't exist.");
-//            return ResponseEntity
-//                    .status(HttpStatus.NOT_FOUND)
-//                    .body(new ApiError(
-//                            "404",
-//                            "Not Found.",
-//                            "User doesn't exist."
-//                    ));
         }
     }
 }

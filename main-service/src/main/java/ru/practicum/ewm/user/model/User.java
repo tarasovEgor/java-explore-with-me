@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 
-//@Data
 @Entity
 @Table(
         name = "users",
@@ -14,7 +13,6 @@ import javax.persistence.*;
 @Setter
 @ToString
 @RequiredArgsConstructor
-//@NoArgsConstructor
 public class User {
 
     @Id

@@ -159,15 +159,3 @@ public class ErrorHandler {
         );
     }
 }
-
-
-/*@RestControllerAdvice
-public class ErrorHandler {
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleInternalServerError(final Throwable e) {
-        return new ErrorResponse(
-                e.getMessage()
-        );
-    }*/

@@ -12,12 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateCompilationDto {
-
     private List<Long> events;
-
     private Boolean pinned;
 
     @Size(min = 1, max = 50, message = "Title can't be shorter than 1 or greater than 50 characters.")
     private String title;
-
 }

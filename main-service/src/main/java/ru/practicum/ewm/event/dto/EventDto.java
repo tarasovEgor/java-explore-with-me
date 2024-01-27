@@ -15,7 +15,6 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class EventDto {
 
-    @NotNull(message = "Annotation field can't be null.")
     @NotBlank(message = "Annotation field can't be blank.")
     @Size(min = 20, max = 2000, message = "Annotation can't be shorter than 20 or greater than 2000 characters.")
     private String annotation;
@@ -23,12 +22,10 @@ public class EventDto {
     @NotNull(message = "Category can't be null.")
     private Long category;
 
-    @NotNull(message = "Description field can't be null.")
     @NotBlank(message = "Description field can't be blank.")
     @Size(min = 20, max = 7000, message = "Description can't be shorter than 20 or greater than 7000 characters.")
     private String description;
 
-    @NotNull(message = "Event date can't be null.")
     @NotBlank(message = "Event date can't be blank.")
     private String eventDate;
 
@@ -39,7 +36,6 @@ public class EventDto {
     private Integer participantLimit;
     private Boolean requestModeration;
 
-    @NotNull(message = "Title can't be null.")
     @NotBlank(message = "Title can't be blank.")
     @Size(min = 3, max = 120, message = "Title can't be shorter than 3 or greater than 120 characters.")
     private String title;

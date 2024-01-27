@@ -16,17 +16,13 @@ public class EventRequestMapper {
         List<ParticipationRequestDto> rejectedRequests = new ArrayList<>();
 
         for (ParticipationRequest req : requests) {
-
             if (req.getStatus().equals(Status.CONFIRMED)) {
-
                 confirmedRequests.add(ParticipationRequestMapper
                         .toParticipationRequestDto(req));
             } else {
-
                 rejectedRequests.add(ParticipationRequestMapper
                         .toParticipationRequestDto(req));
             }
-
         }
 
         return new EventRequestStatusUpdateResult(

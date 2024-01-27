@@ -22,7 +22,6 @@ public class UserController {
 
     @PostMapping("/admin/users")
     public ResponseEntity<?> saveUser(@Valid @RequestBody UserDto userDto) {
-        //return userService.saveUser(userDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(userService.saveUser(userDto));
@@ -32,7 +31,6 @@ public class UserController {
     public ResponseEntity<?> getUsersById(@RequestParam(required = false) long[] ids,
                                                @RequestParam(required = false, defaultValue = "0") int from,
                                                @RequestParam(required = false, defaultValue = "10") int size) {
-        //return userService.getUsersById(ids, from, size);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userService.getUsersById(ids, from, size));

@@ -8,11 +8,7 @@ import java.util.List;
 
 public interface RequestDataService {
 
-    //ResponseEntity<?> saveRequestData(RequestDataDto requestDataDto);
-
     RequestData saveRequestData(RequestDataDto requestDataDto);
-
-    //ResponseEntity<?> getAllRequestDataByPeriod(String start, String end, String[] uris, Boolean unique);
 
     List<ViewStatsDto> getAllRequestDataByPeriod(String start, String end, String[] uris, Boolean unique);
 

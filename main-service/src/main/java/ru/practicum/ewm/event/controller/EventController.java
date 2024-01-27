@@ -28,58 +28,52 @@ public class EventController {
     // ------------------  PRIVATE  ------------------
 
     @PostMapping("/users/{userId}/events")
-    public ResponseEntity<Object> saveEventPrivate(@Valid @RequestBody EventDto eventDto,
+    public ResponseEntity<?> saveEventPrivate(@Valid @RequestBody EventDto eventDto,
                                                    @PathVariable long userId) {
-        //return eventService.saveEventPrivate(eventDto, userId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(eventService.saveEventPrivate(eventDto, userId));
     }
 
     @GetMapping("/users/{userId}/events")
-    public ResponseEntity<Object> getAllEventsByUserPrivate(@PathVariable long userId,
-                                                            @RequestParam(required = false, defaultValue = "0") int from,
-                                                            @RequestParam(required = false, defaultValue = "10") int size) {
-        //return eventService.getAllEventsByUserPrivate(userId, from, size);
+    public ResponseEntity<?> getAllEventsByUserPrivate(@PathVariable long userId,
+                                                            @RequestParam(defaultValue = "0") int from,
+                                                            @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(eventService.getAllEventsByUserPrivate(userId, from, size));
     }
 
     @GetMapping("/users/{userId}/events/{eventId}")
-    public ResponseEntity<Object> getEventByEventIdAndUserIdPrivate(@PathVariable long userId,
+    public ResponseEntity<?> getEventByEventIdAndUserIdPrivate(@PathVariable long userId,
                                                                     @PathVariable long eventId) {
-        //return eventService.getEventByEventIdAndUserIdPrivate(userId, eventId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(eventService.getEventByEventIdAndUserIdPrivate(userId, eventId));
     }
 
     @PatchMapping("/users/{userId}/events/{eventId}")
-    public ResponseEntity<Object> patchEventByEventIdAndUserIdPrivate(@PathVariable long userId,
+    public ResponseEntity<?> patchEventByEventIdAndUserIdPrivate(@PathVariable long userId,
                                                                       @PathVariable long eventId,
                                                                       @Valid @RequestBody UpdateEventUserDto updatedEventDto) {
-        //return eventService.patchEventByEventIdAndUserIdPrivate(updatedEventDto, userId, eventId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(eventService.patchEventByEventIdAndUserIdPrivate(updatedEventDto, userId, eventId));
     }
 
     @GetMapping("/users/{userId}/events/{eventId}/requests")
-    public ResponseEntity<Object> getUserEventRequestByUserIdPrivate(@PathVariable long userId,
+    public ResponseEntity<?> getUserEventRequestByUserIdPrivate(@PathVariable long userId,
                                                                      @PathVariable long eventId) {
-        //return eventService.getUserEventRequestByUserIdAndEventIdPrivate(userId, eventId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(eventService.getUserEventRequestByUserIdAndEventIdPrivate(userId, eventId));
     }
 
     @PatchMapping("/users/{userId}/events/{eventId}/requests")
-    public ResponseEntity<Object> patchUserEventRequestStatusByUserIdAndEventIdPrivate(
+    public ResponseEntity<?> patchUserEventRequestStatusByUserIdAndEventIdPrivate(
                                                                     @PathVariable long userId,
                                                                     @PathVariable long eventId,
                                                                     @RequestBody EventRequestStatusUpdateRequest updateRequest) {
-        //return eventService.patchUserEventRequestStatusByUserIdAndEventIdPrivate(updateRequest, userId, eventId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(eventService.patchUserEventRequestStatusByUserIdAndEventIdPrivate(updateRequest, userId, eventId));
@@ -88,19 +82,16 @@ public class EventController {
     // ------------------  PUBLIC  ------------------
 
     @GetMapping("/events")
-    public ResponseEntity<Object> getAllEventsPublic(HttpServletRequest request,
+    public ResponseEntity<?> getAllEventsPublic(HttpServletRequest request,
                                                      @RequestParam(required = false) String text,
-                                                     @RequestParam(required = false, defaultValue = "0") long[] categories,
+                                                     @RequestParam(defaultValue = "0") long[] categories,
                                                      @RequestParam(required = false) Boolean paid,
                                                      @RequestParam(required = false) String rangeStart,
                                                      @RequestParam(required = false) String rangeEnd,
                                                      @RequestParam(required = false) Boolean onlyAvailable,
                                                      @RequestParam(required = false) String sort,
-                                                     @RequestParam(required = false, defaultValue = "0") int from,
-                                                     @RequestParam(required = false, defaultValue = "10") int size) {
-//        return eventService
-//                .getAllEventsPublic(request, text, categories, paid,
-//                        rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+                                                     @RequestParam(defaultValue = "0") int from,
+                                                     @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(eventService.getAllEventsPublic(
@@ -111,8 +102,7 @@ public class EventController {
     }
 
     @GetMapping("/events/{eventId}")
-    public ResponseEntity<Object> getEventByIdPublic(@PathVariable long eventId, HttpServletRequest request) {
-        //return eventService.getEventByIdPublic(eventId, request);
+    public ResponseEntity<?> getEventByIdPublic(@PathVariable long eventId, HttpServletRequest request) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(eventService.getEventByIdPublic(eventId, request));
@@ -121,16 +111,14 @@ public class EventController {
     // ------------------  ADMIN  ------------------
 
     @GetMapping("/admin/events")
-    public ResponseEntity<Object> getAllEventsAdmin(HttpServletRequest request,
+    public ResponseEntity<?> getAllEventsAdmin(HttpServletRequest request,
                                                     @RequestParam(required = false) long[] users,
                                                     @RequestParam(required = false) String[] states,
                                                     @RequestParam(required = false) long[] categories,
                                                     @RequestParam(required = false) String rangeStart,
                                                     @RequestParam(required = false) String rangeEnd,
-                                                    @RequestParam(required = false, defaultValue = "0") int from,
-                                                    @RequestParam(required = false, defaultValue = "10") int size) {
-//        return eventService.getAllEventsAdmin(request, users, states,
-//                categories, rangeStart, rangeEnd, from, size);
+                                                    @RequestParam(defaultValue = "0") int from,
+                                                    @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(eventService.getAllEventsAdmin(request, users, states,
@@ -138,9 +126,8 @@ public class EventController {
     }
 
     @PatchMapping("/admin/events/{eventId}")
-    public ResponseEntity<Object> patchEventByIdAdmin(@PathVariable long eventId,
+    public ResponseEntity<?> patchEventByIdAdmin(@PathVariable long eventId,
                                                       @Valid @RequestBody UpdateEventAdminDto updatedEventDto) {
-        //return eventService.patchEventDataAdmin(updatedEventDto, eventId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(eventService.patchEventDataAdmin(updatedEventDto, eventId));

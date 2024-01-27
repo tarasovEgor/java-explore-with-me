@@ -8,7 +8,6 @@ import ru.practicum.ewm.request.model.Status;
 @Data
 @NoArgsConstructor
 public class EventRequestStatusUpdateRequest {
-
     private Long[] requestIds;
     private Status status;
 
@@ -16,5 +15,4 @@ public class EventRequestStatusUpdateRequest {
         this.requestIds = requestsIds;
         this.status = status;
     }
-
 }
