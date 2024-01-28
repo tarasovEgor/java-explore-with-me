@@ -39,7 +39,6 @@ public class RequestDataController {
             @RequestParam(required = false) String[] uris,
             @RequestParam(required = false) Boolean unique) {
         return requestDataService.getAllRequestDataByPeriod(start, end, uris, unique);
-        
 //        return ResponseEntity
 //                .status(HttpStatus.OK)
 //                .body(requestDataService.getAllRequestDataByPeriod(start, end, uris, unique));
