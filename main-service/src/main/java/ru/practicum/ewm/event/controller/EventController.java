@@ -1,6 +1,7 @@
 package ru.practicum.ewm.event.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import ru.practicum.ewm.event.dto.*;
@@ -10,6 +11,7 @@ import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -26,6 +28,7 @@ public class EventController {
     // ------------------  PRIVATE  ------------------
 
     @PostMapping("/users/{userId}/events")
+    @ResponseStatus(HttpStatus.CREATED)
     public Event saveEventPrivate(@Valid @RequestBody EventDto eventDto,
                                   @PathVariable long userId) {
         return eventService.saveEventPrivate(eventDto, userId);
@@ -35,6 +38,7 @@ public class EventController {
     }
 
     @GetMapping("/users/{userId}/events")
+    @ResponseStatus(HttpStatus.OK)
     public List<EventShortDto> getAllEventsByUserPrivate(@PathVariable long userId,
                                                          @RequestParam(defaultValue = "0") int from,
                                                          @RequestParam(defaultValue = "10") int size) {
@@ -45,6 +49,7 @@ public class EventController {
     }
 
     @GetMapping("/users/{userId}/events/{eventId}")
+    @ResponseStatus(HttpStatus.OK)
     public Event getEventByEventIdAndUserIdPrivate(@PathVariable long userId,
                                                                     @PathVariable long eventId) {
         return eventService.getEventByEventIdAndUserIdPrivate(userId, eventId);
@@ -54,6 +59,7 @@ public class EventController {
     }
 
     @PatchMapping("/users/{userId}/events/{eventId}")
+    @ResponseStatus(HttpStatus.OK)
     public Event patchEventByEventIdAndUserIdPrivate(@PathVariable long userId,
                                                                       @PathVariable long eventId,
                                                                       @Valid @RequestBody UpdateEventUserDto updatedEventDto) {
@@ -64,6 +70,7 @@ public class EventController {
     }
 
     @GetMapping("/users/{userId}/events/{eventId}/requests")
+    @ResponseStatus(HttpStatus.OK)
     public List<ParticipationRequestDto> getUserEventRequestByUserIdPrivate(@PathVariable long userId,
                                                                             @PathVariable long eventId) {
         return eventService.getUserEventRequestByUserIdAndEventIdPrivate(userId, eventId);
@@ -73,6 +80,7 @@ public class EventController {
     }
 
     @PatchMapping("/users/{userId}/events/{eventId}/requests")
+    @ResponseStatus(HttpStatus.OK)
     public EventRequestStatusUpdateResult patchUserEventRequestStatusByUserIdAndEventIdPrivate(
                                                                     @PathVariable long userId,
                                                                     @PathVariable long eventId,
@@ -86,6 +94,7 @@ public class EventController {
     // ------------------  PUBLIC  ------------------
 
     @GetMapping("/events")
+    @ResponseStatus(HttpStatus.OK)
     public List<Event> getAllEventsPublic(HttpServletRequest request,
                                                      @RequestParam(required = false) String text,
                                                      @RequestParam(defaultValue = "0") long[] categories,
@@ -110,6 +119,7 @@ public class EventController {
     }
 
     @GetMapping("/events/{eventId}")
+    @ResponseStatus(HttpStatus.OK)
     public Event getEventByIdPublic(@PathVariable long eventId, HttpServletRequest request) {
 //        return ResponseEntity
 //                .status(HttpStatus.OK)
@@ -120,6 +130,7 @@ public class EventController {
     // ------------------  ADMIN  ------------------
 
     @GetMapping("/admin/events")
+    @ResponseStatus(HttpStatus.OK)
     public List<Event> getAllEventsAdmin(HttpServletRequest request,
                                                     @RequestParam(required = false) long[] users,
                                                     @RequestParam(required = false) String[] states,
@@ -137,6 +148,7 @@ public class EventController {
     }
 
     @PatchMapping("/admin/events/{eventId}")
+    @ResponseStatus(HttpStatus.OK)
     public Event patchEventByIdAdmin(@PathVariable long eventId,
                                                       @Valid @RequestBody UpdateEventAdminDto updatedEventDto) {
         return eventService.patchEventDataAdmin(updatedEventDto, eventId);

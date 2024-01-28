@@ -1,6 +1,7 @@
 package ru.practicum.ewm.request.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import ru.practicum.ewm.request.dto.ParticipationRequestDto;
@@ -19,6 +20,7 @@ public class ParticipationRequestController {
     }
 
     @PostMapping("/users/{userId}/requests")
+    @ResponseStatus(HttpStatus.CREATED)
     public ParticipationRequestDto saveParticipationRequestPrivate(@PathVariable long userId,
                                                                    @RequestParam long eventId) {
         return requestService.saveParticipationRequestPrivate(userId, eventId);
@@ -28,6 +30,7 @@ public class ParticipationRequestController {
     }
 
     @GetMapping("/users/{userId}/requests")
+    @ResponseStatus(HttpStatus.OK)
     public List<ParticipationRequestDto> getParticipationRequestByUserIdPrivate(@PathVariable long userId) {
         return requestService.getParticipationRequestByUserIdPrivate(userId);
 //        return ResponseEntity
@@ -36,6 +39,7 @@ public class ParticipationRequestController {
     }
 
     @PatchMapping("/users/{userId}/requests/{requestId}/cancel")
+    @ResponseStatus(HttpStatus.OK)
     public ParticipationRequestDto cancelParticipationRequestByUserIdPrivate(@PathVariable long userId,
                                                                             @PathVariable long requestId) {
         return requestService.cancelParticipationRequestByUserIdPrivate(userId, requestId);

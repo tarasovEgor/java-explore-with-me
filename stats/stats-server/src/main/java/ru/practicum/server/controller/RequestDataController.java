@@ -1,6 +1,7 @@
 package ru.practicum.server.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import ru.practicum.dto.RequestDataDto;
@@ -22,6 +23,7 @@ public class RequestDataController {
     }
 
     @PostMapping("/hit")
+    @ResponseStatus(HttpStatus.CREATED)
     public RequestData saveRequestData(@RequestBody RequestDataDto requestDataDto) {
         return requestDataService.saveRequestData(requestDataDto);
 //        return ResponseEntity
@@ -30,6 +32,7 @@ public class RequestDataController {
     }
 
     @GetMapping("/stats")
+    @ResponseStatus(HttpStatus.OK)
     public List<ViewStatsDto> getAllRequestDataByPeriod(
             @RequestParam String start,
             @RequestParam String end,
