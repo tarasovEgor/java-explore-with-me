@@ -26,9 +26,6 @@ public class RequestDataController {
     @ResponseStatus(HttpStatus.CREATED)
     public RequestData saveRequestData(@RequestBody RequestDataDto requestDataDto) {
         return requestDataService.saveRequestData(requestDataDto);
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .body(requestDataService.saveRequestData(requestDataDto));
     }
 
     @GetMapping("/stats")
@@ -39,8 +36,5 @@ public class RequestDataController {
             @RequestParam(required = false) String[] uris,
             @RequestParam(required = false) Boolean unique) {
         return requestDataService.getAllRequestDataByPeriod(start, end, uris, unique);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(requestDataService.getAllRequestDataByPeriod(start, end, uris, unique));
     }
 }

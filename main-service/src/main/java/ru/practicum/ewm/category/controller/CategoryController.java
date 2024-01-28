@@ -28,18 +28,12 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.CREATED)
     public Category saveCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
         return categoryService.saveCategory(newCategoryDto);
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .body(categoryService.saveCategory(newCategoryDto));
     }
 
     @GetMapping("/categories/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
     public Category getCategoryById(@PathVariable long categoryId) {
         return categoryService.getCategoryById(categoryId);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(categoryService.getCategoryById(categoryId));
     }
 
     @GetMapping("/categories")
@@ -47,9 +41,6 @@ public class CategoryController {
     public List<Category> getAllCategories(@PositiveOrZero @RequestParam(defaultValue = "0") int from,
                                            @Positive @RequestParam(defaultValue = "10") int size) {
         return categoryService.getAllCategories(from, size);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(categoryService.getAllCategories(from, size));
     }
 
     @PatchMapping("/admin/categories/{categoryId}")
@@ -57,16 +48,12 @@ public class CategoryController {
     public Category updateCategory(@PathVariable long categoryId,
                                          @Valid @RequestBody NewCategoryDto newCategoryDto) {
         return categoryService.patchCategory(categoryId, newCategoryDto);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(categoryService.patchCategory(categoryId, newCategoryDto));
     }
 
     @DeleteMapping("/admin/categories/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable long categoryId) {
         categoryService.deleteCategory(categoryId);
-        //return ResponseEntity.noContent().build();
     }
 
 }

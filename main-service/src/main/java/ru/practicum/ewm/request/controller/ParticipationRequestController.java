@@ -24,18 +24,12 @@ public class ParticipationRequestController {
     public ParticipationRequestDto saveParticipationRequestPrivate(@PathVariable long userId,
                                                                    @RequestParam long eventId) {
         return requestService.saveParticipationRequestPrivate(userId, eventId);
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .body(requestService.saveParticipationRequestPrivate(userId, eventId));
     }
 
     @GetMapping("/users/{userId}/requests")
     @ResponseStatus(HttpStatus.OK)
     public List<ParticipationRequestDto> getParticipationRequestByUserIdPrivate(@PathVariable long userId) {
         return requestService.getParticipationRequestByUserIdPrivate(userId);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(requestService.getParticipationRequestByUserIdPrivate(userId));
     }
 
     @PatchMapping("/users/{userId}/requests/{requestId}/cancel")
@@ -43,9 +37,6 @@ public class ParticipationRequestController {
     public ParticipationRequestDto cancelParticipationRequestByUserIdPrivate(@PathVariable long userId,
                                                                             @PathVariable long requestId) {
         return requestService.cancelParticipationRequestByUserIdPrivate(userId, requestId);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(requestService.cancelParticipationRequestByUserIdPrivate(userId, requestId));
     }
 
 }

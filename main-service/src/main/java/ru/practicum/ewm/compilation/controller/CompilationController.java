@@ -28,9 +28,6 @@ public class CompilationController {
     public List<CompilationWithShortEventDto> getAllCompilationsPublic(@RequestParam(required = false) Boolean pinned,
                                                                        @RequestParam(defaultValue = "0") int from,
                                                                        @RequestParam(defaultValue = "10") int size) {
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(compilationService.getAllCompilationsPublic(pinned, from, size));
         return compilationService.getAllCompilationsPublic(pinned, from, size);
     }
 
@@ -38,17 +35,11 @@ public class CompilationController {
     @ResponseStatus(HttpStatus.OK)
     public CompilationWithShortEventDto getCompilationByIdPublic(@PathVariable long compId) {
         return compilationService.getCompilationByIdPublic(compId);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(compilationService.getCompilationByIdPublic(compId));
     }
 
     @PostMapping("/admin/compilations")
     @ResponseStatus(HttpStatus.CREATED)
     public CompilationWithShortEventDto saveCompilationAdmin(@Valid @RequestBody NewCompilationDto newCompilationDto) {
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .body(compilationService.saveCompilationAdmin(newCompilationDto));
         return compilationService.saveCompilationAdmin(newCompilationDto);
     }
 
@@ -57,16 +48,12 @@ public class CompilationController {
     public CompilationWithShortEventDto patchCompilationAdmin(@Valid @RequestBody UpdateCompilationDto newCompilationDto,
                                                         @PathVariable long compId) {
         return compilationService.patchCompilationAdmin(newCompilationDto, compId);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(compilationService.patchCompilationAdmin(newCompilationDto, compId));
     }
 
     @DeleteMapping("/admin/compilations/{compId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCompilationAdmin(@PathVariable long compId) {
         compilationService.deleteCompilationAdmin(compId);
-        //return ResponseEntity.noContent().build();
     }
 
 }

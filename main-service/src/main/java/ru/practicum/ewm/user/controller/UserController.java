@@ -26,9 +26,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public User saveUser(@Valid @RequestBody UserDto userDto) {
         return userService.saveUser(userDto);
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .body(userService.saveUser(userDto));
     }
 
     @GetMapping("/admin/users")
@@ -37,17 +34,12 @@ public class UserController {
                                    @RequestParam(defaultValue = "0") int from,
                                    @RequestParam(defaultValue = "10") int size) {
         return userService.getUsersById(ids, from, size);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(userService.getUsersById(ids, from, size));
     }
 
     @DeleteMapping("/admin/users/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public User deleteUser(@PathVariable long userId) {
         return userService.deleteUser(userId);
-//        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-//                .body(userService.deleteUser(userId));
     }
 
 }
