@@ -41,7 +41,7 @@ public class CategoryController {
     @GetMapping("/categories")
     public List<Category> getAllCategories(@PositiveOrZero @RequestParam(defaultValue = "0") int from,
                                            @Positive @RequestParam(defaultValue = "10") int size) {
-        return categoryService.getAllCategories(from ,size);
+        return categoryService.getAllCategories(from, size);
 //        return ResponseEntity
 //                .status(HttpStatus.OK)
 //                .body(categoryService.getAllCategories(from, size));

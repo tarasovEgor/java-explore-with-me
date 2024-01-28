@@ -38,7 +38,7 @@ public class EventController {
     public List<EventShortDto> getAllEventsByUserPrivate(@PathVariable long userId,
                                                          @RequestParam(defaultValue = "0") int from,
                                                          @RequestParam(defaultValue = "10") int size) {
-        return eventService.getAllEventsByUserPrivate(userId, from ,size);
+        return eventService.getAllEventsByUserPrivate(userId, from, size);
 //        return ResponseEntity
 //                .status(HttpStatus.OK)
 //                .body(eventService.getAllEventsByUserPrivate(userId, from, size));
