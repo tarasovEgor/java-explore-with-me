@@ -1,11 +1,12 @@
 package ru.practicum.ewm.request.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 import ru.practicum.ewm.request.service.ParticipationRequestService;
+
+import java.util.List;
 
 @RestController
 public class ParticipationRequestController {
@@ -18,26 +19,29 @@ public class ParticipationRequestController {
     }
 
     @PostMapping("/users/{userId}/requests")
-    public ResponseEntity<?> saveParticipationRequestPrivate(@PathVariable long userId,
-                                                                  @RequestParam long eventId) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(requestService.saveParticipationRequestPrivate(userId, eventId));
+    public ParticipationRequestDto saveParticipationRequestPrivate(@PathVariable long userId,
+                                                                   @RequestParam long eventId) {
+        return requestService.saveParticipationRequestPrivate(userId, eventId);
+//        return ResponseEntity
+//                .status(HttpStatus.CREATED)
+//                .body(requestService.saveParticipationRequestPrivate(userId, eventId));
     }
 
     @GetMapping("/users/{userId}/requests")
-    public ResponseEntity<?> getParticipationRequestByUserIdPrivate(@PathVariable long userId) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(requestService.getParticipationRequestByUserIdPrivate(userId));
+    public List<ParticipationRequestDto> getParticipationRequestByUserIdPrivate(@PathVariable long userId) {
+        return requestService.getParticipationRequestByUserIdPrivate(userId);
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(requestService.getParticipationRequestByUserIdPrivate(userId));
     }
 
     @PatchMapping("/users/{userId}/requests/{requestId}/cancel")
-    public ResponseEntity<?> cancelParticipationRequestByUserIdPrivate(@PathVariable long userId,
+    public ParticipationRequestDto cancelParticipationRequestByUserIdPrivate(@PathVariable long userId,
                                                                             @PathVariable long requestId) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(requestService.cancelParticipationRequestByUserIdPrivate(userId, requestId));
+        return requestService.cancelParticipationRequestByUserIdPrivate(userId, requestId);
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(requestService.cancelParticipationRequestByUserIdPrivate(userId, requestId));
     }
 
 }
