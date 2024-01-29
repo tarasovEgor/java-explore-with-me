@@ -7,43 +7,84 @@ import org.springframework.stereotype.Service;
 
 import ru.practicum.dto.RequestDataDto;
 import ru.practicum.dto.ViewStatsDto;
+import ru.practicum.server.exception.InvalidRequestDataDateException;
 import ru.practicum.server.model.RequestData;
 import ru.practicum.server.mapper.RequestDataMapper;
 
 import ru.practicum.server.repository.RequestDataRepository;
 import ru.practicum.server.service.RequestDataService;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
 @Service
 public class RequestDataServiceImpl implements RequestDataService {
 
-    private final RequestDataRepository repository;
+    private final RequestDataRepository requestDataRepository;
 
     @Autowired
-    public RequestDataServiceImpl(RequestDataRepository repository) {
-        this.repository = repository;
+    public RequestDataServiceImpl(RequestDataRepository requestDataRepository) {
+        this.requestDataRepository = requestDataRepository;
     }
 
     @Override
-    public RequestDataDto saveRequestData(RequestData requestData) {
-        log.info("Saving the following data: {}", requestData);
-        return RequestDataMapper.toRequestDataDto(repository.save(requestData), repository);
+    public RequestData saveRequestData(RequestDataDto requestDataDto) {
+        RequestData requestData = RequestDataMapper.toRequestData(requestDataDto);
+        return requestDataRepository.save(requestData);
     }
 
     @Override
     public List<ViewStatsDto> getAllRequestDataByPeriod(String start, String end, String[] uris, Boolean unique) {
-        if ((uris == null || uris.length == 0) && (unique == null || !unique)) {
-            return repository.findAllByPeriod(start, end);
-        } else if (unique && (uris == null || uris.length == 0)) {
-            return repository.findAllByPeriodIpIsUnique(start, end);
-        } else {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        LocalDateTime startLDT = LocalDateTime.parse(start, formatter);
+        LocalDateTime endLDT = LocalDateTime.parse(end, formatter);
+
+        if (startLDT.isAfter(endLDT)) {
+            throw new InvalidRequestDataDateException("Start date can't come after the end date.");
+        }
+        if (uris != null && unique != null) {
             if (unique) {
-                return repository.findAllByPeriodAndUrisAndIpIsUnique(uris, start, end);
+                return requestDataRepository
+                                .findAllByPeriodAndUrisAndIpIsUnique(
+                                        uris,
+                                        start,
+                                        end
+                                );
             } else {
-                return repository.findAllByPeriodAndUris(uris, start, end);
+                return requestDataRepository
+                        .findAllByPeriodAndUris(
+                                uris,
+                                start,
+                                end
+                        );
             }
+        } else if (uris != null) {
+            return requestDataRepository
+                    .findAllByPeriodAndUrisAndIpIsUnique(
+                            uris,
+                            start,
+                            end
+                    );
+        } else if (unique != null) {
+            if (unique) {
+                return requestDataRepository
+                        .findAllByPeriodIpIsUnique(
+                                start, end
+                        );
+            } else {
+                return requestDataRepository
+                        .findAllByPeriod(
+                                start, end
+                        );
+            }
+        } else {
+            return requestDataRepository
+                    .findAllByPeriod(
+                            start, end
+                    );
         }
     }
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface RequestDataService {
 
-    RequestDataDto saveRequestData(RequestData requestDataDto);
+    RequestData saveRequestData(RequestDataDto requestDataDto);
 
     List<ViewStatsDto> getAllRequestDataByPeriod(String start, String end, String[] uris, Boolean unique);
 

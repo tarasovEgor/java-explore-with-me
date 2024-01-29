@@ -1,11 +1,12 @@
 package ru.practicum.server.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import ru.practicum.dto.RequestDataDto;
-import ru.practicum.dto.ViewStatsDto;
 
+import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.server.model.RequestData;
 import ru.practicum.server.service.RequestDataService;
 
@@ -22,17 +23,18 @@ public class RequestDataController {
     }
 
     @PostMapping("/hit")
-    public RequestDataDto saveRequestData(@RequestBody RequestData requestData) {
-        return requestDataService.saveRequestData(requestData);
+    @ResponseStatus(HttpStatus.CREATED)
+    public RequestData saveRequestData(@RequestBody RequestDataDto requestDataDto) {
+        return requestDataService.saveRequestData(requestDataDto);
     }
 
     @GetMapping("/stats")
+    @ResponseStatus(HttpStatus.OK)
     public List<ViewStatsDto> getAllRequestDataByPeriod(
             @RequestParam String start,
             @RequestParam String end,
             @RequestParam(required = false) String[] uris,
-            @RequestParam(required = false, defaultValue = "false") Boolean unique) {
+            @RequestParam(required = false) Boolean unique) {
         return requestDataService.getAllRequestDataByPeriod(start, end, uris, unique);
     }
-
 }

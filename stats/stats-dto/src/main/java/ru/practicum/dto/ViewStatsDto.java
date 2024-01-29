@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ViewStatsDto {
-
     private String app;
     private String uri;
     private Long hits = 0L;
@@ -16,5 +15,4 @@ public class ViewStatsDto {
         this.uri = uri;
         this.hits = hits;
     }
-
 }
