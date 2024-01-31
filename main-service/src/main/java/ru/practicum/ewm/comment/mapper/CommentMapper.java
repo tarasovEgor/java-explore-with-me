@@ -37,7 +37,7 @@ public class CommentMapper {
     }
 
     public static List<CommentDto> toCommentDto(List<Comment> comments) {
-        List<CommentDto> dtos= new ArrayList<>();
+        List<CommentDto> dtos = new ArrayList<>();
         for (Comment c : comments) {
             dtos.add(toCommentDto(c));
         }
