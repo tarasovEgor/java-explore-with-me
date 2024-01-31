@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.ewm.exception.BadRequestMethodException;
 import ru.practicum.ewm.exception.InvalidMethodException;
 import ru.practicum.ewm.exception.category.CategoryDoesNotExistException;
+import ru.practicum.ewm.exception.comment.CommentDoesNotExistException;
 import ru.practicum.ewm.exception.compilation.CompilationDoesNotExistException;
 import ru.practicum.ewm.exception.event.*;
 import ru.practicum.ewm.exception.request.InvalidInitiatorException;
@@ -155,6 +156,16 @@ public class ErrorHandler {
         return new ApiError(
                 "409",
                 "Conflict.",
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiError handleCommentDoesNotExistException(final CommentDoesNotExistException e) {
+        return new ApiError(
+                "404",
+                "Not Found.",
                 e.getMessage()
         );
     }
