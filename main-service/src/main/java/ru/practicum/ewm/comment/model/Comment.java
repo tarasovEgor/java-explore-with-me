@@ -3,8 +3,8 @@ package ru.practicum.ewm.comment.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import lombok.ToString;
+
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.user.model.User;
 

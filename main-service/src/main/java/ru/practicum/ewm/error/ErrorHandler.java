@@ -1,6 +1,7 @@
 package ru.practicum.ewm.error;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,6 +17,8 @@ import ru.practicum.ewm.exception.request.ParticipationRequestDoesNotExistExcept
 import ru.practicum.ewm.exception.request.ParticipationRequestLimitIsFullException;
 import ru.practicum.ewm.exception.request.RepeatedRequestException;
 import ru.practicum.ewm.exception.user.UserDoesNotExistException;
+
+import javax.validation.ConstraintViolationException;
 
 @RestControllerAdvice
 public class ErrorHandler {
@@ -167,6 +170,36 @@ public class ErrorHandler {
                 "404",
                 "Not Found.",
                 e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+        return new ApiError(
+                "400",
+                "Bad Request.",
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleConstraintViolationException(final ConstraintViolationException e) {
+        return new ApiError(
+                "400",
+                "Bad Request.",
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleThrowable(final Throwable thr) {
+        return new ApiError(
+                "400",
+                "Bad Request.",
+                thr.getMessage()
         );
     }
 }
